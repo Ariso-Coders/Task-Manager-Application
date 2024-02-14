@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { IoAddSharp } from "react-icons/io5";
-import { IoEllipsisVerticalOutline } from "react-icons/io5";
 import { AiOutlineDelete } from "react-icons/ai";
-// import { MdNotificationsActive } from "react-icons/md";
 import { FaFilter } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
-// import { IoLogOutSharp } from "react-icons/io5";
 import Calendar from "react-calendar";
 import { useNavigate } from "react-router-dom";
 import ErrorCard from "../components/ErrorCard/ErrorCard";
@@ -14,7 +11,9 @@ import TaskOverlay from "../components/taskoverlay/TaskOverlay";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { DateRangePicker } from "react-date-range";
-interface Task {
+import { IsOverDue, isOverdue } from "../utils/OverdueCheck";
+
+export interface Task {
   _id: string;
   task_description: string;
   task_status: boolean;
@@ -51,9 +50,13 @@ const ViewTask = () => {
   const [isFilterMenuOpen, setFilterMenuOpen] = useState(false);
   const [showCompleted, setShowCompleted] = useState(false);
   const [showNotCompleted, setShowNotCompleted] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  //const [selectedDate, setSelectedDate] = useState(new Date());
   const [startDate, selectStartDate] = useState(new Date());
   const [endDate, selectEndDate] = useState(new Date());
+  const [isOverDue, setIsOverdue] = useState<IsOverDue>({
+    logic: false,
+    values: [],
+  });
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -70,6 +73,7 @@ const ViewTask = () => {
         setTasks(data.tasksToTheUser);
         setTaskCount(data.tasksToTheUser.length);
         setFilteredTasks(data.tasksToTheUser);
+        setIsOverdue(isOverdue(data.tasksToTheUser));
       } catch (error) {
         console.error("Error fetching tasks", error);
       }
@@ -231,7 +235,7 @@ const ViewTask = () => {
       <div className="w-full flex flex-col md:flex-row gap-4 md:gap-8 mt-view_task_4 ml-view_task_6 md:ml-4xl items-center">
         <input
           placeholder="Search For Task"
-          className="w-full md:w-3/4 border border-gray p-view_task_1 rounded-md mb-4 md:mb-0"
+          className="w-2/3 md:w-3/4 border border-gray p-view_task_1 rounded-md mb-4 md:mb-0"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -279,14 +283,21 @@ const ViewTask = () => {
             </div>
           )}
         </div>
-
         <MdLogout
           className="text-5xl hover:cursor-pointer"
           onClick={logoutHandler}
         />
       </div>
       <div className="flex flex-col md:flex-row mt-4 ml-6 md:ml-12 gap-4 md:gap-8 items-center">
-        <h1 className="font-bold text-3xl mb-4 ml-60 md:mb-0">{`You have got ${taskCount} tasks`}</h1>
+        <h1 className="font-bold text-3xl mb-4 ml-60 md:mb-0">
+          {`You have got ${taskCount} tasks `}
+          {isOverDue.logic && (
+            <span className="text-red" onClick={() => {setFilteredTasks(isOverDue.values)}}>
+              And You Have {isOverDue.values.length} Overdue{" "}
+              {isOverDue.values.length > 1 ? "Tasks" : "Task"}
+            </span>
+          )}{" "}
+        </h1>
         <button
           className="text-xl bg-view_task_main_color p-4 md:p-1 rounded-md text-view_task_white font-bold flex items-center justify-center hover:bg-opacity-75"
           onClick={() => {
@@ -298,29 +309,11 @@ const ViewTask = () => {
           <span className="ml-2 md:ml-1">Add</span>
         </button>
       </div>
-      {<div className="w-1/3 text-view_task_3 ml-80 mt-10">
-        <Calendar
-          value={todayDate}
-          tileContent={({ date }) =>
-            date.getDate() === todayDate.getDate() &&
-            date.getMonth() === todayDate.getMonth() &&
-            date.getFullYear() === todayDate.getFullYear() ? (
-              <div className="relative">
-                <div className="border border-black bg-gray opacity-75 h-7 w-7 rounded-full -mt-6 ml-6"></div>
-                {/* You can add any content or leave it empty */}
-              </div>
-            ) : null
-          }
-        />
-      </div>}
       <div className="w-full md:w-auto mx-auto flex md:flex-row mt-2 md:ml-30">
         <div className="w-full md:w-auto mx-auto flex md:flex-row mt-14 md:ml-30">
           <div className="text-xl w-full md:mb-0">
             {filteredTasks.map((task: Task) => (
               <div key={task._id} className="flex flex-row mb-4">
-                <div className="w-1/24">
-                  <IoEllipsisVerticalOutline />
-                </div>
                 <div className="w-full overflow-x-auto break-all">
                   {task.task_description}
                 </div>
