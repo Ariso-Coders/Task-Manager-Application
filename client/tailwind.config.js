@@ -4,6 +4,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        task_hover:"#e7e5e4",
+        over_due:"#dc2626",
         main_color: "#5534A5",
         blue: "#1fb6ff",
         purple: "#7e5bef",
@@ -36,6 +38,7 @@ module.exports = {
         view_task_10: "120px",
         view_task_11: "200px",
         view_task_12: "250px",
+        view_task_13: "300px",
       },
       fontSize: {
         view_task_1: "8px",
