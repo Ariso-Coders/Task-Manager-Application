@@ -96,14 +96,6 @@ const LoginForm = () => {
               <p className="text-left text-red">{errors.password.message}</p>
             )}
           </div>
-          <div className="mb-4 flex items-center">
-            <input
-              type="checkbox"
-              className="mr-2"
-              {...register("rememberMe")}
-            />
-            <label>Remember Me</label>
-          </div>
 
           <Button buttonLabel="Login" />
           {errorMessage && <p className="text-red">{errorMessage}</p>}
