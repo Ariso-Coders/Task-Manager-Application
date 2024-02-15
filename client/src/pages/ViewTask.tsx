@@ -57,7 +57,7 @@ const ViewTask = () => {
     logic: false,
     values: [],
   });
-
+  const [filterMessage, setFilterMessage] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const tasksPerPage = 4;
   const indexOfLastTask = currentPage * tasksPerPage;
@@ -103,6 +103,15 @@ const ViewTask = () => {
           (!showCompleted && !showNotCompleted))
     );
     setFilteredTasks(filtered);
+
+    // Set filter message based on the filter criteria
+    if (showCompleted) {
+      setFilterMessage("Results for Completed Tasks");
+    } else if (showNotCompleted) {
+      setFilterMessage("Results for Not Completed Tasks");
+    } else {
+      setFilterMessage("");
+    }
   }, [searchTerm, tasks, showCompleted, showNotCompleted]);
 
   //Date Range
@@ -131,6 +140,7 @@ const ViewTask = () => {
           (showNotCompleted && !task.task_status) ||
           (!showCompleted && !showNotCompleted))
       );
+      
     });
     setFilteredTasks(filteredDate);
     selectStartDate(date.selection.startDate);
@@ -255,7 +265,6 @@ const ViewTask = () => {
               className="text-4xl hover:cursor-pointer"
               onClick={toggleFilterMenu}
             />
-           
           </div>
           <MdLogout
             className="text-5xl hover:cursor-pointer"
@@ -266,8 +275,12 @@ const ViewTask = () => {
           <h1 className="font-bold text-3xl mb-4 ml-60 md:mb-0 	text-transform:capitalize">
             {`You have got ${taskCount} tasks `}
             {isOverDue.logic && (
-              <span className="text-over_due hover:underline hover:cursor-pointer" onClick={() => { setFilteredTasks(isOverDue.values) 
-              }}>
+              <span
+                className="text-over_due hover:underline hover:cursor-pointer"
+                onClick={() => {
+                  setFilteredTasks(isOverDue.values);
+                }}
+              >
                 And You Have {isOverDue.values.length} Overdue{" "}
                 {isOverDue.values.length > 1 ? "Tasks" : "Task"}
               </span>
@@ -285,19 +298,31 @@ const ViewTask = () => {
           </button>
         </div>
       </div>
+      <div className="w-full items-start justify-center px-20 -mb-5 md:gap-8 ">
+        <h2 className="text-2xl font-bold text-blue">{filterMessage}</h2>
+      </div>
       <div className="w-full flex items-start justify-center  px-20  h-view_task_13  ">
         <div className="w-full ">
           <div className="text-xl w-full flex flex-col justify-center gap-4 ">
             {currentTasks.map((task: Task) => (
-              <div key={task._id} className=" w-full flex items-center hover:bg-task_hover px-5  py-2 hover:cursor-pointer ">
-                <div className="  flex-1 	text-transform: capitalize  text-left overflow-hidden">  {/* 1*/}
+              <div
+                key={task._id}
+                className=" w-full flex items-center hover:bg-task_hover px-5  py-2 hover:cursor-pointer "
+              >
+                <div className="  flex-1 	text-transform: capitalize  text-left overflow-hidden">
+                  {" "}
+                  {/* 1*/}
                   {task.task_description}
                 </div>
-                <div className="  flex-1 text-left">  {/* 2*/}
+                <div className="  flex-1 text-left">
+                  {" "}
+                  {/* 2*/}
                   {task.date.split("T")[0]}
                 </div>
 
-                <div className="w-view_task_6  flex-1 flex justify-start ">   {/* 3*/}
+                <div className="w-view_task_6  flex-1 flex justify-start ">
+                  {" "}
+                  {/* 3*/}
                   <button
                     onClick={() => {
                       deleteTaskHandler(task._id);
@@ -307,7 +332,9 @@ const ViewTask = () => {
                     <AiOutlineDelete />
                   </button>
                 </div>
-                <div className=" flex-1 flex justify-start  ">  {/* 4*/}
+                <div className=" flex-1 flex justify-start  ">
+                  {" "}
+                  {/* 4*/}
                   <label className="flex items-center ">
                     <span className="">Mark as Complete</span>
                     <span>
@@ -327,7 +354,9 @@ const ViewTask = () => {
                     </span>
                   </label>
                 </div>
-                <div className="  flex-1">  {/* 5*/}
+                <div className="  flex-1">
+                  {" "}
+                  {/* 5*/}
                   {!editMode || editMode !== task._id ? (
                     <button
                       className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold ml-view_task_10 hover:bg-opacity-75"
@@ -419,18 +448,18 @@ const ViewTask = () => {
         )}
       </div>
       <div className="flex justify-center mt-4">
-      {Array.from({ length: totalPages }, (_, index) => (
-        <button
-          key={index}
-          onClick={() => handlePageChange(index + 1)}
-          className={` text-blue text-2xl mx-2 px-3 py-1 ${
-            currentPage === index + 1 ? 'bg-gray-300' : 'bg-gray-100'
-          }`}
-        >
-          {index + 1}
-        </button>
-      ))}
-    </div>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={` text-blue text-2xl mx-2 px-3 py-1 ${
+              currentPage === index + 1 ? "bg-gray-300" : "bg-gray-100"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
       {taskOverLayLogic && <TaskOverlay onCancelClick={taskOVerLayHandler} />}
     </div>
   );
