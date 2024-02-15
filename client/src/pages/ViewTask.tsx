@@ -3,7 +3,6 @@ import { IoAddSharp } from "react-icons/io5";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaFilter } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
-import Calendar from "react-calendar";
 import { useNavigate } from "react-router-dom";
 import ErrorCard from "../components/ErrorCard/ErrorCard";
 import axios from "axios";
@@ -58,6 +57,7 @@ const ViewTask = () => {
     values: [],
   });
   const [filterMessage, setFilterMessage] = useState<string>("");
+  const [filterDateMessage, setFilterDateMessage] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const tasksPerPage = 4;
   const indexOfLastTask = currentPage * tasksPerPage;
@@ -103,12 +103,15 @@ const ViewTask = () => {
           (!showCompleted && !showNotCompleted))
     );
     setFilteredTasks(filtered);
+    console.log("test")
 
     // Set filter message based on the filter criteria
-    if (showCompleted) {
-      setFilterMessage("Results for Completed Tasks");
-    } else if (showNotCompleted) {
+    if (showCompleted && showNotCompleted) {
+      setFilterMessage("Results for Both Completed & Not Completed Tasks");
+    } else if ( showNotCompleted ) {
       setFilterMessage("Results for Not Completed Tasks");
+    } else if ( showCompleted) {
+      setFilterMessage("Results for Completed Tasks");
     } else {
       setFilterMessage("");
     }
@@ -122,15 +125,14 @@ const ViewTask = () => {
   };
 
   const handleDateRange = (date: any) => {
-    const filteredDate = tasks.filter((task: any) => {
+    const taskDateFilter = (task: any) => {
       const taskDate = new Date(task.date);
       const startDate = date.selection.startDate;
       const endDate = date.selection.endDate;
-
+  
       const withinRange = taskDate >= startDate && taskDate <= endDate;
-
       const singleDay = taskDate.toDateString() === startDate.toDateString();
-
+  
       return (
         (withinRange || singleDay) &&
         task.task_description
@@ -140,13 +142,36 @@ const ViewTask = () => {
           (showNotCompleted && !task.task_status) ||
           (!showCompleted && !showNotCompleted))
       );
-      
-    });
+    };
+  
+    const filteredDate = tasks.filter(taskDateFilter);
     setFilteredTasks(filteredDate);
     selectStartDate(date.selection.startDate);
     selectEndDate(date.selection.endDate);
     console.log(date.selection.startDate);
     console.log(date.selection.endDate);
+  
+    // Set filter message based on the date filter criteria
+    if (showCompleted && showNotCompleted) {
+      setFilterMessage("Results for Both Completed & Not Completed Tasks");
+    } else if (showNotCompleted) {
+      setFilterMessage("Results for Not Completed Tasks");
+    } else if (showCompleted) {
+      setFilterMessage("Results for Completed Tasks");
+    } else {
+      setFilterMessage("");
+    }
+  
+    // Set date filter message
+    if (date.selection.startDate && date.selection.endDate) {
+      const formattedStartDate = date.selection.startDate.toDateString();
+      const formattedEndDate = date.selection.endDate.toDateString();
+      setFilterDateMessage(
+        `Results for tasks between ${formattedStartDate} and ${formattedEndDate}`
+      );
+    } else {
+      setFilterDateMessage("");
+    }
   };
 
   // UPDATE STATUS
@@ -300,6 +325,7 @@ const ViewTask = () => {
       </div>
       <div className="w-full items-start justify-center px-20 -mb-5 md:gap-8 ">
         <h2 className="text-2xl font-bold text-blue">{filterMessage}</h2>
+        <h2 className="text-2xl font-bold text-blue">{filterDateMessage}</h2>
       </div>
       <div className="w-full flex items-start justify-center  px-20  h-view_task_13  ">
         <div className="w-full ">
