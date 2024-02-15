@@ -105,10 +105,12 @@ const ViewTask = () => {
     setFilteredTasks(filtered);
 
     // Set filter message based on the filter criteria
-    if (showCompleted) {
-      setFilterMessage("Results for Completed Tasks");
-    } else if (showNotCompleted) {
+    if (showCompleted && showNotCompleted) {
+      setFilterMessage("Results for Both Completed & Not Completed Tasks");
+    } else if ( showNotCompleted ) {
       setFilterMessage("Results for Not Completed Tasks");
+    } else if ( showCompleted) {
+      setFilterMessage("Results for Completed Tasks");
     } else {
       setFilterMessage("");
     }
