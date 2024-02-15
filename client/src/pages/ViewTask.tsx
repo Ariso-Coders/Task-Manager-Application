@@ -58,6 +58,16 @@ const ViewTask = () => {
     values: [],
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const tasksPerPage = 4;
+  const indexOfLastTask = currentPage * tasksPerPage;
+  const indexOfFirstTask = indexOfLastTask - tasksPerPage;
+  const currentTasks = filteredTasks.slice(indexOfFirstTask, indexOfLastTask);
+  const totalPages = Math.ceil(filteredTasks.length / tasksPerPage);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -245,45 +255,7 @@ const ViewTask = () => {
               className="text-4xl hover:cursor-pointer"
               onClick={toggleFilterMenu}
             />
-            {/* {isFilterMenuOpen && (
-            <div className="absolute top-0 right-0  bg-red p-5 rounded-md opacity-80 ">
-              <div className="flex flex-col">
-                <div className="flex items-center mb-4">
-                  <p className="mr-2">Filter by:</p>
-                  <div className="flex">
-                    <label className="inline-flex items-center mr-4">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox h-5 w-5 text-blue-500"
-                        checked={showCompleted}
-                        onChange={() => setShowCompleted(!showCompleted)}
-                      />
-                      <span className="ml-2">Completed</span>
-                    </label>
-                    <label className="inline-flex items-center">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox h-5 w-5 text-blue-500"
-                        checked={showNotCompleted}
-                        onChange={() => setShowNotCompleted(!showNotCompleted)}
-                      />
-                      <span className="ml-2">Not Completed</span>
-                    </label>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <p className="mr-2">Date:</p>
-                  <div>
-                    <DateRangePicker
-                      ranges={[selectionRange]}
-                      onChange={handleDateRange}
-                      className="w-full"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )} */}
+           
           </div>
           <MdLogout
             className="text-5xl hover:cursor-pointer"
@@ -294,14 +266,15 @@ const ViewTask = () => {
           <h1 className="font-bold text-3xl mb-4 ml-60 md:mb-0 	text-transform:capitalize">
             {`You have got ${taskCount} tasks `}
             {isOverDue.logic && (
-              <span className="text-over_due hover:underline hover:cursor-pointer" onClick={() => { setFilteredTasks(isOverDue.values) }}>
+              <span className="text-over_due hover:underline hover:cursor-pointer" onClick={() => { setFilteredTasks(isOverDue.values) 
+              }}>
                 And You Have {isOverDue.values.length} Overdue{" "}
                 {isOverDue.values.length > 1 ? "Tasks" : "Task"}
               </span>
             )}{" "}
           </h1>
           <button
-            className="text-xl bg-view_task_main_color  md:p-1 rounded-md text-view_task_white font-bold flex items-center justify-center hover:bg-opacity-75 "
+            className="text-xl bg-view_task_main_color  px-2 py-2 rounded-md text-view_task_white font-bold flex items-center justify-center hover:bg-green "
             onClick={() => {
               // navigation('/taskpopup');
               setTaskOverLayLogic(true);
@@ -312,10 +285,10 @@ const ViewTask = () => {
           </button>
         </div>
       </div>
-      <div className="w-full flex items-center justify-center  px-20   h-view_task_13 overflow-y-scroll  ">
+      <div className="w-full flex items-start justify-center  px-20  h-view_task_13  ">
         <div className="w-full ">
           <div className="text-xl w-full flex flex-col justify-center gap-4 ">
-            {filteredTasks.map((task: Task) => (
+            {currentTasks.map((task: Task) => (
               <div key={task._id} className=" w-full flex items-center hover:bg-task_hover px-5  py-2 hover:cursor-pointer ">
                 <div className="  flex-1 	text-transform: capitalize  text-left overflow-hidden">  {/* 1*/}
                   {task.task_description}
@@ -445,7 +418,19 @@ const ViewTask = () => {
           </div>
         )}
       </div>
-
+      <div className="flex justify-center mt-4">
+      {Array.from({ length: totalPages }, (_, index) => (
+        <button
+          key={index}
+          onClick={() => handlePageChange(index + 1)}
+          className={` text-blue text-2xl mx-2 px-3 py-1 ${
+            currentPage === index + 1 ? 'bg-gray-300' : 'bg-gray-100'
+          }`}
+        >
+          {index + 1}
+        </button>
+      ))}
+    </div>
       {taskOverLayLogic && <TaskOverlay onCancelClick={taskOVerLayHandler} />}
     </div>
   );

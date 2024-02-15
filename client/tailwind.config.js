@@ -38,7 +38,7 @@ module.exports = {
         view_task_10: "120px",
         view_task_11: "200px",
         view_task_12: "250px",
-        view_task_13: "450px",
+        view_task_13: "300px",
       },
       fontSize: {
         view_task_1: "8px",
