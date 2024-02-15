@@ -70,7 +70,7 @@ function SignUp() {
           Sign Up
         </div>
       </div>
-      <div className="max-w-md w-full rounded-xl mx-auto mt-4 bg-white p-8 border border-gray-300">
+      <div className="max-w-md w-full  mx-auto mt-4 bg-white sm:border border-gray-300 p-8 rounded-lg">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label htmlFor="" className="flex mb-2 font-semibold">
@@ -169,7 +169,7 @@ function SignUp() {
 
           <button
             type="submit"
-            className="w-full py-2 mt-5 px-4 bg-main_color hover:bg-main_color rounded-md text-sm"
+            className="w-full py-2 mt-5 px-4 text-white bg-main_color hover:bg-main_color rounded-md text-sm"
           >
             SignUp
           </button>
