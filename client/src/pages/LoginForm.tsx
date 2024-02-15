@@ -55,7 +55,7 @@ const LoginForm = () => {
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <div className="border border-gray-300 p-8 rounded-lg">
+      <div className="sm:border border-gray-300 p-8 rounded-lg">
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2 className="text-4xl mb-4 font-bold">Login</h2>
           <p className="text-xl mb-8">
@@ -95,14 +95,6 @@ const LoginForm = () => {
             {errors.password && (
               <p className="text-left text-red">{errors.password.message}</p>
             )}
-          </div>
-          <div className="mb-4 flex items-center">
-            <input
-              type="checkbox"
-              className="mr-2"
-              {...register("rememberMe")}
-            />
-            <label>Remember Me</label>
           </div>
 
           <Button buttonLabel="Login" />
