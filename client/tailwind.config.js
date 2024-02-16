@@ -4,24 +4,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        task_hover:"#e7e5e4",
-        over_due:"#dc2626",
+        task_hover: "#e7e5e4",
+        over_due: "#dc2626",
         main_color: "#5534A5",
         blue: "#1fb6ff",
         purple: "#7e5bef",
         pink: "#ff49db",
-        orange: "#ff7849",
-        green: "#13ce66",
-        yellow: "#ffc82c",
-        "gray-dark": "#273444",
-        gray: "#8492a6",
-        "gray-light": "#d3dce6",
-        red: "#FF8080",
-        white: "#fff",
-        black: "#000",
-        "gray-dark": "#273444",
-        gray: "#8492a6",
-        "gray-light": "#d3dce6",
+
+        // "gray-dark": "#273444",
+        // gray: "#8492a6",
+        // "gray-light": "#d3dce6",
         view_task_main_color: "#5534A5",
         view_task_white: "#fff",
       },
@@ -38,7 +30,10 @@ module.exports = {
         view_task_10: "120px",
         view_task_11: "200px",
         view_task_12: "250px",
-        view_task_13: "300px",
+        view_task_13: "50vh",
+        special_width_1: "85vw",
+        special_width_2: "15vw",
+        task_height_lg2: "25vw",
       },
       fontSize: {
         view_task_1: "8px",
@@ -49,6 +44,19 @@ module.exports = {
         view_task_6: "48px",
         sans: ["Graphik", "sans-serif"],
         serif: ["Merriweather", "serif"],
+      },
+      screens: {
+        "2xl_": { max: "1535px" },
+
+        xl_: { max: "1279px" },
+
+        lg_: { max: "1023px" },
+
+        lg2_: { max: "920px" },
+
+        md_: { max: "767px" },
+
+        sm_: { max: "639px" },
       },
     },
   },

@@ -1,12 +1,7 @@
 import { Task } from "../pages/ViewTask";
 
 interface TaskState {
-  // userID: string | null;
-  // date: string;
-  // task_description: string | null;
-  // task_status: boolean | null;
-  // v: string | null;
-  // id: string | null;
+  
   _id: string;
   task_description: string;
   task_status: boolean;
