@@ -11,6 +11,7 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { DateRangePicker } from "react-date-range";
 import { IsOverDue, isOverdue } from "../utils/OverdueCheck";
+import { useGetAllTasksQuery } from "../store/fetures/task-api";
 
 export interface Task {
   _id: string;
@@ -68,6 +69,11 @@ const ViewTask = () => {
     setCurrentPage(page);
   };
 
+  // const ttttId:string  = localStorage.getItem("userId");
+  const dataRTK: Task[] = useGetAllTasksQuery("65c70d1370397cf307b38065")?.data || [];
+
+  console.log("RTX values", dataRTK);
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -79,6 +85,7 @@ const ViewTask = () => {
             },
           }
         );
+
         const data = await response.json();
         setTasks(data.tasksToTheUser);
         setTaskCount(data.tasksToTheUser.length);
@@ -87,6 +94,8 @@ const ViewTask = () => {
       } catch (error) {
         console.error("Error fetching tasks", error);
       }
+
+
     };
     fetchTasks();
   }, [userId]);
@@ -124,15 +133,18 @@ const ViewTask = () => {
     key: "selection",
   };
 
+
+
+
   const handleDateRange = (date: any) => {
     const taskDateFilter = (task: any) => {
       const taskDate = new Date(task.date);
       const startDate = date.selection.startDate;
       const endDate = date.selection.endDate;
-  
+
       const withinRange = taskDate >= startDate && taskDate <= endDate;
       const singleDay = taskDate.toDateString() === startDate.toDateString();
-  
+
       return (
         (withinRange || singleDay) &&
         task.task_description
@@ -142,14 +154,15 @@ const ViewTask = () => {
           (showNotCompleted && !task.task_status) ||
           (!showCompleted && !showNotCompleted))
       );
+    };
 
-    });
+    const filteredDate = tasks.filter(taskDateFilter);
     setFilteredTasks(filteredDate);
     selectStartDate(date.selection.startDate);
     selectEndDate(date.selection.endDate);
     console.log(date.selection.startDate);
     console.log(date.selection.endDate);
-  
+
     // Set filter message based on the date filter criteria
     if (showCompleted && showNotCompleted) {
       setFilterMessage("Results for Both Completed & Not Completed Tasks");
@@ -160,7 +173,7 @@ const ViewTask = () => {
     } else {
       setFilterMessage("");
     }
-  
+
     // Set date filter message
     if (date.selection.startDate && date.selection.endDate) {
       const formattedStartDate = date.selection.startDate.toDateString();
@@ -275,28 +288,28 @@ const ViewTask = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col justify-start  gap-10 pb-10 main_padding">
+    <div className="w-full min-h-screen flex flex-col justify-start px-3 gap-20 pb-10">
       <div className="w-full">
-        <div className="w-full flex items-center mt-view_task_4 justify-between  ">
+        <div className="w-full flex flex-col md:flex-row gap-4 md:gap-8 mt-view_task_4  md:ml-4xl items-center ">
           <input
             placeholder="Search For Task"
-            className="border border-gray p-view_task_1 rounded-md w-special_width_1 "
+            className="w-2/3 md:w-3/4 border border-gray p-view_task_1 rounded-md mb-4 md:mb-0"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <div className=" flex items-center justify-end gap-5 w-special_width_2">
+          <div className="relative">
             <FaFilter
               className="text-4xl hover:cursor-pointer"
               onClick={toggleFilterMenu}
             />
-            <MdLogout
-              className="text-5xl hover:cursor-pointer"
-              onClick={logoutHandler}
-            />
           </div>
+          <MdLogout
+            className="text-5xl hover:cursor-pointer"
+            onClick={logoutHandler}
+          />
         </div>
-        <div className=" w-full flex  mt-4  items-center justify-center gap-2 md_:flex-col md_:gap-1 ">
-          <h1 className="font-bold text-3xl mb-4  	text-transform:capitalize lg_:text-2xl md_:mb-1">
+        <div className=" w-full flex flex-col md:flex-row mt-4  gap-4 md:gap-8 items-center ">
+          <h1 className="font-bold text-3xl mb-4 ml-60 md:mb-0 	text-transform:capitalize">
             {`You have got ${taskCount} tasks `}
             {isOverDue.logic && (
               <span
@@ -311,7 +324,7 @@ const ViewTask = () => {
             )}{" "}
           </h1>
           <button
-            className="text-xl bg-view_task_main_color  px-2 py-2 rounded-md text-view_task_white font-bold flex items-center justify-center hover:bg-green lg_:p-1"
+            className="text-xl bg-view_task_main_color  px-2 py-2 rounded-md text-view_task_white font-bold flex items-center justify-center hover:bg-green "
             onClick={() => {
               // navigation('/taskpopup');
               setTaskOverLayLogic(true);
@@ -322,19 +335,18 @@ const ViewTask = () => {
           </button>
         </div>
       </div>
-      <div className="w-full items-start justify-center px-20  -mb-5 md:gap-8 ">
+      <div className="w-full items-start justify-center px-20 -mb-5 md:gap-8 ">
         <h2 className="text-2xl font-bold text-blue">{filterMessage}</h2>
         <h2 className="text-2xl font-bold text-blue">{filterDateMessage}</h2>
       </div>
-      <div className="w-full flex items-start justify-center  main_padding  h-view_task_13  pt-5 ">
+      <div className="w-full flex items-start justify-center  px-20  h-view_task_13  ">
         <div className="w-full ">
-          <div className="text-xl w-full flex flex-col justify-center gap-4  ">
+          <div className="text-xl w-full flex flex-col justify-center gap-4 ">
             {currentTasks.map((task: Task) => (
               <div
                 key={task._id}
-                className=" w-full flex items-center hover:bg-gray-100   py-2 hover:cursor-pointer px-5 lg2_:flex-wrap lg2_:bg-gray-100 lg2_:h-task_height_lg2 lg2_:flex-col lg2_:items-start "
+                className=" w-full flex items-center hover:bg-task_hover px-5  py-2 hover:cursor-pointer "
               >
-
                 <div className="  flex-1 	text-transform: capitalize  text-left overflow-hidden">
                   {" "}
                   {/* 1*/}
@@ -345,7 +357,6 @@ const ViewTask = () => {
                   {/* 2*/}
                   {task.date.split("T")[0]}
                 </div>
-
 
                 <div className="w-view_task_6  flex-1 flex justify-start ">
                   {" "}
@@ -435,7 +446,7 @@ const ViewTask = () => {
         )}
 
         {isFilterMenuOpen && (
-          <div className="absolute top-20 right-10 bg-purple px-5 py-10 rounded-md" onBlur={toggleFilterMenu}>
+          <div className="absolute top-20 right-10 bg-purple px-5 py-10 rounded-md">
             <div className="flex flex-col">
               <div className="flex items-center mb-4">
                 <p className="mr-2">Filter by:</p>
@@ -471,18 +482,15 @@ const ViewTask = () => {
                 </div>
               </div>
             </div>
-            <div>
-            <button className="" onClick={() => window.location.reload()}>Clear Dates</button>
-            </div>
           </div>
         )}
       </div>
-      <div className="flex justify-center ">
+      <div className="flex justify-center mt-4">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={` text-blue text-2xl mx-2 px-3 py-1 ${currentPage === index + 1 ? "" : ""
+            className={` text-blue text-2xl mx-2 px-3 py-1 ${currentPage === index + 1 ? "bg-gray-300" : "bg-gray-100"
               }`}
           >
             {index + 1}

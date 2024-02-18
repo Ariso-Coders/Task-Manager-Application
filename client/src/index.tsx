@@ -6,17 +6,21 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from "./store/index"
 import { BrowserRouter } from 'react-router-dom';
+import { ApiProvider } from '@reduxjs/toolkit/query/react';
+import { taskApi } from './store/fetures/task-api';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Provider store={store}>
+    <ApiProvider api={taskApi}>
+      <BrowserRouter>
+        <Provider store={store}>
 
-        <App />
-      </Provider>
-    </BrowserRouter>
+          <App />
+        </Provider>
+      </BrowserRouter>
+    </ApiProvider>
   </React.StrictMode>
 );
 
