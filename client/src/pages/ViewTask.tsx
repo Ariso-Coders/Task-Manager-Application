@@ -12,6 +12,8 @@ import "react-date-range/dist/theme/default.css";
 import { DateRangePicker } from "react-date-range";
 import { IsOverDue, isOverdue } from "../utils/OverdueCheck";
 import { useGetAllTasksQuery } from "../store/fetures/task-api";
+import { useDispatch, useSelector } from "react-redux";
+import { taskActions } from "../store/task-slice";
 
 export interface Task {
   _id: string;
@@ -25,6 +27,7 @@ interface ErroCardLogicState {
   update: boolean | false;
 }
 const ViewTask = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigate();
   const userId: string | null = localStorage.getItem("userId");
   const userToken: string | null = localStorage.getItem("userToken");
@@ -99,6 +102,9 @@ const ViewTask = () => {
     };
     fetchTasks();
   }, [userId]);
+
+  // dispatch(taskActions.setTasks({}))
+ 
 
   useEffect(() => {
     // Filter tasks based on search term and completion status
