@@ -1,5 +1,14 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {
+  BaseQueryApi,
+  FetchArgs,
+  FetchBaseQueryError,
+  FetchBaseQueryMeta,
+  createApi,
+  fetchBaseQuery,
+} from "@reduxjs/toolkit/query/react";
 import { Task } from "../../pages/ViewTask";
+import { MaybePromise } from "@reduxjs/toolkit/dist/query/tsHelpers";
+import { QueryReturnValue } from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 
 export const taskApi = createApi({
   reducerPath: "taskApi",
@@ -14,14 +23,9 @@ export const taskApi = createApi({
 
   endpoints: (builder) => ({
     getAllTasks: builder.query<Task[], string>({
-      query: (taskId) => `task/tasks/${taskId}`,
-      
-    }),
-
-    getTaskById: builder.query<Task, string>({
-      query: (taskId) => `task/taskById/${taskId}`,
+      query: (userId) => `task/tasks/${userId}`,
     }),
   }),
 });
 
-export const { useGetAllTasksQuery, useGetTaskByIdQuery } = taskApi;
+export const { useGetAllTasksQuery } = taskApi;

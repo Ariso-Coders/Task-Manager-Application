@@ -13,7 +13,9 @@ import { DateRangePicker } from "react-date-range";
 import { IsOverDue, isOverdue } from "../utils/OverdueCheck";
 import { useGetAllTasksQuery } from "../store/fetures/task-api";
 import { useDispatch, useSelector } from "react-redux";
-import { taskActions } from "../store/task-slice";
+import { Tasks, taskActions } from "../store/task-slice";
+import useTaskData from "../Logic/Task";
+import { da } from 'date-fns/locale';
 
 export interface Task {
   _id: string;
@@ -76,8 +78,13 @@ const ViewTask = () => {
   const dataRTK: Task[] = useGetAllTasksQuery("65c70d1370397cf307b38065")?.data || [];
 
   console.log("RTX values", dataRTK);
+const testFunction = ():void =>{
+
+  
+}
 
   useEffect(() => {
+   
     const fetchTasks = async () => {
       try {
         const response = await fetch(
@@ -104,7 +111,7 @@ const ViewTask = () => {
   }, [userId]);
 
   // dispatch(taskActions.setTasks({}))
- 
+
 
   useEffect(() => {
     // Filter tasks based on search term and completion status
