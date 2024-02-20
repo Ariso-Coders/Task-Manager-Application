@@ -84,7 +84,7 @@ const taskSlice = createSlice({
       
             return state;
           },
-    setFilterByStatus(
+    setFilterByDate(
       state,
       action: PayloadAction<{
         date: { selection: { startDate: Date; endDate: Date } };

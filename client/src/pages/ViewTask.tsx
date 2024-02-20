@@ -165,7 +165,7 @@ const ViewTask = () => {
       const singleDay = taskDate.toDateString() === startDate.toDateString();
 
 
-      dispatch(taskActions.setFilterByStatus({date:{selection:{endDate:endDate,startDate:startDate}}, searchTerm:searchTerm,showCompleted:showCompleted,showNotCompleted:showNotCompleted}))
+      dispatch(taskActions.setFilterByDate({date:{selection:{endDate:endDate,startDate:startDate}}, searchTerm:searchTerm,showCompleted:showCompleted,showNotCompleted:showNotCompleted}))
 
       return (
         (withinRange || singleDay) &&
