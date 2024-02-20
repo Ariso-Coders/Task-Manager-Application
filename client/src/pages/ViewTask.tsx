@@ -13,9 +13,10 @@ import { DateRangePicker } from "react-date-range";
 import { IsOverDue, isOverdue } from "../utils/OverdueCheck";
 import { useGetAllTasksQuery } from "../store/fetures/task-api";
 import { useDispatch, useSelector } from "react-redux";
-import { Tasks, taskActions } from "../store/task-slice";
+// import { Tasks, taskActions } from "../store/task-slice";
 import useTaskData from "../Logic/Task";
 import { da } from 'date-fns/locale';
+import { taskActions } from "../store/task-slice";
 
 export interface Task {
   _id: string;
@@ -163,6 +164,9 @@ const ViewTask = () => {
       const withinRange = taskDate >= startDate && taskDate <= endDate;
       const singleDay = taskDate.toDateString() === startDate.toDateString();
 
+
+      dispatch(taskActions.setFilterByStatus({date:{selection:{endDate:endDate,startDate:startDate}}, searchTerm:searchTerm,showCompleted:showCompleted,showNotCompleted:showNotCompleted}))
+
       return (
         (withinRange || singleDay) &&
         task.task_description
@@ -172,6 +176,8 @@ const ViewTask = () => {
           (showNotCompleted && !task.task_status) ||
           (!showCompleted && !showNotCompleted))
       );
+
+
     };
 
     const filteredDate = tasks.filter(taskDateFilter);
@@ -180,6 +186,8 @@ const ViewTask = () => {
     selectEndDate(date.selection.endDate);
     console.log(date.selection.startDate);
     console.log(date.selection.endDate);
+
+  
 
     // Set filter message based on the date filter criteria
     if (showCompleted && showNotCompleted) {
