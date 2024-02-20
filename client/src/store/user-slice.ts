@@ -1,32 +1,4 @@
-// import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// export interface UserState {
-//   email: string | null;
-//   token: string | null;
-//   userId: string | null;
-// }
-
-// const initialState: UserState = {
-//   email: "",
-//   token: "",
-//   userId: "",
-// };
-
-// const userSlice = createSlice({
-//   name: "user",
-//   initialState,
-//   reducers: {
-//     updateUser: (state, action: PayloadAction<UserState>) => {
-//       state.email = action.payload.email;
-//       state.token = action.payload.token;
-//       state.userId = action.payload.userId;
-//     },
-//   },
-// });
-
-// export const userActions = userSlice.actions;
-
-// export default userSlice;
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 

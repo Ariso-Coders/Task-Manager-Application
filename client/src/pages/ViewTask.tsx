@@ -11,6 +11,12 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { DateRangePicker } from "react-date-range";
 import { IsOverDue, isOverdue } from "../utils/OverdueCheck";
+import { useGetAllTasksQuery } from "../store/fetures/task-api";
+import { useDispatch, useSelector } from "react-redux";
+// import { Tasks, taskActions } from "../store/task-slice";
+import useTaskData from "../Logic/Task";
+import { da } from 'date-fns/locale';
+import { taskActions } from "../store/task-slice";
 
 export interface Task {
   _id: string;
@@ -24,6 +30,7 @@ interface ErroCardLogicState {
   update: boolean | false;
 }
 const ViewTask = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigate();
   const userId: string | null = localStorage.getItem("userId");
   const userToken: string | null = localStorage.getItem("userToken");
@@ -68,7 +75,20 @@ const ViewTask = () => {
     setCurrentPage(page);
   };
 
+
+  const { values, error, isLoading } = useTaskData(localStorage.getItem("userId") || "");
+
+  // fetching and setting values to redux
+
+
+  // dispatch(taskActions.filterTaskDueDate("2024-02-20"))
+
+  function getValuesRedux(): void {
+
+  }
+
   useEffect(() => {
+
     const fetchTasks = async () => {
       try {
         const response = await fetch(
@@ -79,6 +99,9 @@ const ViewTask = () => {
             },
           }
         );
+
+
+
         const data = await response.json();
         setTasks(data.tasksToTheUser);
         setTaskCount(data.tasksToTheUser.length);
@@ -87,11 +110,18 @@ const ViewTask = () => {
       } catch (error) {
         console.error("Error fetching tasks", error);
       }
+
+
     };
     fetchTasks();
   }, [userId]);
 
+  // dispatch(taskActions.setTasks({}))
+
+
   useEffect(() => {
+
+
     // Filter tasks based on search term and completion status
     const filtered = tasks.filter(
       (task) =>
@@ -103,14 +133,14 @@ const ViewTask = () => {
           (!showCompleted && !showNotCompleted))
     );
     setFilteredTasks(filtered);
-    console.log("test")
+
 
     // Set filter message based on the filter criteria
     if (showCompleted && showNotCompleted) {
       setFilterMessage("Results for Both Completed & Not Completed Tasks");
-    } else if ( showNotCompleted ) {
+    } else if (showNotCompleted) {
       setFilterMessage("Results for Not Completed Tasks");
-    } else if ( showCompleted) {
+    } else if (showCompleted) {
       setFilterMessage("Results for Completed Tasks");
     } else {
       setFilterMessage("");
@@ -124,15 +154,21 @@ const ViewTask = () => {
     key: "selection",
   };
 
+
+
+
   const handleDateRange = (date: any) => {
     const taskDateFilter = (task: any) => {
       const taskDate = new Date(task.date);
       const startDate = date.selection.startDate;
       const endDate = date.selection.endDate;
-  
+
       const withinRange = taskDate >= startDate && taskDate <= endDate;
       const singleDay = taskDate.toDateString() === startDate.toDateString();
-  
+
+
+      dispatch(taskActions.setFilterByDate({date:{selection:{endDate:endDate,startDate:startDate}}, searchTerm:searchTerm,showCompleted:showCompleted,showNotCompleted:showNotCompleted}))
+
       return (
         (withinRange || singleDay) &&
         task.task_description
@@ -142,15 +178,19 @@ const ViewTask = () => {
           (showNotCompleted && !task.task_status) ||
           (!showCompleted && !showNotCompleted))
       );
+
+
     };
-  
+
     const filteredDate = tasks.filter(taskDateFilter);
     setFilteredTasks(filteredDate);
     selectStartDate(date.selection.startDate);
     selectEndDate(date.selection.endDate);
     console.log(date.selection.startDate);
     console.log(date.selection.endDate);
-  
+
+
+
     // Set filter message based on the date filter criteria
     if (showCompleted && showNotCompleted) {
       setFilterMessage("Results for Both Completed & Not Completed Tasks");
@@ -161,7 +201,7 @@ const ViewTask = () => {
     } else {
       setFilterMessage("");
     }
-  
+
     // Set date filter message
     if (date.selection.startDate && date.selection.endDate) {
       const formattedStartDate = date.selection.startDate.toDateString();
@@ -253,6 +293,8 @@ const ViewTask = () => {
     } catch (err: any) {
       console.log("error of deleting task", err);
     }
+
+
   };
 
   const handleDeleteErrorCardClick = async (args: {
@@ -478,9 +520,8 @@ const ViewTask = () => {
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={` text-blue text-2xl mx-2 px-3 py-1 ${
-              currentPage === index + 1 ? "bg-gray-300" : "bg-gray-100"
-            }`}
+            className={` text-blue text-2xl mx-2 px-3 py-1 ${currentPage === index + 1 ? "bg-gray-300" : "bg-gray-100"
+              }`}
           >
             {index + 1}
           </button>

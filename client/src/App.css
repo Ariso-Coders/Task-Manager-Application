@@ -2,5 +2,7 @@
 @tailwind base;
 
 @layer base {
-   
+   .main_padding{
+    @apply px-10
+   }
 }
