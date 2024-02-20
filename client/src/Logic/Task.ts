@@ -7,7 +7,7 @@ const useTaskData = (userId: string) => {
   const dispatch = useDispatch();
   const { data, isLoading, error } = useGetAllTasksQuery(userId);
 
-  dispatch(taskActions.setTasks(data?.tasksToTheUser || []));
+  // dispatch(taskActions.setTasks(data?.tasksToTheUser || []));
   dispatch(taskActions.filterTaskDueDate("2024-02-20"));
   console.log("values from RTK respond", data?.tasksToTheUser);
 

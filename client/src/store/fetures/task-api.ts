@@ -1,18 +1,9 @@
-import {
-  BaseQueryApi,
-  FetchArgs,
-  FetchBaseQueryError,
-  FetchBaseQueryMeta,
-  createApi,
-  fetchBaseQuery,
-} from "@reduxjs/toolkit/query/react";
-import { Task } from "../../pages/ViewTask";
-import { MaybePromise } from "@reduxjs/toolkit/dist/query/tsHelpers";
-import { QueryReturnValue } from "@reduxjs/toolkit/dist/query/baseQueryTypes";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
 import { TaskState } from "../task-slice";
 
 export interface getAllTaskRTKInterface {
-  tasksToTheUser:TaskState[]
+  tasksToTheUser: TaskState[];
 }
 
 export const taskApi = createApi({
@@ -29,7 +20,6 @@ export const taskApi = createApi({
   endpoints: (builder) => ({
     getAllTasks: builder.query<getAllTaskRTKInterface, string>({
       query: (userId) => `task/tasks/${userId}`,
-      
     }),
   }),
 });
