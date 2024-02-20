@@ -74,17 +74,18 @@ const ViewTask = () => {
     setCurrentPage(page);
   };
 
-  // const ttttId:string  = localStorage.getItem("userId");
-  const dataRTK: Task[] = useGetAllTasksQuery("65c70d1370397cf307b38065")?.data || [];
 
-  console.log("RTX values", dataRTK);
-const testFunction = ():void =>{
+  const { values, error, isLoading } = useTaskData(localStorage.getItem("userId") || "");  // fetching and setting values to redux
 
-  
-}
+
+  // dispatch(taskActions.filterTaskDueDate("2024-02-20"))
+
+  function getValuesRedux(): void {
+
+  }
 
   useEffect(() => {
-   
+
     const fetchTasks = async () => {
       try {
         const response = await fetch(
@@ -95,6 +96,8 @@ const testFunction = ():void =>{
             },
           }
         );
+
+
 
         const data = await response.json();
         setTasks(data.tasksToTheUser);
@@ -114,6 +117,8 @@ const testFunction = ():void =>{
 
 
   useEffect(() => {
+
+
     // Filter tasks based on search term and completion status
     const filtered = tasks.filter(
       (task) =>
@@ -125,7 +130,7 @@ const testFunction = ():void =>{
           (!showCompleted && !showNotCompleted))
     );
     setFilteredTasks(filtered);
-    console.log("test")
+    
 
     // Set filter message based on the filter criteria
     if (showCompleted && showNotCompleted) {

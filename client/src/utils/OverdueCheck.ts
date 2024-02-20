@@ -14,7 +14,7 @@ export interface IsOverDue {
 let overDueTasks: Task[];
 let overDueLogic: boolean = false;
 const today: Date = new Date();
-function formatDate(date: Date): string {
+export function formatDate(date: Date): string {
   if (date.getMonth() + 1 < 10) {
     return `${date.getFullYear()}-0${date.getMonth() + 1}-${date.getDate()}`;
   } else {

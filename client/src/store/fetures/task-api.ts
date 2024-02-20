@@ -9,6 +9,11 @@ import {
 import { Task } from "../../pages/ViewTask";
 import { MaybePromise } from "@reduxjs/toolkit/dist/query/tsHelpers";
 import { QueryReturnValue } from "@reduxjs/toolkit/dist/query/baseQueryTypes";
+import { TaskState } from "../task-slice";
+
+export interface getAllTaskRTKInterface {
+  tasksToTheUser:TaskState[]
+}
 
 export const taskApi = createApi({
   reducerPath: "taskApi",
@@ -22,8 +27,9 @@ export const taskApi = createApi({
   }),
 
   endpoints: (builder) => ({
-    getAllTasks: builder.query<Task[], string>({
+    getAllTasks: builder.query<getAllTaskRTKInterface, string>({
       query: (userId) => `task/tasks/${userId}`,
+      
     }),
   }),
 });
