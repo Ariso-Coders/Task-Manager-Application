@@ -288,7 +288,7 @@ const ViewTask = () => {
       );
 
       if (deletedTask) {
-        window.location.reload();
+        window.location.reload(); 
       }
     } catch (err: any) {
       console.log("error of deleting task", err);

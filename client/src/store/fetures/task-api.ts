@@ -1,9 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { TaskState } from "../task-slice";
+import { Task } from "../../pages/ViewTask";
 
 export interface getAllTaskRTKInterface {
   tasksToTheUser: TaskState[];
+}
+
+export interface PostTaskRequestInterface {
+  taskDate: Date | any;
+  task: string | "";
+  userId: string | "";
+}
+export interface PostTaskResponsetInterface {
+  message: string | "";
+  details?: Task | any;
 }
 
 export const taskApi = createApi({
@@ -21,7 +32,18 @@ export const taskApi = createApi({
     getAllTasks: builder.query<getAllTaskRTKInterface, string>({
       query: (userId) => `task/tasks/${userId}`,
     }),
+
+    postTask: builder.mutation<
+      PostTaskResponsetInterface,
+      PostTaskRequestInterface
+    >({
+      query: (body) => ({
+        url: `task/createTask`,
+        method: `POST`,
+        body: body,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllTasksQuery } = taskApi;
+export const { useGetAllTasksQuery,usePostTaskMutation } = taskApi;

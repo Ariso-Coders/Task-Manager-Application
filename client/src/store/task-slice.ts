@@ -48,7 +48,7 @@ const taskSlice = createSlice({
             ) && task.task_status === false
         ),
       };
-      console.log("state after duedate Filter",state);
+      
       return state;
     },
 
@@ -85,12 +85,15 @@ const taskSlice = createSlice({
         }),
       };
 
-      console.log("Filter Task output", state);
+      
 
       return state;
     },
   },
   extraReducers: (builder) => {
+
+    // need to move update into extraReducer ?
+
     builder.addMatcher(
       taskApi.endpoints.getAllTasks.matchFulfilled,
       (state, { payload }) => {
