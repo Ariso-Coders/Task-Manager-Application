@@ -11,9 +11,6 @@ module.exports = {
         purple: "#7e5bef",
         pink: "#ff49db",
 
-        // "gray-dark": "#273444",
-        // gray: "#8492a6",
-        // "gray-light": "#d3dce6",
         view_task_main_color: "#5534A5",
         view_task_white: "#fff",
       },

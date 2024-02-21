@@ -2,11 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { taskApi } from "./fetures/task-api";
 import { formatDate } from "../utils/Functions";
 import { compareDates } from "../utils/Functions";
+import { Task } from "../pages/ViewTask";
 
 export interface TaskState {
   userID: string | null;
   date: string | any;
-  task_description: string | null;
+  task_description: string | "";
   task_status: boolean | null;
 }
 
@@ -56,7 +57,7 @@ const taskSlice = createSlice({
             ) && task.task_status === false
         ),
       };
-      
+
       return state;
     },
     setFilterByStatus(state, action: PayloadAction<filterTaskStaus>) {
@@ -76,7 +77,7 @@ const taskSlice = createSlice({
         ),
       };
       if (action.payload.showCompleted && action.payload.showNotCompleted) {
-        state =  {
+        state = {
           ...state,
           filterMessage: "Results for Both Completed & Not Completed Tasks",
         };
@@ -96,7 +97,7 @@ const taskSlice = createSlice({
           filterMessage: "",
         };
       }
-      console.log("These are my filterd by status",state)
+      console.log("These are my filterd by status", state);
       return state;
     },
 
@@ -133,13 +134,10 @@ const taskSlice = createSlice({
         }),
       };
 
-      
-
       return state;
     },
   },
   extraReducers: (builder) => {
-
     // need to move update into extraReducer ?
 
     builder.addMatcher(

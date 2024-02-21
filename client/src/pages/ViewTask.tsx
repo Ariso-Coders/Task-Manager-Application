@@ -79,7 +79,7 @@ const ViewTask = () => {
     localStorage.getItem("userId") || ""
   );
 
-  const { values, error, isLoading } = useTaskData(localStorage.getItem("userId") || "");
+  
 
   // fetching and setting values to redux
 
