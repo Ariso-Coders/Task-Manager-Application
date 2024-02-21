@@ -15,7 +15,7 @@ import { useGetAllTasksQuery } from "../store/fetures/task-api";
 import { useDispatch, useSelector } from "react-redux";
 // import { Tasks, taskActions } from "../store/task-slice";
 import useTaskData from "../Logic/Task";
-import { da } from 'date-fns/locale';
+import { da } from "date-fns/locale";
 import { taskActions } from "../store/task-slice";
 
 export interface Task {
@@ -75,6 +75,9 @@ const ViewTask = () => {
     setCurrentPage(page);
   };
 
+  const { values, error, isLoading } = useTaskData(
+    localStorage.getItem("userId") || ""
+  );
 
   const { values, error, isLoading } = useTaskData(localStorage.getItem("userId") || "");
 
@@ -83,12 +86,9 @@ const ViewTask = () => {
 
   // dispatch(taskActions.filterTaskDueDate("2024-02-20"))
 
-  function getValuesRedux(): void {
-
-  }
+  function getValuesRedux(): void {}
 
   useEffect(() => {
-
     const fetchTasks = async () => {
       try {
         const response = await fetch(
@@ -100,8 +100,6 @@ const ViewTask = () => {
           }
         );
 
-
-
         const data = await response.json();
         setTasks(data.tasksToTheUser);
         setTaskCount(data.tasksToTheUser.length);
@@ -110,18 +108,13 @@ const ViewTask = () => {
       } catch (error) {
         console.error("Error fetching tasks", error);
       }
-
-
     };
     fetchTasks();
   }, [userId]);
 
   // dispatch(taskActions.setTasks({}))
 
-
   useEffect(() => {
-
-
     // Filter tasks based on search term and completion status
     const filtered = tasks.filter(
       (task) =>
@@ -154,9 +147,6 @@ const ViewTask = () => {
     key: "selection",
   };
 
-
-
-
   const handleDateRange = (date: any) => {
     const taskDateFilter = (task: any) => {
       const taskDate = new Date(task.date);
@@ -166,8 +156,14 @@ const ViewTask = () => {
       const withinRange = taskDate >= startDate && taskDate <= endDate;
       const singleDay = taskDate.toDateString() === startDate.toDateString();
 
-
-      dispatch(taskActions.setFilterByDate({date:{selection:{endDate:endDate,startDate:startDate}}, searchTerm:searchTerm,showCompleted:showCompleted,showNotCompleted:showNotCompleted}))
+      dispatch(
+        taskActions.setFilterByDate({
+          date: { selection: { endDate: endDate, startDate: startDate } },
+          searchTerm: searchTerm,
+          showCompleted: showCompleted,
+          showNotCompleted: showNotCompleted,
+        })
+      );
 
       return (
         (withinRange || singleDay) &&
@@ -178,8 +174,6 @@ const ViewTask = () => {
           (showNotCompleted && !task.task_status) ||
           (!showCompleted && !showNotCompleted))
       );
-
-
     };
 
     const filteredDate = tasks.filter(taskDateFilter);
@@ -520,8 +514,9 @@ const ViewTask = () => {
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={` text-blue text-2xl mx-2 px-3 py-1 ${currentPage === index + 1 ? "bg-gray-300" : "bg-gray-100"
-              }`}
+            className={` text-blue text-2xl mx-2 px-3 py-1 ${
+              currentPage === index + 1 ? "bg-gray-300" : "bg-gray-100"
+            }`}
           >
             {index + 1}
           </button>
