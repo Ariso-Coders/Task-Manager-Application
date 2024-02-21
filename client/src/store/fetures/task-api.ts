@@ -15,6 +15,10 @@ export interface getAllTaskRTKInterface {
   tasksToTheUser:TaskState[]
 }
 
+export interface deleteTaskRTKInterface{
+  message: string | "",
+}
+
 export const taskApi = createApi({
   reducerPath: "taskApi",
   baseQuery: fetchBaseQuery({
@@ -31,7 +35,34 @@ export const taskApi = createApi({
       query: (userId) => `task/tasks/${userId}`,
       
     }),
+
+    getTaskById: builder.query<Task, string>({
+      query: (taskId) => `task/taskById/${taskId}`,
+    }),
+
+    updateTaskStatus: builder.mutation<
+      Task,
+      { taskId: string; status: boolean }
+    >({
+      query: ({ taskId, status }) => ({
+        url: `task/tasks/${taskId}`,
+        method: "PUT",
+        body: { task_status: status },
+      }),
+    }),
+
+    deleteTaskById: builder.mutation<deleteTaskRTKInterface, string>({
+      query: (taskId) => ({
+        url: `task/tasks/${taskId}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
-export const { useGetAllTasksQuery } = taskApi;
+export const {
+  useGetAllTasksQuery,
+  useGetTaskByIdQuery,
+  useDeleteTaskByIdMutation,
+  useUpdateTaskStatusMutation,
+} = taskApi;
