@@ -2,24 +2,34 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { taskApi } from "./fetures/task-api";
 import { formatDate } from "../utils/Functions";
 import { compareDates } from "../utils/Functions";
+import { Task } from "../pages/ViewTask";
 
 export interface TaskState {
   userID: string | null;
   date: string | any;
-  task_description: string | null;
+  task_description: string | "";
   task_status: boolean | null;
 }
 
 export interface TasksState {
   totalTask: TaskState[];
   filteredTask: TaskState[];
+  filterMessage: string;
+}
+
+export interface filterTaskStaus {
+  tasks: Task[];
+  searchTerm: string;
+  showCompleted: boolean;
+  showNotCompleted: boolean;
+  //setFilterMessage: string;
 }
 
 const initialState: TasksState = {
   totalTask: [],
   filteredTask: [],
+  filterMessage: "",
 };
-
 const taskSlice = createSlice({
   name: "task",
   initialState,
@@ -36,7 +46,6 @@ const taskSlice = createSlice({
 
       return state;
     },
-
     filterTaskDueDate(state) {
       state = {
         ...state,
@@ -48,7 +57,47 @@ const taskSlice = createSlice({
             ) && task.task_status === false
         ),
       };
-      console.log("state after duedate Filter",state);
+
+      return state;
+    },
+    setFilterByStatus(state, action: PayloadAction<filterTaskStaus>) {
+      //console.log("Values came to redux", action.payload);
+
+      state = {
+        ...state,
+        filteredTask: state.totalTask.filter(
+          (task) =>
+            task.task_description
+              .toLowerCase()
+              .includes(action.payload.searchTerm.toLowerCase()) &&
+            ((action.payload.showCompleted && task.task_status) ||
+              (action.payload.showNotCompleted && !task.task_status) ||
+              (!action.payload.showCompleted &&
+                !action.payload.showNotCompleted))
+        ),
+      };
+      if (action.payload.showCompleted && action.payload.showNotCompleted) {
+        state = {
+          ...state,
+          filterMessage: "Results for Both Completed & Not Completed Tasks",
+        };
+      } else if (action.payload.showNotCompleted) {
+        state = {
+          ...state,
+          filterMessage: "Results for Not Completed Tasks",
+        };
+      } else if (action.payload.showCompleted) {
+        state = {
+          ...state,
+          filterMessage: "Results for Completed Tasks",
+        };
+      } else {
+        state = {
+          ...state,
+          filterMessage: "",
+        };
+      }
+      console.log("These are my filterd by status", state);
       return state;
     },
 
@@ -85,12 +134,12 @@ const taskSlice = createSlice({
         }),
       };
 
-      console.log("Filter Task output", state);
-
       return state;
     },
   },
   extraReducers: (builder) => {
+    // need to move update into extraReducer ?
+
     builder.addMatcher(
       taskApi.endpoints.getAllTasks.matchFulfilled,
       (state, { payload }) => {

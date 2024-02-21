@@ -69,7 +69,6 @@ export const deleteTaskById = async (
     }
     res.status(200).json({
       message: "Task Deleted successfully",
-      details: "nothing",
     });
   } catch (err: any) {
     if (!err.statusCode) {

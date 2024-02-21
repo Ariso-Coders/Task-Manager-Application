@@ -27,7 +27,7 @@ interface respond {
 
 
 const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
-  
+
 
   const [inputDetails, setInputDetails] = useState<InputState>({
     date: null,
@@ -64,6 +64,7 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
       )
       window.location.reload();
 
+
     } catch (err: any) {
       if (err.response.status === 400 || err.response.status === 500) {
         if (!inputDetails.erroLogic) {
@@ -73,7 +74,7 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
       } else {
         setInputDetails({ ...inputDetails, erroLogic: false, erorMsg: "" })
       }
-     
+
     }
   };
 

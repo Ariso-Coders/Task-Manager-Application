@@ -1,13 +1,26 @@
-import { useGetAllTasksQuery } from "../store/fetures/task-api";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  useGetAllTasksQuery,
+  usePostTaskMutation,
+} from "../store/fetures/task-api";
+import { useDispatch} from "react-redux";
 import { taskActions } from "../store/task-slice";
 
 const useTaskData = (userId: string) => {
   const dispatch = useDispatch();
   const { data, isLoading, error } = useGetAllTasksQuery(userId);
+  const [postTaskMutation, { isError }] = usePostTaskMutation();
+  const handlerPostTask = async () => {
+    try {
+      await postTaskMutation({
+        taskDate: new Date(),
+        task: "RTK task",
+        userId: "65c70d1370397cf307b38065",
+      });
+    } catch (error: any) {
+      console.log("post task execute error", error);
+    }
+  };
 
-  // dispatch(taskActions.setTasks(data?.tasksToTheUser || []));
-  // dispatch(taskActions.filterTaskDueDate("2024-02-20"));
   dispatch(taskActions.filterTaskDueDate());
   console.log("values from RTK respond", data?.tasksToTheUser);
 
