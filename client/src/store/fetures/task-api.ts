@@ -13,12 +13,43 @@ export interface PostTaskRequestInterface {
   userId: string | "";
 }
 export interface PostTaskResponsetInterface {
-  message: string | "";
-  details?: Task | any;
+  data: {
+    details: Task;
+    message: string | "";
+  };
+  error?: {
+    data: {
+      message: string | "";
+    };
+    status: number;
+  };
 }
 
-export interface deleteTaskRTKInterface{
-  message: string | "",
+export interface UpdateTaskStatusRequest {
+  taskId: string;
+  status: boolean;
+}
+export interface UpdateTaskStatusResponse {
+  data?: { message: string | "" };
+  error?: {
+    data: {
+      message: string | "";
+    };
+    status: number;
+  };
+}
+
+export interface UpdateTaskStatusResponseError {
+  error?: {
+    data: {
+      message: string | "";
+    };
+    status: number;
+  };
+}
+
+export interface deleteTaskRTKInterface {
+  message: string | "";
 }
 
 export const taskApi = createApi({
@@ -53,8 +84,8 @@ export const taskApi = createApi({
     }),
 
     updateTaskStatus: builder.mutation<
-      Task,
-      { taskId: string; status: boolean }
+      UpdateTaskStatusResponse,
+      UpdateTaskStatusRequest
     >({
       query: ({ taskId, status }) => ({
         url: `task/tasks/${taskId}`,

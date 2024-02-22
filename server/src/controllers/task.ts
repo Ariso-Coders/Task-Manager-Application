@@ -46,7 +46,6 @@ export const updateTaskById = async (
     }
     res.status(200).json({
       message: "Task Status Updated successfully",
-      details: "nothing",
     });
   } catch (err: any) {
     if (!err.statusCode) {
@@ -120,3 +119,4 @@ export const postTask = async (
     next(error);
   }
 };
+

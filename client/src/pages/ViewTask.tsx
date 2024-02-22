@@ -11,18 +11,26 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { DateRangePicker } from "react-date-range";
 import { IsOverDue, isOverdue } from "../utils/OverdueCheck";
-import { useGetAllTasksQuery } from "../store/fetures/task-api";
+import { UpdateTaskStatusResponse, UpdateTaskStatusResponseError, useDeleteTaskByIdMutation, useGetAllTasksQuery, useUpdateTaskStatusMutation } from "../store/fetures/task-api";
 import { useDispatch, useSelector } from "react-redux";
 // import { Tasks, taskActions } from "../store/task-slice";
 import useTaskData from "../Logic/Task";
 import { da } from "date-fns/locale";
 import { taskActions } from "../store/task-slice";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 export interface Task {
   _id: string;
   task_description: string;
   task_status: boolean;
   date: String;
+}
+
+interface updateTaskMutationResponse {
+  data?: UpdateTaskStatusResponse
+
+  error?: FetchBaseQueryError | SerializedError
 }
 
 interface ErroCardLogicState {
@@ -52,11 +60,9 @@ const ViewTask = () => {
 
   const [editMode, setEditMode] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [todayDate, setTodayDate] = useState(new Date());
   const [isFilterMenuOpen, setFilterMenuOpen] = useState(false);
   const [showCompleted, setShowCompleted] = useState(false);
   const [showNotCompleted, setShowNotCompleted] = useState(false);
-  //const [selectedDate, setSelectedDate] = useState(new Date());
   const [startDate, selectStartDate] = useState(new Date());
   const [endDate, selectEndDate] = useState(new Date());
   const [isOverDue, setIsOverdue] = useState<IsOverDue>({
@@ -79,14 +85,18 @@ const ViewTask = () => {
     localStorage.getItem("userId") || ""
   );
 
-  
+  const [updateTaskMutation, { isError }] = useUpdateTaskStatusMutation();
+
+
+  const [mutate, ,] = useDeleteTaskByIdMutation();
+
 
   // fetching and setting values to redux
 
 
   // dispatch(taskActions.filterTaskDueDate("2024-02-20"))
 
-  function getValuesRedux(): void {}
+  function getValuesRedux(): void { }
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -215,19 +225,24 @@ const ViewTask = () => {
   };
 
   const updateTaskStatus = async (taskId: string, status: boolean) => {
+
     try {
-      const response = await axios.put(
-        `http://localhost:8080/task/tasks/${taskId}`,
-        {
-          task_status: status,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + userToken,
-          },
-        }
-      );
-      console.log(response.data);
+      // const response = await axios.put(
+      //   `http://localhost:8080/task/tasks/${taskId}`,
+      //   {
+      //     task_status: status,
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: "Bearer " + userToken,
+      //     },
+      //   }
+      // );
+
+      // console.log("this is update task api respond",response);
+      let updateTaskBackendRespond: updateTaskMutationResponse = await updateTaskMutation({ taskId: taskId, status: status })
+
+
     } catch (error) {
       console.error("Error updating task status", error);
     }
@@ -272,21 +287,25 @@ const ViewTask = () => {
 
   const deleteTaskByIdFunction = async (taskId: string) => {
     try {
-      const deletedTask = await axios.delete(
-        `http://localhost:8080/task/tasks/${taskId}`,
-        {
-          headers: {
-            Authorization: "Bearer " + userToken,
-          },
-        }
-      );
+      // const deletedTask = await axios.delete(
+      //   `http://localhost:8080/task/tasks/${taskId}`,
+      //   {
+      //     headers: {
+      //       Authorization: "Bearer " + userToken,
+      //     },
+      //   }
+      // );
 
-      if (deletedTask) {
-        window.location.reload(); 
-      }
+      // if (deletedTask) {
+      //   window.location.reload();
+      // }
+      let delteTaskBackendRespond = await mutate(taskId);
+
     } catch (err: any) {
       console.log("error of deleting task", err);
     }
+
+
 
 
   };
@@ -514,9 +533,8 @@ const ViewTask = () => {
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={` text-blue text-2xl mx-2 px-3 py-1 ${
-              currentPage === index + 1 ? "bg-gray-300" : "bg-gray-100"
-            }`}
+            className={` text-blue text-2xl mx-2 px-3 py-1 ${currentPage === index + 1 ? "bg-gray-300" : "bg-gray-100"
+              }`}
           >
             {index + 1}
           </button>

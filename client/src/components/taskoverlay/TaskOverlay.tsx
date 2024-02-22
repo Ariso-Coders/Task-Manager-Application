@@ -1,19 +1,46 @@
 import React, { FC, FormEvent, useState } from "react";
 import { isEmpty } from "../../utils/Validations";
-import axios from "axios";
 import { useSelector, TypedUseSelectorHook } from 'react-redux';
 import { RootState } from '../../store/';
+import { PostTaskResponsetInterface, PostTaskRequestInterface, taskApi, usePostTaskMutation } from '../../store/fetures/task-api';
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
+
 
 // interface MyFunctionalComponentProps { }
 
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 interface InputState {
-  date: Date | null;
-  task: string | null;
-  erorMsg: string | null;
-  erroLogic: boolean
+  date: Date | "";
+  task: string | "";
+  erorMsg: string | "";
+  erroLogic: boolean | false
 }
+
+
+
+interface TaskDetails {
+  date: string;
+  task_description: string;
+  task_status: boolean;
+  userID: string;
+  _id: string;
+  // Add other properties if there are any
+}
+
+
+interface ErrorResponse {
+  message?: string | "";
+}
+
+
+
+interface PostTaskMutationResponse {
+  data?: PostTaskResponsetInterface;
+  error?: FetchBaseQueryError | SerializedError
+}
+
 interface MyFunctionalComponentProps {
   onCancelClick: (value: boolean) => void;
   // userId:string;
@@ -28,16 +55,17 @@ interface respond {
 
 const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
 
+  // const {} = usePostTaskMutation();
+  const [postTaskMutation, { isLoading, status, isError, data, error }] = usePostTaskMutation();
 
   const [inputDetails, setInputDetails] = useState<InputState>({
-    date: null,
+    date: "",
     task: "",
     erorMsg: "",
     erroLogic: false
   });
 
   const userId: string | null = localStorage.getItem("userId");
-  const userToken: string | null = localStorage.getItem("userToken");
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -48,24 +76,35 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
       setInputDetails({ ...inputDetails, erroLogic: false, erorMsg: "" })
     }
 
+
+
     try {
 
-      const taskCreationRespond: respond = await axios.post(
-        "http://localhost:8080/task/createTask", {
-        taskDate: inputDetails.date,
-        task: inputDetails.task,
-        userId: userId?.toString()
+      // const taskCreationRespond: respond = await axios.post(
+      //   "http://localhost:8080/task/createTask", {
+      //   taskDate: inputDetails.date,
+      //   task: inputDetails.task,
+      //   userId: userId?.toString()
 
-      }, {
-        headers: {
-          Authorization: "Bearer " + userToken,
-        },
-      }
-      )
+      // }, {
+      //   headers: {
+      //     Authorization: "Bearer " + userToken,
+      //   },
+      // }
+      // )
+
+      let createTaskBackendRespond: PostTaskMutationResponse = await postTaskMutation({
+        task: "" || "",
+        taskDate: inputDetails.date,
+        userId: userId?.toString() || ""
+      });
+      
+
       window.location.reload();
 
 
     } catch (err: any) {
+      console.log("error that passed into ", err)
       if (err.response.status === 400 || err.response.status === 500) {
         if (!inputDetails.erroLogic) {
 
@@ -125,7 +164,7 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
             type="reset"
             onClick={() => {
               setInputDetails({
-                date: null,
+                date: "",
                 task: "",
                 erorMsg: "",
                 erroLogic: false

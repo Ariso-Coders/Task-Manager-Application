@@ -28,7 +28,7 @@ const errorHandler = (
   next: NextFunction
 ) => {
   const status = error.statusCode || 500;
-  const message = error.message;
+  const message = error.message || "This is error from backend";
 
   res.status(status).json({ message: message });
 };
