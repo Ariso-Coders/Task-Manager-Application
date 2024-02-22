@@ -11,21 +11,24 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { DateRangePicker } from "react-date-range";
 import { IsOverDue, isOverdue } from "../utils/OverdueCheck";
-import { PostTaskRequestInterface, PostTaskResponsetInterface, UpdateTaskStatusRequest, UpdateTaskStatusResponse, UpdateTaskStatusResponseError, deleteTaskRTKInterface, getAllTaskRTKInterface, useDeleteTaskByIdMutation, useGetAllTasksQuery, useUpdateTaskStatusMutation } from "../store/fetures/task-api";
+import { PostTaskRequestInterface, PostTaskResponsetInterface, UpdateTaskStatusRequest, UpdateTaskStatusResponse, UpdateTaskStatusResponseError, deleteTaskRTKInterface, getAllTaskRTKInterface, useDeleteTaskByIdMutation, useGetAllTasksQuery, useUpdateTaskStatusMutation } from '../store/fetures/task-api';
 import { useDispatch, useSelector } from "react-redux";
 // import { Tasks, taskActions } from "../store/task-slice";
 import useTaskData from "../Logic/Task";
 import { da } from "date-fns/locale";
-import { taskActions } from "../store/task-slice";
-import { EndpointDefinition, EndpointDefinitions, FetchBaseQueryError, RootState } from "@reduxjs/toolkit/query";
+import { TasksState, taskActions } from "../store/task-slice";
+import { EndpointDefinition, EndpointDefinitions, FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
+import { RootState } from "../store/index";
 
 export interface Task {
   _id: string;
+  date: String | any;
   task_description: string;
   task_status: boolean;
-  date: String;
 }
+
+
 
 interface updateTaskMutationResponse {
   data?: UpdateTaskStatusResponse
@@ -39,44 +42,60 @@ interface ErroCardLogicState {
 }
 
 
-type MyDefinitions = {
-  getAllTasks: {
-    query: string;
-    response: getAllTaskRTKInterface;
-  };
-  postTask: {
-    query: PostTaskRequestInterface;
-    response: PostTaskResponsetInterface;
-  };
-  getTaskById: {
-    query: string;
-    response: Task;
-  };
-  updateTaskStatus: {
-    query: UpdateTaskStatusRequest;
-    response: UpdateTaskStatusResponse;
-  };
-  deleteTaskById: {
-    query: string;
-    response: deleteTaskRTKInterface;
-  };
-};
-
-type MyTagTypes = 'getAllTasks' | 'postTask' | 'getTaskById' | 'updateTaskStatus' | 'deleteTaskById';
-
-type MyReducerPath = "taskApi";
 
 
 const ViewTask = () => {
   const dispatch = useDispatch();
   const navigation = useNavigate();
-  const userId: string | null = localStorage.getItem("userId");
+  const userId: string | any = localStorage.getItem("userId");
   const userToken: string | null = localStorage.getItem("userToken");
+
+
+  // get task details from redux
+
+  const { data, error } = useGetAllTasksQuery(userId);
+  let tasksRedux: TasksState = {
+    totalTask: [
+      {
+        _id: "",
+        date: "",
+        task_description: "",
+        task_status: false
+      }],
+    filteredTask: [
+      {
+        _id: "",
+        date: "",
+        task_description: "",
+        task_status: false
+      }],
+    filterMessage: ""
+  }
+  let tempoaryTaskFromGetAPI: getAllTaskRTKInterface = {
+    tasksToTheUser: [
+
+      {
+        _id: "",
+        date: "",
+        task_description: "",
+        task_status: false
+      }
+    ]
+  };
+  // const taskDataRedux = useSelector((state: RootState) => state.task);
+
+  // if (!error && data?.tasksToTheUser) {
+  //   tasksRedux = taskDataRedux;
+
+  // }
+
+
+
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [taskCount, setTaskCount] = useState<number>(0);
   const [taskIdToDelete, setTaskIdToDelete] = useState<string>("");
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>(tempoaryTaskFromGetAPI.tasksToTheUser);
   const [taskOverLayLogic, setTaskOverLayLogic] = useState<boolean>(false);
   const [deleteErroLogic, setDeleteErroLogic] = useState<ErroCardLogicState>({
     delete: false,
@@ -111,13 +130,16 @@ const ViewTask = () => {
     setCurrentPage(page);
   };
 
+
+
+
   // calling dud date filter from redux
 
   dispatch(taskActions.filterTaskDueDate());
 
-  const { values, error, isLoading } = useTaskData(
-    localStorage.getItem("userId") || ""
-  );
+  // const { values, error, isLoading } = useTaskData(
+  //   localStorage.getItem("userId") || ""
+  // );
 
   const [updateTaskMutation, { isError }] = useUpdateTaskStatusMutation();
 
@@ -164,7 +186,7 @@ const ViewTask = () => {
 
   useEffect(() => {
     // Filter tasks based on search term and completion status
-    const filtered = tasks.filter(
+    const filtered = tempoaryTaskFromGetAPI.tasksToTheUser.filter(
       (task) =>
         task.task_description
           .toLowerCase()
@@ -229,7 +251,7 @@ const ViewTask = () => {
       );
     };
 
-    const filteredDate = tasks.filter(taskDateFilter);
+    const filteredDate = tempoaryTaskFromGetAPI.tasksToTheUser.filter(taskDateFilter);
     setFilteredTasks(filteredDate);
     selectStartDate(date.selection.startDate);
     selectEndDate(date.selection.endDate);
@@ -322,9 +344,8 @@ const ViewTask = () => {
     }
   };
 
-  const deleteTaskHandler = async (taskId: string) => {
+  const deleteTaskHandler = (taskId: string) => {
     setTaskIdToDelete(taskId);
-    console.log("this is deleteHAndler", taskId);
     setDeleteErroLogic({ ...deleteErroLogic, delete: true });
   };
 

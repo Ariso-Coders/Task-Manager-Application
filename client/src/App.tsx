@@ -4,6 +4,7 @@ import LoginForm from "./pages/LoginForm";
 import SignUp from "./pages/SignUp";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import ViewTask from "./pages/ViewTask";
+import ViewTask2 from "./pages/ViewTask2";
 
 
 
@@ -37,6 +38,8 @@ function App() {
 
             localStorage.getItem("userToken") !== null ? <ViewTask /> : <MyComponent />
           } />
+
+          <Route path="/task2" element={<ViewTask2/>} />
 
           <Route path="*" element={<MyComponent />} />
         </Routes>

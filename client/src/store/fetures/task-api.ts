@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { TaskState } from "../task-slice";
-import { Task } from "../../pages/ViewTask";
+
+import { Task } from '../../pages/ViewTask';
 
 export interface getAllTaskRTKInterface {
-  tasksToTheUser: TaskState[];
+  tasksToTheUser: Task[];
 }
 
 export interface PostTaskRequestInterface {

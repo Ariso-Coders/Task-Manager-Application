@@ -4,17 +4,22 @@ import { formatDate } from "../utils/Functions";
 import { compareDates } from "../utils/Functions";
 import { Task } from "../pages/ViewTask";
 
-export interface TaskState {
-  userID: string | null;
-  date: string | any;
-  task_description: string | "";
-  task_status: boolean | null;
-}
+// export interface TaskState {
+//   userID: string | null;
+//   date: string | any;
+//   task_description: string | "";
+//   task_status: boolean | null;
+// }
 
+interface overdueInterface {
+  overdueLogic: boolean | any;
+  overdueTaskCount: number | any;
+}
 export interface TasksState {
-  totalTask: TaskState[];
-  filteredTask: TaskState[];
+  totalTask: Task[];
+  filteredTask: Task[];
   filterMessage: string;
+  overdueTasks?: overdueInterface;
 }
 
 export interface filterTaskStaus {
@@ -34,14 +39,11 @@ const taskSlice = createSlice({
   initialState,
 
   reducers: {
-    setTasks(state, action: PayloadAction<TaskState[]>) {
-      console.log("values came to set", action.payload);
+    setTasks(state, action: PayloadAction<Task[]>) {
       state = {
         ...state,
         totalTask: action.payload,
       };
-
-      console.log("state in redux", state);
 
       return state;
     },
@@ -55,8 +57,11 @@ const taskSlice = createSlice({
               formatDate(new Date())
             ) && task.task_status === false
         ),
+        overdueTasks: {
+          overdueTaskCount: state.filteredTask.length,
+          overdueLogic: state.filteredTask.length >= 0 ? true : false,
+        },
       };
-      
 
       return state;
     },
@@ -97,7 +102,7 @@ const taskSlice = createSlice({
           filterMessage: "",
         };
       }
-      
+
       return state;
     },
 
@@ -133,7 +138,7 @@ const taskSlice = createSlice({
           );
         }),
       };
-      
+
       return state;
     },
   },
