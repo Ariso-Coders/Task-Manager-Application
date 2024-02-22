@@ -18,7 +18,6 @@ export interface TasksState {
 }
 
 export interface filterTaskStaus {
-  tasks: Task[];
   searchTerm: string;
   showCompleted: boolean;
   showNotCompleted: boolean;
@@ -57,6 +56,7 @@ const taskSlice = createSlice({
             ) && task.task_status === false
         ),
       };
+      
 
       return state;
     },
@@ -97,7 +97,7 @@ const taskSlice = createSlice({
           filterMessage: "",
         };
       }
-      console.log("These are my filterd by status", state);
+      
       return state;
     },
 
@@ -133,7 +133,7 @@ const taskSlice = createSlice({
           );
         }),
       };
-
+      
       return state;
     },
   },

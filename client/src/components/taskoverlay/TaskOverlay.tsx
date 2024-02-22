@@ -94,13 +94,14 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
       // )
 
       let createTaskBackendRespond: PostTaskMutationResponse = await postTaskMutation({
-        task: "" || "",
+        task: inputDetails.task || "",
         taskDate: inputDetails.date,
         userId: userId?.toString() || ""
       });
       
 
       window.location.reload();
+      
 
 
     } catch (err: any) {

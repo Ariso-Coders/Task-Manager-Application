@@ -11,13 +11,13 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { DateRangePicker } from "react-date-range";
 import { IsOverDue, isOverdue } from "../utils/OverdueCheck";
-import { UpdateTaskStatusResponse, UpdateTaskStatusResponseError, useDeleteTaskByIdMutation, useGetAllTasksQuery, useUpdateTaskStatusMutation } from "../store/fetures/task-api";
+import { PostTaskRequestInterface, PostTaskResponsetInterface, UpdateTaskStatusRequest, UpdateTaskStatusResponse, UpdateTaskStatusResponseError, deleteTaskRTKInterface, getAllTaskRTKInterface, useDeleteTaskByIdMutation, useGetAllTasksQuery, useUpdateTaskStatusMutation } from "../store/fetures/task-api";
 import { useDispatch, useSelector } from "react-redux";
 // import { Tasks, taskActions } from "../store/task-slice";
 import useTaskData from "../Logic/Task";
 import { da } from "date-fns/locale";
 import { taskActions } from "../store/task-slice";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { EndpointDefinition, EndpointDefinitions, FetchBaseQueryError, RootState } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 
 export interface Task {
@@ -37,6 +37,36 @@ interface ErroCardLogicState {
   delete: boolean | false;
   update: boolean | false;
 }
+
+
+type MyDefinitions = {
+  getAllTasks: {
+    query: string;
+    response: getAllTaskRTKInterface;
+  };
+  postTask: {
+    query: PostTaskRequestInterface;
+    response: PostTaskResponsetInterface;
+  };
+  getTaskById: {
+    query: string;
+    response: Task;
+  };
+  updateTaskStatus: {
+    query: UpdateTaskStatusRequest;
+    response: UpdateTaskStatusResponse;
+  };
+  deleteTaskById: {
+    query: string;
+    response: deleteTaskRTKInterface;
+  };
+};
+
+type MyTagTypes = 'getAllTasks' | 'postTask' | 'getTaskById' | 'updateTaskStatus' | 'deleteTaskById';
+
+type MyReducerPath = "taskApi";
+
+
 const ViewTask = () => {
   const dispatch = useDispatch();
   const navigation = useNavigate();
@@ -81,6 +111,10 @@ const ViewTask = () => {
     setCurrentPage(page);
   };
 
+  // calling dud date filter from redux
+
+  dispatch(taskActions.filterTaskDueDate());
+
   const { values, error, isLoading } = useTaskData(
     localStorage.getItem("userId") || ""
   );
@@ -94,9 +128,13 @@ const ViewTask = () => {
   // fetching and setting values to redux
 
 
-  // dispatch(taskActions.filterTaskDueDate("2024-02-20"))
+  // let stateOfRedux = useSelector((state: RootState<EndpointDefinitions, MyTagTypes, MyReducerPath>) => state)
 
-  function getValuesRedux(): void { }
+
+
+  // useEffect(() => {
+  //   console.log("state of Redux", stateOfRedux);
+  // }, [stateOfRedux])
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -135,6 +173,9 @@ const ViewTask = () => {
           (showNotCompleted && !task.task_status) ||
           (!showCompleted && !showNotCompleted))
     );
+
+    dispatch(taskActions.setFilterByStatus({ searchTerm: searchTerm, showCompleted: showCompleted, showNotCompleted: showNotCompleted }));
+
     setFilteredTasks(filtered);
 
 
@@ -158,6 +199,16 @@ const ViewTask = () => {
   };
 
   const handleDateRange = (date: any) => {
+
+    dispatch(
+      taskActions.setFilterByDate({
+        date: { selection: { endDate: date.selection.endDate, startDate: date.selection.startDate } },
+        searchTerm: searchTerm,
+        showCompleted: showCompleted,
+        showNotCompleted: showNotCompleted,
+      })
+    );
+
     const taskDateFilter = (task: any) => {
       const taskDate = new Date(task.date);
       const startDate = date.selection.startDate;
@@ -166,14 +217,6 @@ const ViewTask = () => {
       const withinRange = taskDate >= startDate && taskDate <= endDate;
       const singleDay = taskDate.toDateString() === startDate.toDateString();
 
-      dispatch(
-        taskActions.setFilterByDate({
-          date: { selection: { endDate: endDate, startDate: startDate } },
-          searchTerm: searchTerm,
-          showCompleted: showCompleted,
-          showNotCompleted: showNotCompleted,
-        })
-      );
 
       return (
         (withinRange || singleDay) &&
