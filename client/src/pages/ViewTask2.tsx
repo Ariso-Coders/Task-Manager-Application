@@ -4,6 +4,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { FaFilter } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { IoFilter } from "react-icons/io5";
+import { CiMenuKebab } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import ErrorCard from "../components/ErrorCard/ErrorCard";
 import TaskOverlay from "../components/taskoverlay/TaskOverlay";
@@ -34,6 +35,10 @@ interface updateTaskMutationResponse {
 interface ErroCardLogicState {
     delete: boolean | false;
     update: boolean | false;
+}
+interface MobileTaskStyleInterface {
+    taskClass: string,
+    cound: number
 }
 
 
@@ -80,28 +85,28 @@ const ViewTask2 = () => {
     taskValues = useSelector((state: RootState) => state.task);
     console.log("task values", taskValues)
 
-   
+
 
     const [currentPage, setCurrentPage] = useState(1);
-  const tasksPerPage = 5;
-  const indexOfLastTask = currentPage * tasksPerPage;
-  const indexOfFirstTask = indexOfLastTask - tasksPerPage;
+    const tasksPerPage = 5;
+    const indexOfLastTask = currentPage * tasksPerPage;
+    const indexOfFirstTask = indexOfLastTask - tasksPerPage;
 
 
     let currentTasks;
-    if(taskValues.filteredTask.length===0){
+    if (taskValues.filteredTask.length === 0) {
         currentTasks = taskValues.totalTask.slice(
-                 indexOfFirstTask,
-                indexOfLastTask
-               );
-    }else{
+            indexOfFirstTask,
+            indexOfLastTask
+        );
+    } else {
         currentTasks = taskValues.filteredTask.slice(
             indexOfFirstTask,
-           indexOfLastTask
-          );
+            indexOfLastTask
+        );
     }
 
-  const totalPages = Math.ceil(taskValues.totalTask.length / tasksPerPage);
+    const totalPages = Math.ceil(taskValues.totalTask.length / tasksPerPage);
 
     // state values
 
@@ -122,6 +127,10 @@ const ViewTask2 = () => {
     const [showNotCompleted, setShowNotCompleted] = useState(false);
     const [startDate, setSelectStartDate] = useState(new Date());
     const [endDate, setSelectEndDate] = useState(new Date());
+    const [mobileTaskStyleClass, setMobileTaskStyleClass] = useState<MobileTaskStyleInterface>({
+        cound: 0,
+        taskClass: ""
+    });
     const navigation = useNavigate();
 
     // variables 
@@ -231,6 +240,15 @@ const ViewTask2 = () => {
         setTaskOverLayLogic(value);
     };
 
+    const mobileStyleClassHandler = (id: string): string => {
+        if ((id === mobileTaskStyleClass.taskClass) && (mobileTaskStyleClass.cound % 2 !== 0)) {
+            return `h-vh10 translate-y-0`
+        } else {
+
+            return ""
+        }
+    }
+
     useEffect(() => {
 
         dispatch(taskActions.setFilterByStatus({ searchTerm: searchTerm, showCompleted: showCompleted, showNotCompleted: showNotCompleted }));
@@ -263,10 +281,10 @@ const ViewTask2 = () => {
                             className="text-3xl hover:cursor-pointer"
                             onClick={() => { setFilterMenuOpen((prev) => !prev); }}
                         />
-                    <MdLogout
-                        className="text-3xl hover:cursor-pointer"
-                        onClick={() => { setLogouErrorLogic(true); }}
-                    />
+                        <MdLogout
+                            className="text-3xl hover:cursor-pointer"
+                            onClick={() => { setLogouErrorLogic(true); }}
+                        />
                     </div>
                 </div>
                 <div className=" w-full flex flex-col md:flex-row mt-4 md:gap-8 items-end justify-center bg-yellow-100">
@@ -299,187 +317,195 @@ const ViewTask2 = () => {
             </div>
             <div className="w-full items-start justify-center px-20 -mb-5 md:gap-8 ">
                 <h2 className="text-2xl font-bold text-blue-600">{taskValues.filterMessage}</h2>
-               
+
             </div>
-            <div className="w-full h-auto flex items-start justify-center  px-5  bg-blue-700 text-sm">
+            <div className="w-full h-auto flex items-start justify-center  px-1  bg-blue-700 text-sm">
                 <div className="w-full">
-                    <div className=" w-full flex flex-col justify-center gap-4 ">
+                    <div className=" w-full flex flex-col justify-center  ">
                         {(currentTasks.length > 0) && (currentTasks.map((task: Task) => (
                             <div
                                 key={task._id}
-                                className=" w-full flex items-center hover:bg-task_hover   py-2 hover:cursor-pointer bg-red-500 *:border border-yellow-400"
+                                className=" w-full flex flex-col relative border-black"
                             >
-                                <div className="text-transform:capitalize  text-left overflow-hidden">
+                                <div className="w-full flex items-center  justify-between hover:bg-task_hover    hover:cursor-pointer bg-red-500 *:border border-black h-vh10 z-50"  >
+                                    <div className="text-transform:capitalize  text-left overflow-hidden bg-blue-400 lg:basis-1/2">   {/* 1*/}
 
-                                    {task.task_description}
-                                </div>
-                                <div className="text-left">
-
-                                    {task.date.split("T")[0]}
-                                </div>
-
-                                <div className="w-view_task_6  flex-1 flex justify-start ">
-
-                                    <button
-                                        onClick={() => {
-
-                                            setDeleteErroLogic({ ...deleteErroLogic, delete: true });
-
-                                            setTaskIdToDelete(task._id)
-
-                                        }}
-                                        className="w-10 text-view_task_4 bg-view_task_main_color rounded-md text-view_task_white p-view_task_1 hover:bg-over_due"
-                                    >
-                                        <AiOutlineDelete />
-                                    </button>
-                                </div>
-                                <div className="flex justify-start  ">
-
-                                    <label className="flex items-center ">
-                                        <span className="">Mark as Complete</span>
+                                        {task.task_description}
+                                    </div>
+                                    <div className="text-left bg-yellow-500 lg:basis-1/4 flex items-center gap-4">   {/* 2*/}
                                         <span>
-                                            <input
-                                                type="checkbox"
-                                                className="form-checkbox h-view_task_3 w-view_task_3 text-view_task_main_color ml-8"
-                                                onChange={() => {
-                                                    // handleRadioChange()
-                                                    setSelectedTask({ id: task._id.trim(), status: !task.task_status })
-                                                    console.log("onchaged", task._id, task.task_status)
-                                                }
 
-
-                                                }
-                                                checked={
-                                                    task.task_status ||
-                                                    (selectedTask?.id.trim() === task._id.trim() &&
-                                                        selectedTask?.status)
-
-
-                                                }
-                                                disabled={editMode !== task._id}
-                                            />
+                                            {task.date.split("T")[0]}
                                         </span>
-                                    </label>
-                                </div>
-                                <div className="  flex-1">
-                                    {" "}
+                                        <div className=" bg-green-500" onClick={() => {
 
-                                    {!editMode || editMode !== task._id ? (
-                                        <button
-                                            className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold ml-view_task_10 hover:bg-opacity-75"
-                                            onClick={() => {
-                                                setEditMode((prev) => (prev === task._id ? null : task._id));
-                                            }}
-                                        >
-                                            Edit
-                                        </button>
-                                    ) : (
-                                        <div className="flex">
-                                            <button
-                                                className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold ml-view_task_10 hover:bg-opacity-75"
-                                                onClick={() => window.location.reload()}
-                                            >
-                                                Cancel
-                                            </button>
-                                            <button
-                                                className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold ml-2 hover:bg-opacity-75"
-                                                onClick={handleSaveClick}
-                                            >
-                                                Save
-                                            </button>
+                                            setMobileTaskStyleClass({ taskClass: task._id, cound: mobileTaskStyleClass.cound + 1 })
+                                        }}>
+                                            <CiMenuKebab />
                                         </div>
-                                    )}
+
+                                    </div>
+
+
+                                    <div className="lg:flex justify-start  bg-pink lg:basis-1/2 hidden">  {/* 3*/}
+
+                                        <label className="flex items-center ">
+                                            <span className="">Mark as Complete</span>
+                                            <span>
+                                                <input
+                                                    type="checkbox"
+                                                    className="form-checkbox h-view_task_3 w-view_task_3 text-view_task_main_color ml-8"
+                                                    onChange={() => {
+                                                        // handleRadioChange()
+                                                        setSelectedTask({ id: task._id.trim(), status: !task.task_status })
+                                                        console.log("onchaged", task._id, task.task_status)
+                                                    }
+
+
+                                                    }
+                                                    checked={
+                                                        task.task_status ||
+                                                        (selectedTask?.id.trim() === task._id.trim() &&
+                                                            selectedTask?.status)
+
+
+                                                    }
+                                                    disabled={editMode !== task._id}
+                                                />
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div className="   lg:flex justify-start  bg-green-500 lg:basis-1/5  hidden">  {/* 4*/}
+
+                                        <button
+                                            onClick={() => {
+
+                                                setDeleteErroLogic({ ...deleteErroLogic, delete: true });
+
+                                                setTaskIdToDelete(task._id)
+
+                                            }}
+                                            className="w-10 text-view_task_4 bg-view_task_main_color rounded-md text-view_task_white p-view_task_1 hover:bg-over_due"
+                                        >
+                                            <AiOutlineDelete />
+                                        </button>
+                                    </div>
+                                    <div className="bg-yellow-500  lg:basis-1/4 hidden">   {/* 5*/}
+                                        {" "}
+
+                                        {!editMode || editMode !== task._id ? (
+                                            <button
+                                                className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold hover:bg-opacity-75"
+                                                onClick={() => {
+                                                    setEditMode((prev) => (prev === task._id ? null : task._id));
+                                                }}
+                                            >
+                                                Edit
+                                            </button>
+                                        ) : (
+                                            <div className="flex ">
+                                                <button
+                                                    className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold  hover:bg-opacity-75"
+                                                    onClick={() => window.location.reload()}
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold  hover:bg-opacity-75"
+                                                    onClick={handleSaveClick}
+                                                >
+                                                    Save
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className={`w-full bg-green-500 h-0  border-black -translate-y-vh10  transition-all flex items-center justify-between ${mobileStyleClassHandler(task._id)}`} >
+
+
+
+
+                                    <div className={` bg-pink `}>  {/* 3*/}
+
+                                        <label className="flex items-center ">
+                                            <span className="">Mark as Complete</span>
+                                            <span>
+                                                <input
+                                                    type="checkbox"
+                                                    className="form-checkbox h-view_task_3 w-view_task_3 text-view_task_main_color ml-8"
+                                                    onChange={() => {
+
+                                                        setSelectedTask({ id: task._id.trim(), status: !task.task_status })
+                                                        console.log("onchaged", task._id, task.task_status)
+                                                    }
+
+
+                                                    }
+                                                    checked={
+                                                        task.task_status ||
+                                                        (selectedTask?.id.trim() === task._id.trim() &&
+                                                            selectedTask?.status)
+
+
+                                                    }
+                                                    disabled={editMode !== task._id}
+                                                />
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <div className="   flex justify-start  bg-green-500 lg:basis-1/5 ">  {/* 4*/}
+
+                                        <button
+                                            onClick={() => {
+
+                                                setDeleteErroLogic({ ...deleteErroLogic, delete: true });
+
+                                                setTaskIdToDelete(task._id)
+
+                                            }}
+                                            className="w-10 text-view_task_4 bg-view_task_main_color rounded-md text-view_task_white p-view_task_1 hover:bg-over_due"
+                                        >
+                                            <AiOutlineDelete />
+                                        </button>
+                                    </div>
+
+                                    <div className="bg-yellow-500  lg:basis-1/4 ">   {/* 5*/}
+                                        {" "}
+
+                                        {!editMode || editMode !== task._id ? (
+                                            <button
+                                                className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold hover:bg-opacity-75"
+                                                onClick={() => {
+                                                    setEditMode((prev) => (prev === task._id ? null : task._id));
+                                                }}
+                                            >
+                                                Edit
+                                            </button>
+                                        ) : (
+                                            <div className="flex ">
+                                                <button
+                                                    className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold  hover:bg-opacity-75"
+                                                    onClick={() => window.location.reload()}
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold  hover:bg-opacity-75"
+                                                    onClick={handleSaveClick}
+                                                >
+                                                    Save
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+
+
+
                                 </div>
                             </div>
                         )))}
-                        {/* {(taskValues.filteredTask.length === 0) && (taskValues.totalTask.map((task: Task) => (
-                            <div
-                                key={task._id}
-                                className=" w-full flex items-center hover:bg-task_hover  py-2 hover:cursor-pointer bg-red-500 *:border border-yellow-400"
-                            >
-                                <div className="text-transform:capitalize  text-left overflow-hidden">
 
-                                    {task.task_description}
-                                </div>
-                                <div className="text-left">
-
-                                    {task.date.split("T")[0]}
-                                </div>
-
-                                <div className="w-view_task_6  flex justify-start ">
-
-                                    <button
-                                        onClick={() => {
-
-                                            setDeleteErroLogic({ ...deleteErroLogic, delete: true });
-
-                                            setTaskIdToDelete(task._id)
-
-                                        }}
-                                        className="w-10 text-view_task_4 bg-view_task_main_color rounded-md text-view_task_white p-view_task_1 hover:bg-over_due"
-                                    >
-                                        <AiOutlineDelete />
-                                    </button>
-                                </div>
-                                <div className="flex justify-start  ">
-
-                                    <label className="flex items-center ">
-                                        <span className="">Mark as Complete</span>
-                                        <span>
-                                            <input
-                                                type="checkbox"
-                                                className="form-checkbox h-view_task_3 w-view_task_3 text-view_task_main_color ml-8"
-                                                onChange={() => {
-                                                    
-                                                    setSelectedTask({ id: task._id.trim(), status: !task.task_status })
-                                                    console.log("onchaged", task._id, task.task_status)
-                                                }
-
-
-                                                }
-                                                checked={
-                                                    task.task_status ||
-                                                    (selectedTask?.id.trim() === task._id.trim() &&
-                                                        selectedTask?.status)
-
-
-                                                }
-                                                disabled={editMode !== task._id}
-                                            />
-                                        </span>
-                                    </label>
-                                </div>
-                                <div className="bg-yellow-400">
-                                    {" "}
-
-                                    {!editMode || editMode !== task._id ? (
-                                        <button
-                                            className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold ml-view_task_10 hover:bg-opacity-75"
-                                            onClick={() => {
-                                                setEditMode((prev) => (prev === task._id ? null : task._id));
-                                            }}
-                                        >
-                                            Edit
-                                        </button>
-                                    ) : (
-                                        <div className="flex">
-                                            <button
-                                                className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold ml-view_task_10 hover:bg-opacity-75"
-                                                onClick={() => window.location.reload()}
-                                            >
-                                                Cancel
-                                            </button>
-                                            <button
-                                                className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold ml-2 hover:bg-opacity-75"
-                                                onClick={handleSaveClick}
-                                            >
-                                                Save
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )))} */}
                     </div>
                 </div>
 
@@ -560,7 +586,7 @@ const ViewTask2 = () => {
                 ))}
             </div>
             {taskOverLayLogic && <TaskOverlay onCancelClick={taskOVerLayHandler} />}
-        </div>
+        </div >
     );
 };
 
