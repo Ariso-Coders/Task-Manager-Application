@@ -3,7 +3,7 @@ import "./App.css";
 import LoginForm from "./pages/LoginForm";
 import SignUp from "./pages/SignUp";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import ViewTask from "./pages/ViewTask";
+// import ViewTask from "./pages/ViewTask";
 import ViewTask2 from "./pages/ViewTask2";
 
 
@@ -36,7 +36,7 @@ function App() {
 
           <Route path="/task" element={
 
-            localStorage.getItem("userToken") !== null ? <ViewTask /> : <MyComponent />
+            localStorage.getItem("userToken") !== null ? <ViewTask2 /> : <MyComponent />
           } />
 
           <Route path="/task2" element={<ViewTask2/>} />

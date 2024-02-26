@@ -110,41 +110,42 @@ const taskSlice = createSlice({
     setFilterByDate(
       state,
       action: PayloadAction<{
-        date: { selection: { startDate: Date; endDate: Date } };
+        date: { selection: { startDate: string; endDate: string } };
         searchTerm: string;
         showCompleted: boolean;
         showNotCompleted: boolean;
       }>
     ) {
-      const { date, searchTerm, showCompleted, showNotCompleted } =
-        action.payload;
-
+      const { date, searchTerm, showCompleted, showNotCompleted } = action.payload;
+    
+      const filteredTasks = state.totalTask.filter((task) => {
+        const taskDate = task.date?.split("T")[0];
+        const withinRange =
+          task.date?.split("T")[0] >= formatDate(new Date(date.selection.startDate)) &&
+          taskDate <= formatDate(new Date(date.selection.endDate));
+        const singleDay =
+          taskDate.toDateString === date.selection.startDate;
+        return (
+          (withinRange || singleDay) &&
+          task.task_description
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) &&
+          ((showCompleted && task.task_status) ||
+            (showNotCompleted && !task.task_status) ||
+            (!showCompleted && !showNotCompleted))
+        );
+      });
+    
       state = {
         ...state,
-        filteredTask: state.totalTask.filter((task) => {
-          const taskDate = task.date?.split("T")[0];
-          const withinRange =
-            task.date?.split("T")[0] >= formatDate(date.selection.startDate) &&
-            taskDate <= formatDate(date.selection.endDate);
-          const singleDay =
-            taskDate.toDateString === date.selection.startDate.toDateString;
-          return (
-            (withinRange || singleDay) &&
-            task.task_description
-              ?.toLowerCase()
-              .includes(searchTerm.toLowerCase()) &&
-            ((showCompleted && task.task_status) ||
-              (showNotCompleted && !task.task_status) ||
-              (!showCompleted && !showNotCompleted))
-          );
-        }),
-        filterMessage: `Results for tasks between ${date.selection.startDate.toDateString()} and ${date.selection.endDate.toDateString()}`
-
-        
+        filteredTask: filteredTasks,
+        filterMessage: filteredTasks.length > 0 ?
+          `Results for tasks between ${date.selection.startDate.split('T')[0]} and ${date.selection.endDate.split('T')[0]}` :
+          'No tasks available for the selected date range',
       };
-      console.log("state after filter by date reducer",state)
+    
       return state;
-    },
+    },    
   },
   extraReducers: (builder) => {
     // need to move update into extraReducer ?
