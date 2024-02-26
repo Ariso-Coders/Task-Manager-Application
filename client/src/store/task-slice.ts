@@ -19,7 +19,7 @@ export interface TasksState {
   totalTask: Task[];
   filteredTask: Task[];
   filterMessage: string;
-  overdueTasks?: overdueInterface;
+  overdueTasks: Task[];
 }
 
 export interface filterTaskStaus {
@@ -33,6 +33,7 @@ const initialState: TasksState = {
   totalTask: [],
   filteredTask: [],
   filterMessage: "",
+  overdueTasks: [],
 };
 const taskSlice = createSlice({
   name: "task",
@@ -57,12 +58,9 @@ const taskSlice = createSlice({
               formatDate(new Date())
             ) && task.task_status === false
         ),
-        overdueTasks: {
-          overdueTaskCount: state.filteredTask.length,
-          overdueLogic: state.filteredTask.length >= 0 ? true : false,
-        },
       };
 
+      console.log("state overdue", state);
       return state;
     },
     setFilterByStatus(state, action: PayloadAction<filterTaskStaus>) {
@@ -102,7 +100,6 @@ const taskSlice = createSlice({
           filterMessage: "",
         };
       }
-      
 
       return state;
     },
@@ -138,11 +135,9 @@ const taskSlice = createSlice({
               (!showCompleted && !showNotCompleted))
           );
         }),
-        filterMessage: `Results for tasks between ${date.selection.startDate.toDateString()} and ${date.selection.endDate.toDateString()}`
-
-        
+        filterMessage: `Results for tasks between ${date.selection.startDate.toDateString()} and ${date.selection.endDate.toDateString()}`,
       };
-      console.log("state after filter by date reducer",state)
+      console.log("state after filter state reducer", state);
       return state;
     },
   },
@@ -152,7 +147,17 @@ const taskSlice = createSlice({
     builder.addMatcher(
       taskApi.endpoints.getAllTasks.matchFulfilled,
       (state, { payload }) => {
-        state = { ...state, totalTask: payload.tasksToTheUser };
+        state = {
+          ...state,
+          totalTask: payload.tasksToTheUser,
+          overdueTasks: payload.tasksToTheUser.filter(
+            (task) =>
+              compareDates(
+                task.date.split("T")[0].trim(),
+                formatDate(new Date())
+              ) && task.task_status === false
+          ),
+        };
         console.log("output from extrareducers", state.totalTask);
         return state;
       }

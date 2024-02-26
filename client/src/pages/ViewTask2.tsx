@@ -43,9 +43,11 @@ const ViewTask2 = () => {
 
     const userId: string | any = localStorage.getItem("userId");
     const { data, isError } = useGetAllTasksQuery(userId); // calling API 
+    const dispatch = useDispatch();
+
     const [updateTaskMutation] = useUpdateTaskStatusMutation();
     const [mutate, ,] = useDeleteTaskByIdMutation();
-    const dispatch = useDispatch();
+
     let taskValues: TasksState;
     if (isError) {
         taskValues = {
@@ -63,7 +65,15 @@ const ViewTask2 = () => {
                     task_description: "",
                     task_status: false
                 }],
-            filterMessage: ""
+            filterMessage: "",
+            overdueTasks: [
+                {
+                    _id: "",
+                    date: "",
+                    task_description: "",
+                    task_status: false
+                }
+            ]
         };
     }
     taskValues = useSelector((state: RootState) => state.task);
@@ -207,12 +217,13 @@ const ViewTask2 = () => {
     useEffect(() => {
 
         dispatch(taskActions.setFilterByStatus({ searchTerm: searchTerm, showCompleted: showCompleted, showNotCompleted: showNotCompleted }));
-
+        // dispatch(taskActions.filterTaskDueDate());
+        console.log("called")
         console.log("redux store after status filter", taskValues)
 
 
 
-    }, [showCompleted, showNotCompleted, dispatch, searchTerm, taskValues])
+    }, [showCompleted, showNotCompleted, searchTerm])
 
     //   return (
     //     <div> </div>
@@ -242,17 +253,18 @@ const ViewTask2 = () => {
                     />
                 </div>
                 <div className=" w-full flex flex-col md:flex-row mt-4  gap-4 md:gap-8 items-center ">
-                    <h1 className="font-bold text-3xl mb-4 ml-60 md:mb-0 	text-transform:capitalize">
-                        {`You have got ${taskValues.totalTask.length} tasks `}
-                        {taskValues.overdueTasks?.overdueLogic && (
+                    <h1 className="font-bold text-3xl mb-4 ml-60 md:mb-0 	text-transform:capitalize " onClick={() => { window.location.reload() }}>
+                        <span className="hover:underline" onClick={() => { window.location.reload() }}>
+                            {`You have got ${taskValues.totalTask.length} tasks `}  </span>
+                        {taskValues.overdueTasks.length > 0 && (
                             <span
                                 className="text-over_due hover:underline hover:cursor-pointer"
                                 onClick={() => {
                                     dispatch(taskActions.filterTaskDueDate())
                                 }}
                             >
-                                And You Have {taskValues.overdueTasks.overdueTaskCount} Overdue{" "}
-                                {taskValues.overdueTasks.overdueTaskCount > 1 ? "Tasks" : "Task"}
+                                And You Have {taskValues.overdueTasks.length} Overdue{" "}
+                                {taskValues.overdueTasks.length > 1 ? "Tasks" : "Task"}
                             </span>
                         )}{" "}
                     </h1>
