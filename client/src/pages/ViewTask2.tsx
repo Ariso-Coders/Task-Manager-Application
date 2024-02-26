@@ -3,6 +3,7 @@ import { IoAddSharp } from "react-icons/io5";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaFilter } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
+import { IoFilter } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import ErrorCard from "../components/ErrorCard/ErrorCard";
 import TaskOverlay from "../components/taskoverlay/TaskOverlay";
@@ -79,13 +80,17 @@ const ViewTask2 = () => {
     taskValues = useSelector((state: RootState) => state.task);
     console.log("task values", taskValues)
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const tasksPerPage = 4;
-    const indexOfLastTask = currentPage * tasksPerPage;
-    const indexOfFirstTask = indexOfLastTask - tasksPerPage;
-    const currentTasks = taskValues.filteredTask.slice(indexOfFirstTask, indexOfLastTask);
+   
 
-    const totalPages = Math.ceil(taskValues.filteredTask.length / tasksPerPage);
+    const [currentPage, setCurrentPage] = useState(1);
+  const tasksPerPage = 5;
+  const indexOfLastTask = currentPage * tasksPerPage;
+  const indexOfFirstTask = indexOfLastTask - tasksPerPage;
+  const currentTasks = taskValues.filteredTask.slice(
+    indexOfFirstTask,
+    indexOfLastTask
+  );
+  const totalPages = Math.ceil(taskValues.totalTask.length / tasksPerPage);
 
     // state values
 
@@ -233,28 +238,28 @@ const ViewTask2 = () => {
 
 
     return (
-        <div className="w-full min-h-screen flex flex-col justify-start px-3 gap-20 pb-10">
+        <div className="w-full min-h-screen flex flex-col justify-start px-3 gap-10 pb-10 ">
             <div className="w-full">
-                <div className="w-full flex flex-col md:flex-row gap-4 md:gap-8 mt-view_task_4  md:ml-4xl items-center ">
+                <div className="w-full flex items-center gap-3 py-3">
                     <input
                         placeholder="Search For Task"
-                        className="w-2/3 md:w-3/4 border border-gray p-view_task_1 rounded-md mb-4 md:mb-0"
+                        className="w-3/4 py-2 px-3  border-2 rounded-sm border-gray-200"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <div className="relative">
-                        <FaFilter
-                            className="text-4xl hover:cursor-pointer"
+                    <div className=" w-1/4 flex items-center justify-end gap-2">
+                        <IoFilter
+                            className="text-3xl hover:cursor-pointer"
                             onClick={() => { setFilterMenuOpen((prev) => !prev); }}
                         />
-                    </div>
                     <MdLogout
-                        className="text-5xl hover:cursor-pointer"
+                        className="text-3xl hover:cursor-pointer"
                         onClick={() => { setLogouErrorLogic(true); }}
                     />
+                    </div>
                 </div>
-                <div className=" w-full flex flex-col md:flex-row mt-4  gap-4 md:gap-8 items-center ">
-                    <h1 className="font-bold text-3xl mb-4 ml-60 md:mb-0 	text-transform:capitalize ">
+                <div className=" w-full flex flex-col md:flex-row mt-4 md:gap-8 items-end justify-center bg-yellow-100">
+                    <h1 className=" w-full font-bold text-xl text-center md:mb-0 	text-transform:capitalize ">
                         <span className="hover:underline hover:cursor-pointer" onClick={() => { window.location.reload() }}>
                             {`You have got ${taskValues.totalTask.length} tasks `}  </span>
                         {taskValues.overdueTasks.length > 0 && (
@@ -270,35 +275,34 @@ const ViewTask2 = () => {
                         )}{" "}
                     </h1>
                     <button
-                        className="text-xl bg-view_task_main_color  px-2 py-2 rounded-md text-view_task_white font-bold flex items-center justify-center hover:bg-green "
+                        className="text-xs bg-view_task_main_color  px-2 py-1 rounded-sm text-view_task_white font-bold flex items-center justify-center hover:bg-green "
                         onClick={() => {
 
                             setTaskOverLayLogic(true);
                         }}
                     >
-                        <IoAddSharp className="size-8" />
-                        <span className="">Add</span>
+                        <IoAddSharp className="size-4 text-white" />
+                        {/* <span className="">Add</span> */}
                     </button>
                 </div>
             </div>
             <div className="w-full items-start justify-center px-20 -mb-5 md:gap-8 ">
-                <h2 className="text-2xl font-bold text-blue">{taskValues.filterMessage}</h2>
-                {/* <h2 className="text-2xl font-bold text-blue">{taskValues.filterMessage}</h2> */}
-                {/*Need extra look  {filterDateMessage} */}
+                <h2 className="text-2xl font-bold text-blue-600">{taskValues.filterMessage}</h2>
+               
             </div>
-            <div className="w-full flex items-start justify-center  px-20  h-view_task_13  ">
-                <div className="w-full ">
-                    <div className="text-xl w-full flex flex-col justify-center gap-4 ">
-                        {!(taskValues.filteredTask.length > 0) && (taskValues.totalTask.map((task: Task) => (
+            <div className="w-full h-auto flex items-start justify-center  px-5  bg-blue-700 text-sm">
+                <div className="w-full">
+                    <div className=" w-full flex flex-col justify-center gap-4 ">
+                        {(currentTasks.length > 0) && (currentTasks.map((task: Task) => (
                             <div
                                 key={task._id}
-                                className=" w-full flex items-center hover:bg-task_hover px-5  py-2 hover:cursor-pointer "
+                                className=" w-full flex items-center hover:bg-task_hover   py-2 hover:cursor-pointer bg-red-500 *:border border-yellow-400"
                             >
-                                <div className="  flex-1 	text-transform: capitalize  text-left overflow-hidden">
+                                <div className="text-transform:capitalize  text-left overflow-hidden">
 
                                     {task.task_description}
                                 </div>
-                                <div className="  flex-1 text-left">
+                                <div className="text-left">
 
                                     {task.date.split("T")[0]}
                                 </div>
@@ -318,7 +322,7 @@ const ViewTask2 = () => {
                                         <AiOutlineDelete />
                                     </button>
                                 </div>
-                                <div className=" flex-1 flex justify-start  ">
+                                <div className="flex justify-start  ">
 
                                     <label className="flex items-center ">
                                         <span className="">Mark as Complete</span>
@@ -377,7 +381,7 @@ const ViewTask2 = () => {
                                 </div>
                             </div>
                         )))}
-                        {(taskValues.filteredTask.length > 0) && (taskValues.filteredTask.map((task: Task) => (
+                        {(taskValues.filteredTask.length === 0) && (taskValues.totalTask.map((task: Task) => (
                             <div
                                 key={task._id}
                                 className=" w-full flex items-center hover:bg-task_hover px-5  py-2 hover:cursor-pointer "

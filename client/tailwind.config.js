@@ -7,7 +7,6 @@ module.exports = {
         task_hover: "#e7e5e4",
         over_due: "#dc2626",
         main_color: "#5534A5",
-        blue: "#1fb6ff",
         purple: "#7e5bef",
         pink: "#ff49db",
 
