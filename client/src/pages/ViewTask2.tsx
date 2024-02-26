@@ -160,11 +160,11 @@ const ViewTask2 = () => {
 
 
     const handleDateRange = (date: any) => {
-        const startDate=new Date(date.selection.startDate).toISOString()
-        const endDate=new Date(date.selection.endDate).toISOString()
+        const startDate = new Date(date.selection.startDate).toISOString()
+        const endDate = new Date(date.selection.endDate).toISOString()
         dispatch(
             taskActions.setFilterByDate({
-                date: { selection: { endDate: endDate, startDate:startDate } },
+                date: { selection: { endDate: endDate, startDate: startDate } },
                 searchTerm: searchTerm,
                 showCompleted: showCompleted,
                 showNotCompleted: showNotCompleted,
@@ -254,8 +254,8 @@ const ViewTask2 = () => {
                     />
                 </div>
                 <div className=" w-full flex flex-col md:flex-row mt-4  gap-4 md:gap-8 items-center ">
-                    <h1 className="font-bold text-3xl mb-4 ml-60 md:mb-0 	text-transform:capitalize " onClick={() => { window.location.reload() }}>
-                        <span className="hover:underline" onClick={() => { window.location.reload() }}>
+                    <h1 className="font-bold text-3xl mb-4 ml-60 md:mb-0 	text-transform:capitalize ">
+                        <span className="hover:underline hover:cursor-pointer" onClick={() => { window.location.reload() }}>
                             {`You have got ${taskValues.totalTask.length} tasks `}  </span>
                         {taskValues.overdueTasks.length > 0 && (
                             <span
