@@ -48,6 +48,8 @@ const ViewTask2 = () => {
 
     const userId: string | any = localStorage.getItem("userId");
     const { data, isError } = useGetAllTasksQuery(userId);
+    const [updateTaskMutation] = useUpdateTaskStatusMutation();
+    const [mutate, ,] = useDeleteTaskByIdMutation();
     const dispatch = useDispatch();
     let taskValues: TasksState;
     if (isError) {
@@ -71,7 +73,13 @@ const ViewTask2 = () => {
     }
     taskValues = useSelector((state: RootState) => state.task);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const tasksPerPage = 4;
+    const indexOfLastTask = currentPage * tasksPerPage;
+    const indexOfFirstTask = indexOfLastTask - tasksPerPage;
+    const currentTasks = taskValues.filteredTask.slice(indexOfFirstTask, indexOfLastTask);
 
+    const totalPages = Math.ceil(taskValues.filteredTask.length / tasksPerPage);
 
     // state values
 
@@ -88,13 +96,124 @@ const ViewTask2 = () => {
         status: boolean;
     } | null>(null);
     const [editMode, setEditMode] = useState<string | null>(null);
+    const [showCompleted, setShowCompleted] = useState(false);
+    const [showNotCompleted, setShowNotCompleted] = useState(false);
+    const [startDate, selectStartDate] = useState(new Date());
+    const [endDate, selectEndDate] = useState(new Date());
+    const navigation = useNavigate();
 
     // variables 
 
-    let taskIdToDelete: string = "";
+    const [taskIdToDelete, setTaskIdToDelete] = useState<string>("");
+    const selectionRange = {
+        startDate: startDate,
+        endDate: endDate,
+        key: "selection",
+    };
+
+
+    // functions 
+
+
+    const handleSaveClick = () => {
+        if (selectedTask) {
+
+            updateTaskStatus(selectedTask.id, selectedTask.status);
+            setSelectedTask(null);
+            setEditMode(null);
+        }
+    };
+
+
+    const updateTaskStatus = async (taskId: string, status: boolean) => {
+
+        try {
+
+            let updateTaskBackendRespond: updateTaskMutationResponse = await updateTaskMutation({ taskId: taskId, status: status })
+            window.location.reload();
+
+        } catch (error) {
+            console.error("Error updating task status", error);
+        }
+    };
+
+
+    const deleteTaskByIdFunction = async (taskId: string) => {
+        try {
+
+            let delteTaskBackendRespond = await mutate(taskId);
+
+        } catch (err: any) {
+            console.log("error of deleting task", err);
+        }
+
+
+
+
+    };
+
+
+    const handleDateRange = (date: any) => {
+
+        dispatch(
+            taskActions.setFilterByDate({
+                date: { selection: { endDate: date.selection.endDate, startDate: date.selection.startDate } },
+                searchTerm: searchTerm,
+                showCompleted: showCompleted,
+                showNotCompleted: showNotCompleted,
+            })
+        );
+
+    };
+
+
+    const handleRadioChange = (taskId: string, status: boolean) => {
+        setSelectedTask({ id: taskId, status });
+    };
+
+
+
+    // error card handlers 
+
+    const handleDeleteErrorCardClick = async (args: {
+        btn1: boolean;
+        btn2: boolean;
+    }) => {
+        if (args.btn1) {
+            deleteTaskByIdFunction(taskIdToDelete);
+            window.location.reload();
+        } else {
+            setDeleteErroLogic({ ...deleteErroLogic, delete: false });
+        }
+    };
+
+
+    const handleLogoutErrorCardClick = async (args: {
+        btn1: boolean;
+        btn2: boolean;
+    }) => {
+        if (args.btn1) {
+            localStorage.removeItem("userToken");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("userId");
+            navigation("/");
+        } else {
+            setLogouErrorLogic(false);
+        }
+    };
+
+    const taskOVerLayHandler = (value: boolean) => {
+        setTaskOverLayLogic(value);
+    };
+
     useEffect(() => {
 
-    }, [])
+        dispatch(taskActions.setFilterByStatus({ searchTerm: searchTerm, showCompleted: showCompleted, showNotCompleted: showNotCompleted }));
+        console.log("redux store after status filter", taskValues)
+
+
+
+    }, [showCompleted, showNotCompleted])
 
     //   return (
     //     <div> </div>
@@ -157,7 +276,7 @@ const ViewTask2 = () => {
             <div className="w-full flex items-start justify-center  px-20  h-view_task_13  ">
                 <div className="w-full ">
                     <div className="text-xl w-full flex flex-col justify-center gap-4 ">
-                        {taskValues.filteredTask.map((task: Task) => (
+                        {taskValues.totalTask.map((task: Task) => (
                             <div
                                 key={task._id}
                                 className=" w-full flex items-center hover:bg-task_hover px-5  py-2 hover:cursor-pointer "
@@ -174,11 +293,12 @@ const ViewTask2 = () => {
                                 <div className="w-view_task_6  flex-1 flex justify-start ">
 
                                     <button
-                                        onClick={(): string => {
+                                        onClick={() => {
 
                                             setDeleteErroLogic({ ...deleteErroLogic, delete: true });
-                                            taskIdToDelete = task._id;
-                                            return taskIdToDelete
+
+                                            setTaskIdToDelete(task._id)
+
                                         }}
                                         className="w-10 text-view_task_4 bg-view_task_main_color rounded-md text-view_task_white p-view_task_1 hover:bg-over_due"
                                     >
@@ -194,15 +314,19 @@ const ViewTask2 = () => {
                                                 type="checkbox"
                                                 className="form-checkbox h-view_task_3 w-view_task_3 text-view_task_main_color ml-8"
                                                 onChange={() => {
-                                                    setSelectedTask({ id: task._id, status: task.task_status })
+                                                    // handleRadioChange()
+                                                    setSelectedTask({ id: task._id.trim(), status: !task.task_status })
+                                                    console.log("onchaged", task._id, task.task_status)
                                                 }
 
 
                                                 }
                                                 checked={
                                                     task.task_status ||
-                                                    (selectedTask?.id === task._id &&
+                                                    (selectedTask?.id.trim() === task._id.trim() &&
                                                         selectedTask?.status)
+
+
                                                 }
                                                 disabled={editMode !== task._id}
                                             />
@@ -308,7 +432,10 @@ const ViewTask2 = () => {
                 {Array.from({ length: totalPages }, (_, index) => (
                     <button
                         key={index}
-                        onClick={() => handlePageChange(index + 1)}
+                        onClick={() => {
+
+                            setCurrentPage(index + 1)
+                        }}
                         className={` text-blue text-2xl mx-2 px-3 py-1 ${currentPage === index + 1 ? "bg-gray-300" : "bg-gray-100"
                             }`}
                     >

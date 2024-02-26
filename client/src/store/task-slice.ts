@@ -102,6 +102,7 @@ const taskSlice = createSlice({
           filterMessage: "",
         };
       }
+      console.log("state after filter state reducer",state)
 
       return state;
     },
