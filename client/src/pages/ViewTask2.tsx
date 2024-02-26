@@ -86,10 +86,21 @@ const ViewTask2 = () => {
   const tasksPerPage = 5;
   const indexOfLastTask = currentPage * tasksPerPage;
   const indexOfFirstTask = indexOfLastTask - tasksPerPage;
-  const currentTasks = taskValues.filteredTask.slice(
-    indexOfFirstTask,
-    indexOfLastTask
-  );
+
+
+    let currentTasks;
+    if(taskValues.filteredTask.length===0){
+        currentTasks = taskValues.totalTask.slice(
+                 indexOfFirstTask,
+                indexOfLastTask
+               );
+    }else{
+        currentTasks = taskValues.filteredTask.slice(
+            indexOfFirstTask,
+           indexOfLastTask
+          );
+    }
+
   const totalPages = Math.ceil(taskValues.totalTask.length / tasksPerPage);
 
     // state values
@@ -381,21 +392,21 @@ const ViewTask2 = () => {
                                 </div>
                             </div>
                         )))}
-                        {(taskValues.filteredTask.length === 0) && (taskValues.totalTask.map((task: Task) => (
+                        {/* {(taskValues.filteredTask.length === 0) && (taskValues.totalTask.map((task: Task) => (
                             <div
                                 key={task._id}
-                                className=" w-full flex items-center hover:bg-task_hover px-5  py-2 hover:cursor-pointer "
+                                className=" w-full flex items-center hover:bg-task_hover  py-2 hover:cursor-pointer bg-red-500 *:border border-yellow-400"
                             >
-                                <div className="  flex-1 	text-transform: capitalize  text-left overflow-hidden">
+                                <div className="text-transform:capitalize  text-left overflow-hidden">
 
                                     {task.task_description}
                                 </div>
-                                <div className="  flex-1 text-left">
+                                <div className="text-left">
 
                                     {task.date.split("T")[0]}
                                 </div>
 
-                                <div className="w-view_task_6  flex-1 flex justify-start ">
+                                <div className="w-view_task_6  flex justify-start ">
 
                                     <button
                                         onClick={() => {
@@ -410,7 +421,7 @@ const ViewTask2 = () => {
                                         <AiOutlineDelete />
                                     </button>
                                 </div>
-                                <div className=" flex-1 flex justify-start  ">
+                                <div className="flex justify-start  ">
 
                                     <label className="flex items-center ">
                                         <span className="">Mark as Complete</span>
@@ -419,7 +430,7 @@ const ViewTask2 = () => {
                                                 type="checkbox"
                                                 className="form-checkbox h-view_task_3 w-view_task_3 text-view_task_main_color ml-8"
                                                 onChange={() => {
-                                                    // handleRadioChange()
+                                                    
                                                     setSelectedTask({ id: task._id.trim(), status: !task.task_status })
                                                     console.log("onchaged", task._id, task.task_status)
                                                 }
@@ -438,7 +449,7 @@ const ViewTask2 = () => {
                                         </span>
                                     </label>
                                 </div>
-                                <div className="  flex-1">
+                                <div className="bg-yellow-400">
                                     {" "}
 
                                     {!editMode || editMode !== task._id ? (
@@ -468,7 +479,7 @@ const ViewTask2 = () => {
                                     )}
                                 </div>
                             </div>
-                        )))}
+                        )))} */}
                     </div>
                 </div>
 
