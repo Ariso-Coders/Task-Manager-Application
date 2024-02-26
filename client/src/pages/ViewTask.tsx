@@ -1,25 +1,20 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { IoAddSharp } from "react-icons/io5";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaFilter } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import ErrorCard from "../components/ErrorCard/ErrorCard";
-import axios from "axios";
 import TaskOverlay from "../components/taskoverlay/TaskOverlay";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { DateRangePicker } from "react-date-range";
 import { IsOverDue, isOverdue } from "../utils/OverdueCheck";
-import { PostTaskRequestInterface, PostTaskResponsetInterface, UpdateTaskStatusRequest, UpdateTaskStatusResponse, UpdateTaskStatusResponseError, deleteTaskRTKInterface, getAllTaskRTKInterface, useDeleteTaskByIdMutation, useGetAllTasksQuery, useUpdateTaskStatusMutation } from '../store/fetures/task-api';
-import { useDispatch, useSelector } from "react-redux";
-// import { Tasks, taskActions } from "../store/task-slice";
-import useTaskData from "../Logic/Task";
-import { da } from "date-fns/locale";
+import { UpdateTaskStatusResponse, getAllTaskRTKInterface, useDeleteTaskByIdMutation, useGetAllTasksQuery, useUpdateTaskStatusMutation } from '../store/fetures/task-api';
+import { useDispatch } from "react-redux";
 import { TasksState, taskActions } from "../store/task-slice";
-import { EndpointDefinition, EndpointDefinitions, FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
-import { RootState } from "../store/index";
 
 export interface Task {
   _id: string;
@@ -53,24 +48,8 @@ const ViewTask = () => {
 
   // get task details from redux
 
-  const { data, error } = useGetAllTasksQuery(userId);
-  let tasksRedux: TasksState = {
-    totalTask: [
-      {
-        _id: "",
-        date: "",
-        task_description: "",
-        task_status: false
-      }],
-    filteredTask: [
-      {
-        _id: "",
-        date: "",
-        task_description: "",
-        task_status: false
-      }],
-    filterMessage: ""
-  }
+  const { data, error } = useGetAllTasksQuery(userId);   // Call API 
+
   let tempoaryTaskFromGetAPI: getAllTaskRTKInterface = {
     tasksToTheUser: [
 
@@ -82,15 +61,6 @@ const ViewTask = () => {
       }
     ]
   };
-  // const taskDataRedux = useSelector((state: RootState) => state.task);
-
-  // if (!error && data?.tasksToTheUser) {
-  //   tasksRedux = taskDataRedux;
-
-  // }
-
-
-
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [taskCount, setTaskCount] = useState<number>(0);
@@ -137,26 +107,11 @@ const ViewTask = () => {
 
   dispatch(taskActions.filterTaskDueDate());
 
-  // const { values, error, isLoading } = useTaskData(
-  //   localStorage.getItem("userId") || ""
-  // );
-
   const [updateTaskMutation, { isError }] = useUpdateTaskStatusMutation();
 
 
   const [mutate, ,] = useDeleteTaskByIdMutation();
 
-
-  // fetching and setting values to redux
-
-
-  // let stateOfRedux = useSelector((state: RootState<EndpointDefinitions, MyTagTypes, MyReducerPath>) => state)
-
-
-
-  // useEffect(() => {
-  //   console.log("state of Redux", stateOfRedux);
-  // }, [stateOfRedux])
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -182,7 +137,7 @@ const ViewTask = () => {
     fetchTasks();
   }, [userId]);
 
-  // dispatch(taskActions.setTasks({}))
+
 
   useEffect(() => {
     // Filter tasks based on search term and completion status
@@ -292,19 +247,7 @@ const ViewTask = () => {
   const updateTaskStatus = async (taskId: string, status: boolean) => {
 
     try {
-      // const response = await axios.put(
-      //   `http://localhost:8080/task/tasks/${taskId}`,
-      //   {
-      //     task_status: status,
-      //   },
-      //   {
-      //     headers: {
-      //       Authorization: "Bearer " + userToken,
-      //     },
-      //   }
-      // );
-
-      // console.log("this is update task api respond",response);
+      
       let updateTaskBackendRespond: updateTaskMutationResponse = await updateTaskMutation({ taskId: taskId, status: status })
 
 

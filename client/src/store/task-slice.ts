@@ -102,7 +102,7 @@ const taskSlice = createSlice({
           filterMessage: "",
         };
       }
-      console.log("state after filter state reducer",state)
+      
 
       return state;
     },
@@ -138,8 +138,11 @@ const taskSlice = createSlice({
               (!showCompleted && !showNotCompleted))
           );
         }),
-      };
+        filterMessage: `Results for tasks between ${date.selection.startDate.toDateString()} and ${date.selection.endDate.toDateString()}`
 
+        
+      };
+      console.log("state after filter by date reducer",state)
       return state;
     },
   },

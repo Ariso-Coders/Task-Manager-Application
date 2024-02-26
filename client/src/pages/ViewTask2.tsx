@@ -1,23 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { IoAddSharp } from "react-icons/io5";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaFilter } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import ErrorCard from "../components/ErrorCard/ErrorCard";
-import axios from "axios";
 import TaskOverlay from "../components/taskoverlay/TaskOverlay";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { DateRangePicker } from "react-date-range";
-import { IsOverDue, isOverdue } from "../utils/OverdueCheck";
-import { PostTaskRequestInterface, PostTaskResponsetInterface, UpdateTaskStatusRequest, UpdateTaskStatusResponse, UpdateTaskStatusResponseError, deleteTaskRTKInterface, getAllTaskRTKInterface, taskApi, useDeleteTaskByIdMutation, useGetAllTasksQuery, useUpdateTaskStatusMutation } from "../store/fetures/task-api";
+import { UpdateTaskStatusResponse, useDeleteTaskByIdMutation, useGetAllTasksQuery, useUpdateTaskStatusMutation } from "../store/fetures/task-api";
 import { useDispatch, useSelector } from "react-redux";
-// import { Tasks, taskActions } from "../store/task-slice";
-import useTaskData from "../Logic/Task";
-import { da } from "date-fns/locale";
 import { TasksState, taskActions } from "../store/task-slice";
-import { EndpointDefinition, EndpointDefinitions, FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
@@ -47,7 +42,7 @@ interface ErroCardLogicState {
 const ViewTask2 = () => {
 
     const userId: string | any = localStorage.getItem("userId");
-    const { data, isError } = useGetAllTasksQuery(userId);
+    const { data, isError } = useGetAllTasksQuery(userId); // calling API 
     const [updateTaskMutation] = useUpdateTaskStatusMutation();
     const [mutate, ,] = useDeleteTaskByIdMutation();
     const dispatch = useDispatch();
@@ -72,6 +67,7 @@ const ViewTask2 = () => {
         };
     }
     taskValues = useSelector((state: RootState) => state.task);
+    console.log("task values", taskValues)
 
     const [currentPage, setCurrentPage] = useState(1);
     const tasksPerPage = 4;
@@ -98,8 +94,8 @@ const ViewTask2 = () => {
     const [editMode, setEditMode] = useState<string | null>(null);
     const [showCompleted, setShowCompleted] = useState(false);
     const [showNotCompleted, setShowNotCompleted] = useState(false);
-    const [startDate, selectStartDate] = useState(new Date());
-    const [endDate, selectEndDate] = useState(new Date());
+    const [startDate, setSelectStartDate] = useState(new Date());
+    const [endDate, setSelectEndDate] = useState(new Date());
     const navigation = useNavigate();
 
     // variables 
@@ -163,6 +159,8 @@ const ViewTask2 = () => {
                 showNotCompleted: showNotCompleted,
             })
         );
+        setSelectStartDate(date.selection.startDate);
+        setSelectEndDate(date.selection.endDate);
 
     };
 
@@ -209,11 +207,12 @@ const ViewTask2 = () => {
     useEffect(() => {
 
         dispatch(taskActions.setFilterByStatus({ searchTerm: searchTerm, showCompleted: showCompleted, showNotCompleted: showNotCompleted }));
+
         console.log("redux store after status filter", taskValues)
 
 
 
-    }, [showCompleted, showNotCompleted])
+    }, [showCompleted, showNotCompleted, dispatch, searchTerm, taskValues])
 
     //   return (
     //     <div> </div>
@@ -271,12 +270,13 @@ const ViewTask2 = () => {
             </div>
             <div className="w-full items-start justify-center px-20 -mb-5 md:gap-8 ">
                 <h2 className="text-2xl font-bold text-blue">{taskValues.filterMessage}</h2>
-                <h2 className="text-2xl font-bold text-blue">{taskValues.filterMessage}</h2> {/*Need extra look  {filterDateMessage} */}
+                {/* <h2 className="text-2xl font-bold text-blue">{taskValues.filterMessage}</h2> */}
+                {/*Need extra look  {filterDateMessage} */}
             </div>
             <div className="w-full flex items-start justify-center  px-20  h-view_task_13  ">
                 <div className="w-full ">
                     <div className="text-xl w-full flex flex-col justify-center gap-4 ">
-                        {taskValues.totalTask.map((task: Task) => (
+                        {!(taskValues.filteredTask.length > 0) && (taskValues.totalTask.map((task: Task) => (
                             <div
                                 key={task._id}
                                 className=" w-full flex items-center hover:bg-task_hover px-5  py-2 hover:cursor-pointer "
@@ -363,7 +363,95 @@ const ViewTask2 = () => {
                                     )}
                                 </div>
                             </div>
-                        ))}
+                        )))}
+                        {(taskValues.filteredTask.length > 0) && (taskValues.filteredTask.map((task: Task) => (
+                            <div
+                                key={task._id}
+                                className=" w-full flex items-center hover:bg-task_hover px-5  py-2 hover:cursor-pointer "
+                            >
+                                <div className="  flex-1 	text-transform: capitalize  text-left overflow-hidden">
+
+                                    {task.task_description}
+                                </div>
+                                <div className="  flex-1 text-left">
+
+                                    {task.date.split("T")[0]}
+                                </div>
+
+                                <div className="w-view_task_6  flex-1 flex justify-start ">
+
+                                    <button
+                                        onClick={() => {
+
+                                            setDeleteErroLogic({ ...deleteErroLogic, delete: true });
+
+                                            setTaskIdToDelete(task._id)
+
+                                        }}
+                                        className="w-10 text-view_task_4 bg-view_task_main_color rounded-md text-view_task_white p-view_task_1 hover:bg-over_due"
+                                    >
+                                        <AiOutlineDelete />
+                                    </button>
+                                </div>
+                                <div className=" flex-1 flex justify-start  ">
+
+                                    <label className="flex items-center ">
+                                        <span className="">Mark as Complete</span>
+                                        <span>
+                                            <input
+                                                type="checkbox"
+                                                className="form-checkbox h-view_task_3 w-view_task_3 text-view_task_main_color ml-8"
+                                                onChange={() => {
+                                                    // handleRadioChange()
+                                                    setSelectedTask({ id: task._id.trim(), status: !task.task_status })
+                                                    console.log("onchaged", task._id, task.task_status)
+                                                }
+
+
+                                                }
+                                                checked={
+                                                    task.task_status ||
+                                                    (selectedTask?.id.trim() === task._id.trim() &&
+                                                        selectedTask?.status)
+
+
+                                                }
+                                                disabled={editMode !== task._id}
+                                            />
+                                        </span>
+                                    </label>
+                                </div>
+                                <div className="  flex-1">
+                                    {" "}
+
+                                    {!editMode || editMode !== task._id ? (
+                                        <button
+                                            className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold ml-view_task_10 hover:bg-opacity-75"
+                                            onClick={() => {
+                                                setEditMode((prev) => (prev === task._id ? null : task._id));
+                                            }}
+                                        >
+                                            Edit
+                                        </button>
+                                    ) : (
+                                        <div className="flex">
+                                            <button
+                                                className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold ml-view_task_10 hover:bg-opacity-75"
+                                                onClick={() => window.location.reload()}
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold ml-2 hover:bg-opacity-75"
+                                                onClick={handleSaveClick}
+                                            >
+                                                Save
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )))}
                     </div>
                 </div>
 
