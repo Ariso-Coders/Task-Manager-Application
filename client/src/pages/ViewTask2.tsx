@@ -160,10 +160,11 @@ const ViewTask2 = () => {
 
 
     const handleDateRange = (date: any) => {
-
+        const startDate=new Date(date.selection.startDate).toISOString()
+        const endDate=new Date(date.selection.endDate).toISOString()
         dispatch(
             taskActions.setFilterByDate({
-                date: { selection: { endDate: date.selection.endDate, startDate: date.selection.startDate } },
+                date: { selection: { endDate: endDate, startDate:startDate } },
                 searchTerm: searchTerm,
                 showCompleted: showCompleted,
                 showNotCompleted: showNotCompleted,
