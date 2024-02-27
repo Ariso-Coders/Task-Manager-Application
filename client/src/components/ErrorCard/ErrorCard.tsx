@@ -22,7 +22,7 @@ const ErrorCard: React.FC<ErrorCardProps> = (props) => {
     };
 
     return (
-        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-1000  ">
+        <div className=" absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50  ">
             <div className=" py-5 px-10  flex flex-col justify-center items-center rounded-lg bg-white gap-10">
                 <p className="text-lg mb-4 capitalize text-red"> {props.details.message}</p>
                 <section className="mt-5vh flex gap-5">

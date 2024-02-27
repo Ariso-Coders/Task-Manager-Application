@@ -268,7 +268,7 @@ const ViewTask2 = () => {
 
     return (
         <div className="w-full min-h-screen flex flex-col justify-start px-3 gap-10 pb-10 ">
-            <div className="w-full">
+            <div className="w-full ">
                 <div className="w-full flex items-center gap-3 py-3">
                     <input
                         placeholder="Search For Task"
@@ -287,7 +287,7 @@ const ViewTask2 = () => {
                         />
                     </div>
                 </div>
-                <div className=" w-full flex flex-col md:flex-row mt-4 md:gap-8 items-end justify-center bg-yellow-100">
+                <div className=" w-full flex flex-col md:flex-row mt-4 md:gap-8 items-end justify-center lg:px-vw2 ">
                     <h1 className=" w-full font-bold text-xl text-center md:mb-0 	text-transform:capitalize ">
                         <span className="hover:underline hover:cursor-pointer" onClick={() => { window.location.reload() }}>
                             {`You have got ${taskValues.totalTask.length} tasks `}  </span>
@@ -315,29 +315,29 @@ const ViewTask2 = () => {
                     </button>
                 </div>
             </div>
-            <div className="w-full items-start justify-center px-20 -mb-5 md:gap-8 ">
+            <div className="w-full items-start justify-center px-20 -mb-5 md:gap-8 lg:px-vw2">
                 <h2 className="text-2xl font-bold text-blue-600">{taskValues.filterMessage}</h2>
 
             </div>
-            <div className="w-full h-auto flex items-start justify-center  px-1  bg-blue-700 text-sm">
+            <div className="w-full h-auto flex items-start justify-center  px-1   text-sm lg:px-vw10 ">
                 <div className="w-full">
                     <div className=" w-full flex flex-col justify-center  ">
                         {(currentTasks.length > 0) && (currentTasks.map((task: Task) => (
                             <div
                                 key={task._id}
-                                className=" w-full flex flex-col relative border-black"
+                                className=" w-full flex flex-col relative  lg:flex-row hover:bg-gray-100 lg:px-5"
                             >
-                                <div className="w-full flex items-center  justify-between hover:bg-task_hover    hover:cursor-pointer bg-red-500 *:border border-black h-vh10 z-50"  >
-                                    <div className="text-transform:capitalize  text-left overflow-hidden bg-blue-400 lg:basis-1/2">   {/* 1*/}
+                                <div className="w-full flex items-center  justify-between    h-vh10 z-10"  >
+                                    <div className="text-transform:capitalize  text-left overflow-hidden  lg:basis-1/2">   {/* 1*/}
 
                                         {task.task_description}
                                     </div>
-                                    <div className="text-left bg-yellow-500 lg:basis-1/4 flex items-center gap-4">   {/* 2*/}
+                                    <div className="text-left  lg:basis-1/2 flex items-center gap-4">   {/* 2*/}
                                         <span>
 
                                             {task.date.split("T")[0]}
                                         </span>
-                                        <div className=" bg-green-500" onClick={() => {
+                                        <div className=" lg:hidden " onClick={() => {
 
                                             setMobileTaskStyleClass({ taskClass: task._id, cound: mobileTaskStyleClass.cound + 1 })
                                         }}>
@@ -347,7 +347,7 @@ const ViewTask2 = () => {
                                     </div>
 
 
-                                    <div className="lg:flex justify-start  bg-pink lg:basis-1/2 hidden">  {/* 3*/}
+                                    <div className=" justify-start  bg-pink lg:basis-1/2 hidden">  {/* 3*/}
 
                                         <label className="flex items-center ">
                                             <span className="">Mark as Complete</span>
@@ -375,7 +375,7 @@ const ViewTask2 = () => {
                                             </span>
                                         </label>
                                     </div>
-                                    <div className="   lg:flex justify-start  bg-green-500 lg:basis-1/5  hidden">  {/* 4*/}
+                                    <div className="    justify-start   lg:basis-1/5  hidden">  {/* 4*/}
 
                                         <button
                                             onClick={() => {
@@ -390,7 +390,7 @@ const ViewTask2 = () => {
                                             <AiOutlineDelete />
                                         </button>
                                     </div>
-                                    <div className="bg-yellow-500  lg:basis-1/4 hidden">   {/* 5*/}
+                                    <div className="  lg:basis-1/4 hidden">   {/* 5*/}
                                         {" "}
 
                                         {!editMode || editMode !== task._id ? (
@@ -420,12 +420,12 @@ const ViewTask2 = () => {
                                         )}
                                     </div>
                                 </div>
-                                <div className={`w-full bg-green-500 h-0  border-black -translate-y-vh10  transition-all flex items-center justify-between ${mobileStyleClassHandler(task._id)}`} >
+                                <div className={`w-full  h-0   -translate-y-vh10  transition-all flex items-center justify-between ${mobileStyleClassHandler(task._id)} lg:translate-y-0   lg:h-vh10`} >
 
 
 
 
-                                    <div className={` bg-pink `}>  {/* 3*/}
+                                    <div className={`   lg:basis-2/3`}>  {/* 3*/}
 
                                         <label className="flex items-center ">
                                             <span className="">Mark as Complete</span>
@@ -454,7 +454,7 @@ const ViewTask2 = () => {
                                         </label>
                                     </div>
 
-                                    <div className="   flex justify-start  bg-green-500 lg:basis-1/5 ">  {/* 4*/}
+                                    <div className="   flex justify-start   lg:basis-1/3 ">  {/* 4*/}
 
                                         <button
                                             onClick={() => {
@@ -464,18 +464,18 @@ const ViewTask2 = () => {
                                                 setTaskIdToDelete(task._id)
 
                                             }}
-                                            className="w-10 text-view_task_4 bg-view_task_main_color rounded-md text-view_task_white p-view_task_1 hover:bg-over_due"
+                                            className=" text-view_task_4  rounded-sm text-red-500 p-1 transition-all  hover:scale-150"
                                         >
                                             <AiOutlineDelete />
                                         </button>
                                     </div>
 
-                                    <div className="bg-yellow-500  lg:basis-1/4 ">   {/* 5*/}
+                                    <div className="  lg:basis-1/3 ">   {/* 5*/}
                                         {" "}
 
                                         {!editMode || editMode !== task._id ? (
                                             <button
-                                                className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold hover:bg-opacity-75"
+                                                className=" rounded-sm text-black bg-gray-300 py-1 px-2 transition-all hover:text-white hover:bg-gray-700"
                                                 onClick={() => {
                                                     setEditMode((prev) => (prev === task._id ? null : task._id));
                                                 }}
@@ -483,15 +483,15 @@ const ViewTask2 = () => {
                                                 Edit
                                             </button>
                                         ) : (
-                                            <div className="flex ">
+                                            <div className="flex gap-2 ">
                                                 <button
-                                                    className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold  hover:bg-opacity-75"
+                                                    className="rounded-sm text-black bg-gray-300 py-1 px-2 transition-all hover:text-white hover:bg-gray-700"
                                                     onClick={() => window.location.reload()}
                                                 >
                                                     Cancel
                                                 </button>
                                                 <button
-                                                    className="bg-view_task_main_color p-view_task_1 rounded-md text-view_task_white font-bold  hover:bg-opacity-75"
+                                                    className="rounded-sm text-black bg-green-300 py-1 px-2 transition-all hover:text-white hover:bg-green-700"
                                                     onClick={handleSaveClick}
                                                 >
                                                     Save
