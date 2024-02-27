@@ -19,7 +19,7 @@ export interface TasksState {
   totalTask: Task[];
   filteredTask: Task[];
   filterMessage: string;
-  overdueTasks?: overdueInterface;
+  overdueTasks: Task[];
 }
 
 export interface filterTaskStaus {
@@ -33,6 +33,7 @@ const initialState: TasksState = {
   totalTask: [],
   filteredTask: [],
   filterMessage: "",
+  overdueTasks: [],
 };
 const taskSlice = createSlice({
   name: "task",
@@ -57,10 +58,6 @@ const taskSlice = createSlice({
               formatDate(new Date())
             ) && task.task_status === false
         ),
-        overdueTasks: {
-          overdueTaskCount: state.filteredTask.length,
-          overdueLogic: state.filteredTask.length >= 0 ? true : false,
-        },
       };
 
       return state;
@@ -102,7 +99,6 @@ const taskSlice = createSlice({
           filterMessage: "",
         };
       }
-      
 
       return state;
     },
@@ -116,15 +112,16 @@ const taskSlice = createSlice({
         showNotCompleted: boolean;
       }>
     ) {
-      const { date, searchTerm, showCompleted, showNotCompleted } = action.payload;
-    
+      const { date, searchTerm, showCompleted, showNotCompleted } =
+        action.payload;
+
       const filteredTasks = state.totalTask.filter((task) => {
         const taskDate = task.date?.split("T")[0];
         const withinRange =
-          task.date?.split("T")[0] >= formatDate(new Date(date.selection.startDate)) &&
+          task.date?.split("T")[0] >=
+            formatDate(new Date(date.selection.startDate)) &&
           taskDate <= formatDate(new Date(date.selection.endDate));
-        const singleDay =
-          taskDate.toDateString === date.selection.startDate;
+        const singleDay = taskDate.toDateString === date.selection.startDate;
         return (
           (withinRange || singleDay) &&
           task.task_description
@@ -147,9 +144,9 @@ newEndDate.setDate(newEndDate.getDate()+1);
         `Results for tasks between ${newStartDate.toISOString().split('T')[0]} and ${newEndDate.toISOString().split('T')[0]}` :
           'No tasks available for the selected date range',
       };
-    
+
       return state;
-    },    
+    },
   },
   extraReducers: (builder) => {
     // need to move update into extraReducer ?
@@ -157,7 +154,17 @@ newEndDate.setDate(newEndDate.getDate()+1);
     builder.addMatcher(
       taskApi.endpoints.getAllTasks.matchFulfilled,
       (state, { payload }) => {
-        state = { ...state, totalTask: payload.tasksToTheUser };
+        state = {
+          ...state,
+          totalTask: payload.tasksToTheUser,
+          overdueTasks: payload.tasksToTheUser.filter(
+            (task) =>
+              compareDates(
+                task.date.split("T")[0].trim(),
+                formatDate(new Date())
+              ) && task.task_status === false
+          ),
+        };
         console.log("output from extrareducers", state.totalTask);
         return state;
       }

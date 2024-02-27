@@ -39,8 +39,9 @@ function App() {
             localStorage.getItem("userToken") !== null ? <ViewTask2 /> : <MyComponent />
           } />
 
-          <Route path="/task2" element={<ViewTask2/>} />
+          
 
+          
           <Route path="*" element={<MyComponent />} />
         </Routes>
 
