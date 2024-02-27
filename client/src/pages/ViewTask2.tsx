@@ -288,8 +288,8 @@ const ViewTask2 = () => {
                     </div>
                 </div>
                 <div className=" w-full flex flex-col md:flex-row mt-4 md:gap-8 items-end justify-center lg:px-vw2 ">
-                    <h1 className=" w-full font-bold text-xl text-center md:mb-0 	text-transform:capitalize ">
-                        <span className="hover:underline hover:cursor-pointer" onClick={() => { window.location.reload() }}>
+                    <h1 className=" w-full font-bold text-xl text-center md:mb-0 capitalize ">
+                        <span className="hover:underline hover:cursor-pointer capitalize" onClick={() => { window.location.reload() }}>
                             {`You have got ${taskValues.totalTask.length} tasks `}  </span>
                         {taskValues.overdueTasks.length > 0 && (
                             <span
@@ -304,13 +304,13 @@ const ViewTask2 = () => {
                         )}{" "}
                     </h1>
                     <button
-                        className="text-xs bg-view_task_main_color  px-2 py-1 rounded-sm text-view_task_white font-bold flex items-center justify-center hover:bg-green "
+                        className="text-sm  min-w-vw8 flex items-center justify-center gap-2 px-3 py-2 font-semibold uppercase text-white bg-green-400 transition-all "
                         onClick={() => {
 
                             setTaskOverLayLogic(true);
                         }}
-                    >
-                        <IoAddSharp className="size-4 text-white" />
+                    > Add new
+                        <IoAddSharp className="size-4  text-white font-bold" />
                         {/* <span className="">Add</span> */}
                     </button>
                 </div>
