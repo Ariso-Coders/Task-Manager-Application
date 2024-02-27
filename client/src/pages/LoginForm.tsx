@@ -75,7 +75,7 @@ const LoginForm = () => {
               placeholder="Enter Your Email"
             />
             {errors.email && (
-              <p className="text-left text-red">{errors.email.message}</p>
+              <p className="text-left text-red-700">{errors.email.message}</p>
             )}
           </div>
           <div className="mb-4">
@@ -93,12 +93,12 @@ const LoginForm = () => {
               type="password"
             />
             {errors.password && (
-              <p className="text-left text-red">{errors.password.message}</p>
+              <p className="text-left text-red-700">{errors.password.message}</p>
             )}
           </div>
 
           <Button buttonLabel="Login"  />
-          {errorMessage && <p className="text-red">{errorMessage}</p>}
+          {errorMessage && <p className="text-red-700">{errorMessage}</p>}
           {successMessage && <p className="text-green">{successMessage}</p>}
           <p>
             Don't Have an Account?{" "}

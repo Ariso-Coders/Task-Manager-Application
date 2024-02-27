@@ -87,7 +87,7 @@ function SignUp() {
               className="p-3 w-full border-2 border-gray-300 rounded-md"
             />
             {errors.email && (
-              <p className="text-left text-red">{errors.email.message}</p>
+              <p className="text-left text-red-700">{errors.email.message}</p>
             )}
           </div>
 
@@ -103,7 +103,7 @@ function SignUp() {
               type="text"
             />
             {errors.name && (
-              <p className="text-left text-red">{errors.name.message}</p>
+              <p className="text-left text-red-700">{errors.name.message}</p>
             )}
           </div>
 
@@ -119,7 +119,7 @@ function SignUp() {
               type="date"
             />
             {errors.dob && (
-              <p className="text-left text-red">{errors.dob.message}</p>
+              <p className="text-left text-red-700">{errors.dob.message}</p>
             )}
           </div>
 
@@ -139,7 +139,7 @@ function SignUp() {
               type="password"
             />
             {errors.password && (
-              <p className="text-left text-red">{errors.password.message}</p>
+              <p className="text-left text-red-700">{errors.password.message}</p>
             )}
           </div>
 
@@ -161,7 +161,7 @@ function SignUp() {
               type="password"
             />
             {errors.confirmPassword && (
-              <p className="text-left text-red">
+              <p className="text-left text-red-700">
                 {errors.confirmPassword.message}
               </p>
             )}
@@ -173,7 +173,7 @@ function SignUp() {
           >
             SignUp
           </button>
-          {errorMessage && <p className="text-red">{errorMessage}</p>}
+          {errorMessage && <p className="text-red-700">{errorMessage}</p>}
           {successMessage && <p className="text-green">{successMessage}</p>}
 
           <div className="mt-4">
