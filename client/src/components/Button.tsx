@@ -1,4 +1,4 @@
-type ButtonProps = {
+interface ButtonProps {
   buttonLabel: string
 }
 export const Button = (props: ButtonProps) => {
@@ -8,5 +8,5 @@ export const Button = (props: ButtonProps) => {
         Log in
       </button>
     </div>
-  );
-};
+  )
+}
