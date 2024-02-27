@@ -566,6 +566,7 @@ const ViewTask2 = () => {
                                     />
                                 </div>
                             </div>
+                            <button onClick={() => window.location.reload()}>Clear Dates</button>
                         </div>
                     </div>
                 )}
