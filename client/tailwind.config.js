@@ -9,6 +9,8 @@ module.exports = {
         main_color: "#5534A5",
         purple: "#7e5bef",
         pink: "#ff49db",
+        dark_purple:"#081A51",
+        light_white:"rgba(255,255,0,18)",
 
         view_task_main_color: "#5534A5",
         view_task_white: "#fff",
@@ -51,6 +53,7 @@ module.exports = {
         vw8: "8vw",
         vw9: "9vw",
         vw10: "10vw",
+        vw20:"20vw"
       },
       fontSize: {
         view_task_1: "8px",
@@ -75,6 +78,7 @@ module.exports = {
 
         sm_: { max: "639px" },
       },
+      
     },
   },
   plugins: [],

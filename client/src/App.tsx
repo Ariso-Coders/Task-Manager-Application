@@ -5,6 +5,7 @@ import SignUp from "./pages/SignUp";
 import { Routes, Route, useNavigate } from "react-router-dom";
 // import ViewTask from "./pages/ViewTask";
 import ViewTask2 from "./pages/ViewTask2";
+import SideBar from './components/sidebar/SideBar';
 
 
 
@@ -43,6 +44,14 @@ function App() {
 
           
           <Route path="*" element={<MyComponent />} />
+          <Route path="/sidebar" element={<SideBar/>}></Route>
+
+
+
+
+
+
+
         </Routes>
 
       </div>
