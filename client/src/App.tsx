@@ -6,6 +6,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 // import ViewTask from "./pages/ViewTask";
 import ViewTask2 from "./pages/ViewTask2";
 import SideBar from './components/sidebar/SideBar';
+import { NavBar } from "./components/NavBar/NavBar";
 
 
 
@@ -52,6 +53,7 @@ function App() {
 
 
 
+          
         </Routes>
 
       </div>

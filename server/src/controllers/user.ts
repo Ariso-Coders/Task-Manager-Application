@@ -55,6 +55,7 @@ export const login = async (
       message: "Login Successfull",
       token: token,
       email: existUser.email,
+      name:existUser.name,
     });
   } catch (err) {
     if (!err.statusCode) {
