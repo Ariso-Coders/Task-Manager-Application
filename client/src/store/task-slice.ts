@@ -132,16 +132,17 @@ const taskSlice = createSlice({
             (!showCompleted && !showNotCompleted))
         );
       });
-
+    //fix error of displaying wrong date
+const newStartDate = new Date(date.selection.startDate);
+const newEndDate = new Date(date.selection.endDate);
+newStartDate.setDate(newStartDate.getDate() + 1);
+newEndDate.setDate(newEndDate.getDate()+1);
       state = {
         ...state,
         filteredTask: filteredTasks,
-        filterMessage:
-          filteredTasks.length > 0
-            ? `Results for tasks between ${
-                date.selection.startDate.split("T")[0]
-              } and ${date.selection.endDate.split("T")[0]}`
-            : "No tasks available for the selected date range",
+        filterMessage: filteredTasks.length > 0 ?
+        `Results for tasks between ${newStartDate.toISOString().split('T')[0]} and ${newEndDate.toISOString().split('T')[0]}` :
+          'No tasks available for the selected date range',
       };
 
       return state;

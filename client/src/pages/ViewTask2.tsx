@@ -201,10 +201,13 @@ const ViewTask2 = () => {
     };
 
 
-    const handleRadioChange = (taskId: string, status: boolean) => {
-        setSelectedTask({ id: taskId, status });
+    const handleRadioChange = async (taskId: string, status: boolean) => {
+        try {
+            await updateTaskStatus(taskId, !status); // Invert the status when checkbox is clicked
+        } catch (error) {
+            console.error("Error updating task status", error);
+        }
     };
-
 
 
     // error card handlers 
@@ -355,22 +358,10 @@ const ViewTask2 = () => {
                                                 <input
                                                     type="checkbox"
                                                     className="form-checkbox h-view_task_3 w-view_task_3 text-view_task_main_color ml-8"
-                                                    onChange={() => {
-                                                        // handleRadioChange()
-                                                        setSelectedTask({ id: task._id.trim(), status: !task.task_status })
-                                                        console.log("onchaged", task._id, task.task_status)
+                                                    onChange={() =>
+                                                        handleRadioChange(task._id, task.task_status)
                                                     }
-
-
-                                                    }
-                                                    checked={
-                                                        task.task_status ||
-                                                        (selectedTask?.id.trim() === task._id.trim() &&
-                                                            selectedTask?.status)
-
-
-                                                    }
-                                                    disabled={editMode !== task._id}
+                                                    checked={task.task_status}
                                                 />
                                             </span>
                                         </label>
@@ -433,22 +424,10 @@ const ViewTask2 = () => {
                                                 <input
                                                     type="checkbox"
                                                     className="form-checkbox h-view_task_3 w-view_task_3 text-view_task_main_color ml-8"
-                                                    onChange={() => {
-
-                                                        setSelectedTask({ id: task._id.trim(), status: !task.task_status })
-                                                        console.log("onchaged", task._id, task.task_status)
+                                                    onChange={() =>
+                                                        handleRadioChange(task._id, task.task_status)
                                                     }
-
-
-                                                    }
-                                                    checked={
-                                                        task.task_status ||
-                                                        (selectedTask?.id.trim() === task._id.trim() &&
-                                                            selectedTask?.status)
-
-
-                                                    }
-                                                    disabled={editMode !== task._id}
+                                                    checked={task.task_status}
                                                 />
                                             </span>
                                         </label>
@@ -566,6 +545,7 @@ const ViewTask2 = () => {
                                     />
                                 </div>
                             </div>
+                            <button onClick={() => window.location.reload()}>Clear Dates</button>
                         </div>
                     </div>
                 )}

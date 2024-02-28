@@ -5,9 +5,9 @@ type Props = {}
 
 const Task = () => {
     return (
-        <div className='w-full bg-blue-500 py-vh5'>
+        <div className='w-full bg-blue-500 py-vh5 ' >
 
-            <section> search + filter <br />
+            <section > search + filter <br />
 
                 overdue warning
             </section>
