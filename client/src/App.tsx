@@ -5,6 +5,7 @@ import SignUp from "./pages/SignUp";
 import { Routes, Route, useNavigate } from "react-router-dom";
 // import ViewTask from "./pages/ViewTask";
 import ViewTask2 from "./pages/ViewTask2";
+import { NavBar } from "./components/NavBar/NavBar";
 
 
 
@@ -43,6 +44,7 @@ function App() {
 
           
           <Route path="*" element={<MyComponent />} />
+          
         </Routes>
 
       </div>

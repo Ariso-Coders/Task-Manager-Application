@@ -40,6 +40,7 @@ const LoginForm = () => {
       localStorage.setItem("userToken", loginRespond.data.token);
       localStorage.setItem("userEmail", decodedToken.email);
       localStorage.setItem("userId",decodedToken.userId);
+      localStorage.setItem("userName",loginRespond.data.name);
       navigation("/task");
       window.location.reload();
   
