@@ -4,7 +4,7 @@ import { FiLogOut } from 'react-icons/fi'; // Import FiLogOut icon from React Ic
 export default function SideBar() {
   return (
     <div className='flex h-screen'>
-      <div className='bg-dark_purple h-screen  pt-vh4 w-vw20 flex flex-col gap-vh5 items-center justify-between'>
+      <div className='bg-dark_purple h-screen  pt-vh4 sm:w-vw20 w-full flex flex-col gap-vh5 items-center justify-between'>
         <div className="inline-flex text-view_task_white origin-left font-medium md:text-4xl">
           ARISO Technologies
         </div>

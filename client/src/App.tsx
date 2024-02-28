@@ -37,18 +37,18 @@ function App() {
 
           <Route path="/signup" element={<SignUp />} />
 
-          <Route path="/task" element={
+          <Route path="/task2" element={
 
             localStorage.getItem("userToken") !== null ? <ViewTask2 /> : <MyComponent />
           } />
-{/* 
+
           <Route path="/task" element={<Layout>
             <Task />
           </Layout>} >
 
 
 
-          </Route> */}
+          </Route>
           <Route path="/task2" element={<Layout>
             <User />
           </Layout>} >
