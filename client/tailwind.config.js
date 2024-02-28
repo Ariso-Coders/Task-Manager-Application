@@ -51,6 +51,7 @@ module.exports = {
         vw8: "8vw",
         vw9: "9vw",
         vw10: "10vw",
+        vw80: "80vw",
       },
       fontSize: {
         view_task_1: "8px",
