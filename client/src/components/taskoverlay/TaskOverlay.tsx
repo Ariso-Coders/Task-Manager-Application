@@ -1,11 +1,15 @@
 import React, { FC, FormEvent, useState } from "react";
 import { isEmpty } from "../../utils/Validations";
-import { useSelector, TypedUseSelectorHook } from 'react-redux';
-import { RootState } from '../../store/';
-import { PostTaskResponsetInterface, PostTaskRequestInterface, taskApi, usePostTaskMutation } from '../../store/fetures/task-api';
+import { useSelector, TypedUseSelectorHook } from "react-redux";
+import { RootState } from "../../store/";
+import {
+  PostTaskResponsetInterface,
+  PostTaskRequestInterface,
+  taskApi,
+  usePostTaskMutation,
+} from "../../store/fetures/task-api";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
-
 
 // interface MyFunctionalComponentProps { }
 
@@ -15,10 +19,8 @@ interface InputState {
   date: Date | "";
   task: string | "";
   erorMsg: string | "";
-  erroLogic: boolean | false
+  erroLogic: boolean | false;
 }
-
-
 
 interface TaskDetails {
   date: string;
@@ -29,16 +31,13 @@ interface TaskDetails {
   // Add other properties if there are any
 }
 
-
 interface ErrorResponse {
   message?: string | "";
 }
 
-
-
 interface PostTaskMutationResponse {
   data?: PostTaskResponsetInterface;
-  error?: FetchBaseQueryError | SerializedError
+  error?: FetchBaseQueryError | SerializedError;
 }
 
 interface MyFunctionalComponentProps {
@@ -47,22 +46,20 @@ interface MyFunctionalComponentProps {
 }
 
 interface respond {
-  message: string | null,
-  details: string | null
+  message: string | null;
+  details: string | null;
 }
 
-
-
 const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
-
   // const {} = usePostTaskMutation();
-  const [postTaskMutation, { isLoading, status, isError, data, error }] = usePostTaskMutation();
+  const [postTaskMutation, { isLoading, status, isError, data, error }] =
+    usePostTaskMutation();
 
   const [inputDetails, setInputDetails] = useState<InputState>({
     date: "",
     task: "",
     erorMsg: "",
-    erroLogic: false
+    erroLogic: false,
   });
 
   const userId: string | null = localStorage.getItem("userId");
@@ -70,16 +67,17 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isEmpty(inputDetails.date) || isEmpty(inputDetails.task)) {
-      setInputDetails({ ...inputDetails, erroLogic: true, erorMsg: "Date or task cannot be empty" })
+      setInputDetails({
+        ...inputDetails,
+        erroLogic: true,
+        erorMsg: "Date or task cannot be empty",
+      });
       return;
     } else {
-      setInputDetails({ ...inputDetails, erroLogic: false, erorMsg: "" })
+      setInputDetails({ ...inputDetails, erroLogic: false, erorMsg: "" });
     }
 
-
-
     try {
-
       // const taskCreationRespond: respond = await axios.post(
       //   "http://localhost:8080/task/createTask", {
       //   taskDate: inputDetails.date,
@@ -93,31 +91,29 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
       // }
       // )
 
-      let createTaskBackendRespond: PostTaskMutationResponse = await postTaskMutation({
-        task: inputDetails.task || "",
-        taskDate: inputDetails.date,
-        userId: userId?.toString() || ""
-      });
-      
+      let createTaskBackendRespond: PostTaskMutationResponse =
+        await postTaskMutation({
+          task: inputDetails.task || "",
+          taskDate: inputDetails.date,
+          userId: userId?.toString() || "",
+        });
 
       window.location.reload();
-      
-
-
     } catch (err: any) {
-      console.log("error that passed into ", err)
+      console.log("error that passed into ", err);
       if (err.response.status === 400 || err.response.status === 500) {
         if (!inputDetails.erroLogic) {
-
-          setInputDetails({ ...inputDetails, erroLogic: true, erorMsg: err.response.data.message })
+          setInputDetails({
+            ...inputDetails,
+            erroLogic: true,
+            erorMsg: err.response.data.message,
+          });
         }
       } else {
-        setInputDetails({ ...inputDetails, erroLogic: false, erorMsg: "" })
+        setInputDetails({ ...inputDetails, erroLogic: false, erorMsg: "" });
       }
-
     }
   };
-
 
   return (
     <div className="absolute top-0 left-0 w-screen h-screen flex items-center justify-center text-white opacity bg-black bg-opacity-50">
@@ -125,6 +121,7 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
         className=" w-1/3 bg-main_color px-10 py-10 flex flex-col  gap-5"
         onSubmit={handleSubmit}
       >
+        <h1 className="text-black text-xl">Add New Task</h1>
         <section>
           <h4>Select Date</h4>
           <input
@@ -132,9 +129,11 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
             name="date"
             className="w-full pl-2 text-black outline-none rounded"
             onChange={(e) => {
-              setInputDetails({ ...inputDetails, date: new Date(e.target.value) });
+              setInputDetails({
+                ...inputDetails,
+                date: new Date(e.target.value),
+              });
             }}
-
           />
         </section>
         <section>
@@ -142,6 +141,7 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
           <input
             type="text"
             name="task"
+            placeholder="Enter your Task here"
             className="w-full pl-2 text-black outline-none rounded"
             onChange={(e) => {
               setInputDetails({ ...inputDetails, task: e.target.value });
@@ -149,7 +149,6 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
           />
         </section>
         {inputDetails.erroLogic && (
-
           <p className="text-red-700 capitalize text-center font-bold  w-full ">
             {inputDetails.erorMsg}
           </p>
@@ -168,11 +167,11 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
                 date: "",
                 task: "",
                 erorMsg: "",
-                erroLogic: false
+                erroLogic: false,
               });
               props.onCancelClick(false);
             }}
-            className="rounded-md text-sm bg-white text-main_color py-1 px-3 hover:bg-gray hover:text-white border border-white"
+            className="rounded-md text-sm bg-white text-main_color py-1 px-3 hover:bg-main_color hover:text-white border border-white "
           >
             Cancel
           </button>

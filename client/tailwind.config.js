@@ -9,7 +9,7 @@ module.exports = {
         main_color: "#5534A5",
         purple: "#7e5bef",
         pink: "#ff49db",
-
+        over_due_background: "#FA8282",
         view_task_main_color: "#5534A5",
         view_task_white: "#fff",
       },

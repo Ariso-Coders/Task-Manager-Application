@@ -5,7 +5,6 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
-
 type LoginFormData = {
   email: string;
   password: string;
@@ -19,10 +18,9 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>();
- 
+
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
-
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     console.log(data);
@@ -39,10 +37,10 @@ const LoginForm = () => {
       const decodedToken: any = jwtDecode(loginRespond.data.token);
       localStorage.setItem("userToken", loginRespond.data.token);
       localStorage.setItem("userEmail", decodedToken.email);
-      localStorage.setItem("userId",decodedToken.userId);
+      localStorage.setItem("userId", decodedToken.userId);
+      localStorage.setItem("userName", loginRespond.data.name);
       navigation("/task");
       window.location.reload();
-  
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
         setErrorMessage("This email is not registered or Invalid Password");
@@ -93,11 +91,13 @@ const LoginForm = () => {
               type="password"
             />
             {errors.password && (
-              <p className="text-left text-red-700">{errors.password.message}</p>
+              <p className="text-left text-red-700">
+                {errors.password.message}
+              </p>
             )}
           </div>
 
-          <Button buttonLabel="Login"  />
+          <Button buttonLabel="Login" />
           {errorMessage && <p className="text-red-700">{errorMessage}</p>}
           {successMessage && <p className="text-green">{successMessage}</p>}
           <p>
