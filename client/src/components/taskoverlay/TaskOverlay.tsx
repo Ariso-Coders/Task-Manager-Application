@@ -98,10 +98,10 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
         taskDate: inputDetails.date,
         userId: userId?.toString() || ""
       });
-      
+
 
       window.location.reload();
-      
+
 
 
     } catch (err: any) {
@@ -120,13 +120,16 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
 
 
   return (
-    <div className="absolute top-0 left-0 w-screen h-screen flex items-center justify-center text-white opacity bg-black bg-opacity-50">
+    <div className="absolute top-0 left-0 
+    w-full h-full 
+    flex items-center justify-center text-white opacity bg-black bg-opacity-50">
       <form
-        className=" w-1/3 bg-main_color px-10 py-10 flex flex-col  gap-5"
+        className=" mx-vw5 w-full sm:mx-vw10 lg:w-1/2 bg-main_color px-10 py-10 flex flex-col  gap-5"
         onSubmit={handleSubmit}
       >
+        <h1 className="text-xl">Add New Task</h1>
         <section>
-          <h4>Select Date</h4>
+          <h4 className="w-full text-left">Select Date</h4>
           <input
             type="date"
             name="date"
@@ -138,7 +141,7 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
           />
         </section>
         <section>
-          <h4>Enter Task</h4>
+          <h4 className="w-full text-left">Enter Task</h4>
           <input
             type="text"
             name="task"

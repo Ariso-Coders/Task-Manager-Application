@@ -18,6 +18,7 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { FaSliders } from "react-icons/fa6";
+import { tr } from "date-fns/locale";
 
 
 export interface Task {
@@ -43,10 +44,14 @@ interface MobileTaskStyleInterface {
 }
 
 
+type props = {
+    erroLogicValue: boolean
+}
 
 
 
-const Task = () => {
+
+const Task = ({ erroLogicValue }: props) => {
 
 
     const userId: string | any = localStorage.getItem("userId");
@@ -261,9 +266,9 @@ const Task = () => {
         console.log("called")
         console.log("redux store after status filter", taskValues)
 
+        setLogouErrorLogic(erroLogicValue)
 
-
-    }, [showCompleted, showNotCompleted, searchTerm])
+    }, [showCompleted, showNotCompleted, searchTerm, erroLogicValue])
 
 
 
@@ -290,13 +295,136 @@ const Task = () => {
                 overdue warning
             </section>
 
-            <section className="w-full flex flex-col gap-vh4">
+            <section className="w-full h-auto flex flex-col gap-vh4">
                 <h1 className="capitalize font-bold text-xl">you have 4 tasks</h1>
                 <div className="w-full flex justify-end">
-                    <button className="px-vw5 rounded-sm  py-1 border-2 border-main_color hover:bg-main_color hover:text-white transition-all">ADD</button>
+                    <button className="px-vw5 rounded-sm  py-1 border-2 border-main_color hover:bg-main_color hover:text-white transition-all" onClick={() => {
+
+                        setTaskOverLayLogic(true);
+                    }} >ADD</button>
                 </div>
-                mapped tasks <br />
+
+                <div className="w-full h-auto border border-gray-200 py-vh4 px-vw3 rounded-md">
+                    <table className="table-auto  w-full h-auto overflow-scroll ">
+                        <thead>
+                            <tr className=" text-left border-b h-vh5 border-b-gray-300 ">
+                                <th>Task Name</th>
+                                <th>Task Date</th>
+                                <th>Task Status</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                (currentTasks.length > 0) && (
+                                    currentTasks.map((task: Task) => (
+
+                                        <tr key={task._id} className="text-left border-b  border-gray-400">
+                                            <td className="">{task.task_description}</td>
+                                            <td>{task.date.split("T")[0]}</td>
+                                            <td> <span>
+                                                <input
+                                                    type="checkbox"
+                                                    className="form-checkbox h-view_task_3 w-view_task_3 text-view_task_main_color ml-8"
+                                                    onChange={() =>
+                                                        handleRadioChange(task._id, task.task_status)
+                                                    }
+                                                    checked={task.task_status}
+                                                />
+                                            </span></td>
+                                            <td>
+                                                <button
+                                                    onClick={() => {
+                                                        console.log("delete svg clicked")
+
+                                                        setDeleteErroLogic({ ...deleteErroLogic, delete: true });
+
+                                                        setTaskIdToDelete(task._id)
+
+                                                    }}
+                                                    className=" text-view_task_4  rounded-sm text-red-500 p-1 transition-all  hover:scale-150"
+                                                >
+                                                    <AiOutlineDelete />
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                    ))
+                                )
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+
             </section>
+
+
+            {deleteErroLogic.delete && (
+                <ErrorCard
+                    fn={handleDeleteErrorCardClick}
+                    details={{
+                        message: "Do you want to  Delete this task ?",
+                        btn1: [true, "Yes"],
+                        btn2: [true, "No"],
+                    }}
+                />
+            )}
+            {logoutErroLogic && (
+                <ErrorCard
+                    fn={handleLogoutErrorCardClick}
+                    details={{
+                        message: "Are you sure you want to log out?",
+                        btn1: [true, "Yes"],
+                        btn2: [true, "No"],
+                    }}
+                />
+            )}
+
+            {taskOverLayLogic && <TaskOverlay onCancelClick={taskOVerLayHandler} />}
+
+            {isFilterMenuOpen && (
+                <div className="absolute top-20 right-10 bg-purple px-5 py-10 rounded-md">
+                    <div className="flex flex-col">
+                        <div className="flex items-center mb-4">
+                            <p className="mr-2">Filter by:</p>
+                            <div className="flex">
+                                <label className="inline-flex items-center mr-4">
+                                    <input
+                                        type="checkbox"
+                                        className="form-checkbox h-5 w-5 text-blue-500"
+                                        checked={showCompleted}
+                                        onChange={() => setShowCompleted(!showCompleted)}
+                                    />
+                                    <span className="ml-2">Completed</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        className="form-checkbox h-5 w-5 text-blue-500"
+                                        checked={showNotCompleted}
+                                        onChange={() => setShowNotCompleted(!showNotCompleted)}
+                                    />
+                                    <span className="ml-2">Not Completed</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div className="flex items-center">
+                            <p className="mr-2">Date:</p>
+                            <div>
+                                <DateRangePicker
+                                    ranges={[selectionRange]}
+                                    onChange={handleDateRange}
+                                    className="w-full"
+                                />
+                            </div>
+                        </div>
+                        <button onClick={() => window.location.reload()}>Clear Dates</button>
+                    </div>
+                </div>
+            )}
+
 
 
         </div>

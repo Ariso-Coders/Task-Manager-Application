@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import LoginForm from "./pages/LoginForm";
 import SignUp from "./pages/SignUp";
@@ -8,6 +8,8 @@ import ViewTask2 from "./pages/ViewTask2";
 import Layout from "./Layout/Layout";
 import Task from "./pages/Task";
 import User from "./pages/User";
+import AboutUs from "./pages/AboutUs";
+import ContactUs from "./pages/ContactUs";
 
 
 
@@ -26,6 +28,12 @@ const MyComponent = () => {
 }
 
 function App() {
+  const [layoutTaskLogicValue, setLayoutTaskLogicValue] = useState<boolean>(false);
+
+  const layoutTaskHandler = (value: boolean) => {
+    setLayoutTaskLogicValue(value)
+    console.log("out out in app tsx", value)
+  }
 
   return (
     <div className="App">
@@ -42,13 +50,24 @@ function App() {
             localStorage.getItem("userToken") !== null ? <ViewTask2 /> : <MyComponent />
           } />
 
-          <Route path="/task" element={<Layout>
-            <Task />
+          <Route path="/task" element={<Layout taskLogicCallBack={layoutTaskHandler} >
+            <Task erroLogicValue={layoutTaskLogicValue} />
           </Layout>} >
-
-
-
           </Route>
+          <Route path="/user" element={<Layout taskLogicCallBack={layoutTaskHandler} >
+            <User />
+          </Layout>} >
+          </Route>
+          <Route path="/about" element={<Layout taskLogicCallBack={layoutTaskHandler} >
+            <AboutUs />
+          </Layout>} >
+          </Route>
+          <Route path="/contact" element={<Layout taskLogicCallBack={layoutTaskHandler} >
+            <ContactUs />
+          </Layout>} >
+          </Route>
+
+
           <Route path="/task2" element={<Layout>
             <User />
           </Layout>} >
