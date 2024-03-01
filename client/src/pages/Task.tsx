@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
-import { IoAddSharp } from "react-icons/io5";
 import { AiOutlineDelete } from "react-icons/ai";
-import { FaFilter } from "react-icons/fa";
-import { MdLogout } from "react-icons/md";
-import { IoFilter } from "react-icons/io5";
-import { CiMenuKebab } from "react-icons/ci";
+
 import { useNavigate } from "react-router-dom";
 import ErrorCard from "../components/ErrorCard/ErrorCard";
 import TaskOverlay from "../components/taskoverlay/TaskOverlay";
@@ -18,7 +14,8 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { FaSliders } from "react-icons/fa6";
-import { tr } from "date-fns/locale";
+import { IoIosWarning } from "react-icons/io";
+import { IoIosCloseCircle } from "react-icons/io";
 
 
 export interface Task {
@@ -44,14 +41,11 @@ interface MobileTaskStyleInterface {
 }
 
 
-type props = {
-    erroLogicValue: boolean
-}
 
 
 
 
-const Task = ({ erroLogicValue }: props) => {
+const Task = () => {
 
 
     const userId: string | any = localStorage.getItem("userId");
@@ -112,6 +106,7 @@ const Task = ({ erroLogicValue }: props) => {
             indexOfLastTask
         );
     }
+    console.log("these are the current tasks", currentTasks)
 
     const totalPages = Math.ceil(taskValues.totalTask.length / tasksPerPage);
 
@@ -139,6 +134,15 @@ const Task = ({ erroLogicValue }: props) => {
         taskClass: ""
     });
     const navigation = useNavigate();
+
+    const [isVisible, setIsVisible] = useState(true);
+    const [isHovered, setIsHovered] = useState(false);
+    const [isAppear, setIsAppear] = useState(false);
+    const [isTopic, setIsTopic] = useState(false);
+    const handleCloseClick = () => {
+        setIsVisible(false);
+        setIsAppear(true);
+    };
 
     // variables 
 
@@ -266,9 +270,9 @@ const Task = ({ erroLogicValue }: props) => {
         console.log("called")
         console.log("redux store after status filter", taskValues)
 
-        setLogouErrorLogic(erroLogicValue)
 
-    }, [showCompleted, showNotCompleted, searchTerm, erroLogicValue])
+
+    }, [showCompleted, showNotCompleted, searchTerm,])
 
 
 
@@ -276,7 +280,7 @@ const Task = ({ erroLogicValue }: props) => {
     return (
         <div className='w-full py-vh5  px-vw5 flex flex-col gap-vh5' >
 
-            <section >
+            <section className=" flex flex-col gap-vh5" >
 
                 <div className="w-full flex items-center justify-between  gap-vw3">
                     <input
@@ -292,11 +296,67 @@ const Task = ({ erroLogicValue }: props) => {
                     />
 
                 </div>
-                overdue warning
+                <div className="w-full flex gap-5 justify-center">
+                    {taskValues.overdueTasks.length > 0 && isVisible && (
+                        <span
+                            className="text-white hover:underline hover:cursor-pointer relative transition-all bg-red-500 "
+                            onClick={() => {
+                                dispatch(taskActions.filterTaskDueDate());
+                            }}
+                        >
+                            <div className="relative group flex">
+                                <div className="w-full h-vh5 bg-over_due_background flex items-center justify-center gap-5 p-2 rounded ">
+                                    <IoIosWarning className="text-2xl" />
+                                    And You Have {taskValues.overdueTasks.length} Overdue{" "}
+                                    {taskValues.overdueTasks.length > 1 ? "Tasks" : "Task"}
+                                </div>
+                                <button
+                                    className="absolute -top-5 -right-2 m-2 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleCloseClick();
+                                    }}
+                                >
+                                    <IoIosCloseCircle className="text-red-600 text-xl relative left-3 transition-all hover:text-red-950" />
+                                </button>
+                            </div>
+                        </span>
+                    )}
+                </div>
+                {!isVisible && isAppear && (
+                    <div className="flex items-center justify-center">
+                        <button
+                            onMouseEnter={() => setIsHovered(true)}
+                            onMouseLeave={() => setIsHovered(false)}
+
+
+                        >
+                            <IoIosWarning
+                                className="text-2xl text-over_due"
+                                onClick={() => {
+                                    setIsAppear(false);
+                                    dispatch(taskActions.filterTaskDueDate());
+                                    setIsTopic(true);
+                                }}
+                            />
+
+
+                            {isHovered && (
+                                <div className={` absolute  bg-white p-1 rounded-md text-sm  transition-all hover:text-red-600`}>
+                                    Click here to view tasks
+                                </div>
+                            )}
+
+
+                        </button>
+                    </div>
+                )}
+
+                {isTopic && <h1 className="capitalize font-bold text-xl text-red-700">You have {taskValues.overdueTasks.length} overdue tasks</h1>}
             </section>
 
             <section className="w-full h-auto flex flex-col gap-vh4">
-                <h1 className="capitalize font-bold text-xl">you have 4 tasks</h1>
+                {!isTopic && (<h1 className="capitalize font-bold text-xl">you have {taskValues.totalTask.length} tasks</h1>)}
                 <div className="w-full flex justify-end">
                     <button className="px-vw5 rounded-sm  py-1 border-2 border-main_color hover:bg-main_color hover:text-white transition-all" onClick={() => {
 
@@ -304,7 +364,9 @@ const Task = ({ erroLogicValue }: props) => {
                     }} >ADD</button>
                 </div>
 
-                <div className="w-full h-auto border border-gray-200 py-vh4 px-vw3 rounded-md">
+                <h1 className="w-full text-green-600 text-left">{taskValues.filterMessage}</h1>
+
+                <div className=" h-vh40 overflow-x-hidden overflow-y-scroll flex items-start justify-center border border-gray-200 py-vh4 px-vw3 rounded-md">
                     <table className="table-auto  w-full h-auto overflow-scroll ">
                         <thead>
                             <tr className=" text-left border-b h-vh5 border-b-gray-300 ">
@@ -352,6 +414,7 @@ const Task = ({ erroLogicValue }: props) => {
                                     ))
                                 )
                             }
+
 
 
                         </tbody>
@@ -416,7 +479,9 @@ const Task = ({ erroLogicValue }: props) => {
                                 <DateRangePicker
                                     ranges={[selectionRange]}
                                     onChange={handleDateRange}
-                                    className="w-full"
+                                    className="w-full bg-red-500 border  border-red-600 text-green-500"
+                                    rangeColors={['#f33e5b', '#3ecf8e', '#fed14c']}
+
                                 />
                             </div>
                         </div>
@@ -424,6 +489,48 @@ const Task = ({ erroLogicValue }: props) => {
                     </div>
                 </div>
             )}
+
+            <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                <div>
+                    <p className="text-sm text-gray-700 flex ">
+                        Showing
+                        <span className="font-medium">
+                            {tasksPerPage * currentPage - tasksPerPage + 1}
+                        </span>
+                        to
+                        <span className="font-medium">{tasksPerPage * currentPage}</span>
+                        of
+                        <span className="font-medium">{taskValues.totalTask.length}</span>
+                        results
+                    </p>
+                </div>
+                <div>
+                    <nav
+                        className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+                        aria-label="Pagination"
+                    >
+
+                        <button
+                            onClick={() => {
+                                setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+                            }}
+                            className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-200 focus:z-20 focus:outline-offset-0"
+                        >
+                            Previous
+                        </button>
+                        <button
+                            onClick={() => {
+                                setCurrentPage((prevPage) =>
+                                    Math.min(prevPage + 1, totalPages)
+                                );
+                            }}
+                            className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 focus:z-20 focus:outline-offset-0"
+                        >
+                            Next
+                        </button>
+                    </nav>
+                </div>
+            </div>
 
 
 

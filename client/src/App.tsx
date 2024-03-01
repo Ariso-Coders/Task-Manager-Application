@@ -28,12 +28,7 @@ const MyComponent = () => {
 }
 
 function App() {
-  const [layoutTaskLogicValue, setLayoutTaskLogicValue] = useState<boolean>(false);
 
-  const layoutTaskHandler = (value: boolean) => {
-    setLayoutTaskLogicValue(value)
-    console.log("out out in app tsx", value)
-  }
 
   return (
     <div className="App">
@@ -50,19 +45,19 @@ function App() {
             localStorage.getItem("userToken") !== null ? <ViewTask2 /> : <MyComponent />
           } />
 
-          <Route path="/task" element={<Layout taskLogicCallBack={layoutTaskHandler} >
-            <Task erroLogicValue={layoutTaskLogicValue} />
+          <Route path="/task" element={<Layout  >
+            <Task />
           </Layout>} >
           </Route>
-          <Route path="/user" element={<Layout taskLogicCallBack={layoutTaskHandler} >
+          <Route path="/user" element={<Layout  >
             <User />
           </Layout>} >
           </Route>
-          <Route path="/about" element={<Layout taskLogicCallBack={layoutTaskHandler} >
+          <Route path="/about" element={<Layout  >
             <AboutUs />
           </Layout>} >
           </Route>
-          <Route path="/contact" element={<Layout taskLogicCallBack={layoutTaskHandler} >
+          <Route path="/contact" element={<Layout  >
             <ContactUs />
           </Layout>} >
           </Route>
