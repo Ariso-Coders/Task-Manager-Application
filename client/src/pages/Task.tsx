@@ -17,6 +17,8 @@ import { FaSliders } from "react-icons/fa6";
 import { IoIosWarning } from "react-icons/io";
 import { IoIosClose } from "react-icons/io";
 import { IoIosCloseCircle } from "react-icons/io";
+import { formatDate } from "../utils/OverdueCheck";
+import { compareDates } from "../utils/Functions";
 
 
 export interface Task {
@@ -110,6 +112,21 @@ const Task = () => {
     console.log("these are the current tasks", currentTasks)
 
     const totalPages = Math.ceil(taskValues.totalTask.length / tasksPerPage);
+
+
+    if (taskValues.filteredTask.length != 0) {
+        var noOfResults = taskValues.filteredTask.length;
+    } else {
+        var noOfResults = taskValues.totalTask.length;
+    }
+    if (currentTasks.length % tasksPerPage != 0) {
+        var ofResults =
+            tasksPerPage * currentPage -
+            tasksPerPage +
+            (currentTasks.length % tasksPerPage);
+    } else {
+        var ofResults = indexOfLastTask;
+    }
 
     // state values
 
@@ -207,6 +224,10 @@ const Task = () => {
                 showNotCompleted: showNotCompleted,
             })
         );
+
+
+
+
         setSelectStartDate(date.selection.startDate);
         setSelectEndDate(date.selection.endDate);
 
@@ -265,6 +286,8 @@ const Task = () => {
     }
 
     useEffect(() => {
+
+
 
         dispatch(taskActions.setFilterByStatus({ searchTerm: searchTerm, showCompleted: showCompleted, showNotCompleted: showNotCompleted }));
         // dispatch(taskActions.filterTaskDueDate());
@@ -512,16 +535,17 @@ const Task = () => {
 
 
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+
                 <div>
                     <p className="text-sm text-gray-700 flex ">
                         Showing
-                        <span className="font-medium">
+                        <span className="font-medium mr-1 ml-1">
                             {tasksPerPage * currentPage - tasksPerPage + 1}
                         </span>
                         to
-                        <span className="font-medium">{tasksPerPage * currentPage}</span>
+                        <span className="font-medium ml-1 mr-1">{ofResults}</span>
                         of
-                        <span className="font-medium">{taskValues.totalTask.length}</span>
+                        <span className="font-medium ml-1 mr-1">{noOfResults}</span>
                         results
                     </p>
                 </div>

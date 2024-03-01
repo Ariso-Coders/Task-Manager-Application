@@ -13,7 +13,7 @@ export const NavBar = ({ onCallback, onCallBacklogic }: props) => {
   const [menuLogic, setMenuLogic] = useState<boolean>(false)
   return (
 
-    <header className="bg-slate-200 shadow-md w-full px-5 h-vh10  flex items-center justify-between">
+    <header className="bg-slate-200 shadow-md w-full px-5 h-vh10  flex items-center justify-between ">
 
       <div className="flex justify-between items-center w-full p-3 ">
         <div className="sm:hidden" onClick={() => {

@@ -61,6 +61,10 @@ function App() {
             <ContactUs />
           </Layout>} >
           </Route>
+          <Route path="/setting" element={<Layout  >
+            <div className="w-full h-full flex items-center justify-center text-blue-600 text-xl">SETTNG</div>
+          </Layout>} >
+          </Route>
 
 
           <Route path="/task2" element={<Layout>
