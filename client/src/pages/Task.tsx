@@ -475,15 +475,8 @@ const Task = () => {
                         </div>
                         <div className="flex items-center">
                             <p className="mr-2">Date:</p>
-                            <div>
-                                <DateRangePicker
-                                    ranges={[selectionRange]}
-                                    onChange={handleDateRange}
-                                    className="w-full bg-red-500 border  border-red-600 text-green-500"
-                                    rangeColors={['#f33e5b', '#3ecf8e', '#fed14c']}
-
-                                />
-                            </div>
+                          
+                           
                         </div>
                         <button onClick={() => window.location.reload()}>Clear Dates</button>
                     </div>
