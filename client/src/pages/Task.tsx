@@ -15,6 +15,7 @@ import { SerializedError } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { FaSliders } from "react-icons/fa6";
 import { IoIosWarning } from "react-icons/io";
+import { IoIosClose } from "react-icons/io";
 import { IoIosCloseCircle } from "react-icons/io";
 
 
@@ -311,7 +312,7 @@ const Task = () => {
                                     {taskValues.overdueTasks.length > 1 ? "Tasks" : "Task"}
                                 </div>
                                 <button
-                                    className="absolute -top-5 -right-2 m-2 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="absolute z-10 -top-5 -right-2 m-2 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleCloseClick();
@@ -354,6 +355,67 @@ const Task = () => {
 
                 {isTopic && <h1 className="capitalize font-bold text-xl text-red-700">You have {taskValues.overdueTasks.length} overdue tasks</h1>}
             </section>
+
+            {isFilterMenuOpen && (
+                <div className="sm:absolute top-vw10 lg:absolute right-10 bg-white px-1 py-1 rounded-md border-4 border-dark_purple">
+                    <div className="flex flex-col">
+                        <div className="flex justify-end">
+                            <button onClick={() => { setFilterMenuOpen(false); }}>
+                                <IoIosClose className="text-3xl hover:cursor-pointer" />
+                            </button>
+                        </div>
+                        <div className="flex items-center mb-4">
+                            <p className="mr-2 sm:text-sm">Filter by:</p>
+                            <div className="flex">
+                                <label className="inline-flex items-center mr-4">
+                                    <input
+                                        type="checkbox"
+                                        className="form-checkbox h-5 w-5 text-blue-500"
+                                        checked={showCompleted}
+                                        onChange={() => setShowCompleted(!showCompleted)}
+                                    />
+                                    <span className="ml-2 sm:text-sm">Completed</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        className="form-checkbox h-5 w-5 text-blue-500"
+                                        checked={showNotCompleted}
+                                        onChange={() => setShowNotCompleted(!showNotCompleted)}
+                                    />
+                                    <span className="ml-2 sm:text-sm">Not Completed</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div className="flex items-center">
+                            <div className="sm:rdrInputRange hidden sm:block lg:flex lg:mr-10">
+                                <DateRangePicker
+                                    ranges={[selectionRange]}
+                                    onChange={handleDateRange}
+                                    className="w-full hidden"
+                                />
+                            </div>
+                            <div className="sm:rdrStaticRangeLabel w-1 lg:mr-10 sm:hidden">
+                                <DateRangePicker
+                                    ranges={[selectionRange]}
+                                    onChange={handleDateRange}
+                                    staticRanges={[]} // Remove predefined static ranges
+                                    inputRanges={[]}  // Remove predefined input ranges
+                                    className="w-full"
+                                />
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-end px-4">
+                            <button
+                                className="bg-dark_purple text-white rounded-sm w-32 p-1.5"
+                                onClick={() => window.location.reload()}
+                            >
+                                Clear Dates
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <section className="w-full h-auto flex flex-col gap-vh4">
                 {!isTopic && (<h1 className="capitalize font-bold text-xl">you have {taskValues.totalTask.length} tasks</h1>)}
@@ -447,41 +509,7 @@ const Task = () => {
 
             {taskOverLayLogic && <TaskOverlay onCancelClick={taskOVerLayHandler} />}
 
-            {isFilterMenuOpen && (
-                <div className="absolute top-20 right-10 bg-purple px-5 py-10 rounded-md">
-                    <div className="flex flex-col">
-                        <div className="flex items-center mb-4">
-                            <p className="mr-2">Filter by:</p>
-                            <div className="flex">
-                                <label className="inline-flex items-center mr-4">
-                                    <input
-                                        type="checkbox"
-                                        className="form-checkbox h-5 w-5 text-blue-500"
-                                        checked={showCompleted}
-                                        onChange={() => setShowCompleted(!showCompleted)}
-                                    />
-                                    <span className="ml-2">Completed</span>
-                                </label>
-                                <label className="inline-flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        className="form-checkbox h-5 w-5 text-blue-500"
-                                        checked={showNotCompleted}
-                                        onChange={() => setShowNotCompleted(!showNotCompleted)}
-                                    />
-                                    <span className="ml-2">Not Completed</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div className="flex items-center">
-                            <p className="mr-2">Date:</p>
-                          
-                           
-                        </div>
-                        <button onClick={() => window.location.reload()}>Clear Dates</button>
-                    </div>
-                </div>
-            )}
+
 
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                 <div>

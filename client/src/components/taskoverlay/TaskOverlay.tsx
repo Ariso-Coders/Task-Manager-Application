@@ -124,7 +124,7 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
     w-full h-full 
     flex items-center justify-center text-white opacity bg-black bg-opacity-50">
       <form
-        className=" mx-vw5 w-full sm:mx-vw10 lg:w-1/2 bg-main_color px-10 py-10 flex flex-col  gap-5"
+        className=" mx-vw5 w-full sm:mx-vw10 lg:w-1/2 bg-blue-700 px-10 py-10 flex flex-col  gap-5"
         onSubmit={handleSubmit}
       >
         <h1 className="text-xl">Add New Task</h1>
@@ -157,10 +157,10 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
             {inputDetails.erorMsg}
           </p>
         )}
-        <section className="w-full  flex flex-row justify-end gap-3 ">
+        <section className="w-full  flex flex-row justify-end gap-3  transition-all">
           <button
             type="submit"
-            className="rounded-md text-sm bg-white text-main_color py-1 px-3 hover:bg-main_color hover:text-white border border-white "
+            className="rounded-md text-sm bg-white text-main_color py-1 px-3 hover:bg-green-500 hover:text-white border border-white "
           >
             Save
           </button>
@@ -175,7 +175,7 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
               });
               props.onCancelClick(false);
             }}
-            className="rounded-md text-sm bg-white text-main_color py-1 px-3 hover:bg-gray hover:text-white border border-white"
+            className="rounded-md text-sm bg-white text-blue-800  py-1 px-3 hover:bg-gray-300 hover:text-white border border-white"
           >
             Cancel
           </button>
