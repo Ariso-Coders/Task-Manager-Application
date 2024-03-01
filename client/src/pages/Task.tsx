@@ -466,7 +466,7 @@ const Task = () => {
                                 (currentTasks.length > 0) && (
                                     currentTasks.map((task: Task) => (
 
-                                        <tr key={task._id} className="text-left border-b  border-gray-400">
+                                        <tr key={task._id} className="text-left border-b  border-gray-400 transition-all hover:bg-gray-100">
                                             <td className="">{task.task_description}</td>
                                             <td>{task.date.split("T")[0]}</td>
                                             <td> <span>

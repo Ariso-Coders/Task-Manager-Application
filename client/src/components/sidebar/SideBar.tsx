@@ -20,13 +20,13 @@ export default function SideBar({ onCallback, logoutLogic }: prop) {
         <div className='w-full flex flex-col gap-vh3 text-white items-center justify-center px-vw5 '>
 
           <NavLink className={({ isActive, isPending }) =>
-            isPending ? " text-left w-full transition-all hover:scale-105   text-white" : isActive ? " scale-105 text-left w-full transition-all hover:scale-105 " : "text-left w-full transition-all hover:scale-105"
+            isPending ? " text-left w-full transition-all hover:scale-105   text-white" : isActive ? "py-vh1 px-vw1 rounded text-blue-700 bg-white scale-105 text-left w-full transition-all hover:scale-105 " : "text-left w-full transition-all hover:scale-105"
           } to="/task">Task</NavLink>
           <NavLink className={({ isActive, isPending }) =>
-            isPending ? " text-left w-full transition-all hover:scale-105   text-white" : isActive ? " scale-105 text-left w-full transition-all hover:scale-105 " : "text-left w-full transition-all hover:scale-105"
+            isPending ? " text-left w-full transition-all hover:scale-105   text-white" : isActive ? " py-vh1 px-vw1 rounded text-blue-700 bg-white  scale-105 text-left w-full transition-all hover:scale-105 " : "text-left w-full transition-all hover:scale-105 "
           } to="/user">Users</NavLink>
           <NavLink className={({ isActive, isPending }) =>
-            isPending ? " text-left w-full transition-all hover:scale-105   text-white" : isActive ? " scale-105 text-left w-full transition-all hover:scale-105 " : "text-left w-full transition-all hover:scale-105"
+            isPending ? " text-left w-full transition-all hover:scale-105   text-white" : isActive ? "py-vh1 px-vw1 rounded text-blue-700 bg-white  scale-105 text-left w-full transition-all hover:scale-105  " : "text-left w-full transition-all hover:scale-105"
           } to="/setting">Settings</NavLink>
 
 
