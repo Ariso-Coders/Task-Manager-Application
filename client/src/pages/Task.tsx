@@ -52,11 +52,13 @@ const Task = () => {
 
 
     const userId: string | any = localStorage.getItem("userId");
-    const { data, isError } = useGetAllTasksQuery(userId); // calling API 
+    const [taskPageNumber, setTaskPageNumber] = useState<number>(1);
+    const { data, isError } = useGetAllTasksQuery({ userID: userId, pageNumber: taskPageNumber }); // calling API 
     const dispatch = useDispatch();
 
     const [updateTaskMutation] = useUpdateTaskStatusMutation();
     const [mutate, ,] = useDeleteTaskByIdMutation();
+
 
     let taskValues: TasksState;
     if (isError) {
@@ -92,7 +94,7 @@ const Task = () => {
 
 
     const [currentPage, setCurrentPage] = useState(1);
-    const tasksPerPage = 5;
+    const tasksPerPage = 10;
     const indexOfLastTask = currentPage * tasksPerPage;
     const indexOfFirstTask = indexOfLastTask - tasksPerPage;
 
@@ -558,6 +560,16 @@ const Task = () => {
                         <button
                             onClick={() => {
                                 setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+
+                                if (taskPageNumber > 1) {
+
+                                    console.log("previos triggerd 1", taskPageNumber)
+                                    setTaskPageNumber(((taskPageNumber) - 1));
+                                    console.log("previos triggerd 2", taskPageNumber)
+                                    return taskPageNumber
+
+                                }
+
                             }}
                             className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-200 focus:z-20 focus:outline-offset-0"
                         >
@@ -568,8 +580,14 @@ const Task = () => {
                                 setCurrentPage((prevPage) =>
                                     Math.min(prevPage + 1, totalPages)
                                 );
+
+
+
+                                setTaskPageNumber(taskPageNumber + 1)
                             }}
                             className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 focus:z-20 focus:outline-offset-0"
+
+
                         >
                             Next
                         </button>

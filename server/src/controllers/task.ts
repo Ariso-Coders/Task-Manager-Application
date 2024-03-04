@@ -14,8 +14,16 @@ export const getTaskById = async (
   next: NextFunction
 ) => {
   const userID = req.params.userID;
+  const pageNumber:string = req.query.pageNumber as string;
+
+  const pageSize = 10;
+console.log("page number",pageNumber,parseInt(pageNumber))
   try {
-    const tasksToTheUser = await taskModel.find({ userID: userID });
+    const tasksToTheUser = await taskModel
+      .find({ userID: userID })
+      .skip((parseInt(pageNumber) - 1) * pageSize)
+      .limit(pageSize)
+      console.log("task to the user",tasksToTheUser)
     if (!tasksToTheUser) {
       const error = new CustomError("This user does not exist", 404);
       return next(error);
@@ -119,4 +127,3 @@ export const postTask = async (
     next(error);
   }
 };
-

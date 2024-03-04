@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-
-import { Task } from '../../pages/ViewTask';
+import { Task } from "../../pages/ViewTask";
 
 export interface getAllTaskRTKInterface {
   tasksToTheUser: Task[];
@@ -64,8 +63,12 @@ export const taskApi = createApi({
   }),
 
   endpoints: (builder) => ({
-    getAllTasks: builder.query<getAllTaskRTKInterface, string>({
-      query: (userId) => `task/tasks/${userId}`,
+    getAllTasks: builder.query<
+      getAllTaskRTKInterface,
+      { userID: string; pageNumber: number }
+    >({
+      query: ({ userID, pageNumber }) =>
+        `task/tasks/${userID}?pageNumber=${pageNumber}`,
     }),
 
     postTask: builder.mutation<
