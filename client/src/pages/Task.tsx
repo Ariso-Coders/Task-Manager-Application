@@ -25,14 +25,14 @@ export interface Task {
     _id: string;
     task_description: string;
     task_status: boolean;
-    date: String;
+    date: String | any;
 }
 
-interface updateTaskMutationResponse {
-    data?: UpdateTaskStatusResponse
+// interface updateTaskMutationResponse {
+//     data?: UpdateTaskStatusResponse
 
-    error?: FetchBaseQueryError | SerializedError
-}
+//     error?: FetchBaseQueryError | SerializedError
+// }
 
 interface ErroCardLogicState {
     delete: boolean | false;
@@ -89,7 +89,7 @@ const Task = () => {
         };
     }
     taskValues = useSelector((state: RootState) => state.task);
-    console.log("task values", taskValues)
+   
 
 
 
@@ -111,7 +111,7 @@ const Task = () => {
             indexOfLastTask
         );
     }
-    console.log("these are the current tasks", currentTasks)
+
 
     const totalPages = Math.ceil(taskValues.totalTask.length / tasksPerPage);
 
@@ -164,6 +164,7 @@ const Task = () => {
         setIsAppear(true);
     };
 
+
     // variables 
 
     const [taskIdToDelete, setTaskIdToDelete] = useState<string>("");
@@ -191,8 +192,11 @@ const Task = () => {
 
         try {
 
-            let updateTaskBackendRespond: updateTaskMutationResponse = await updateTaskMutation({ taskId: taskId, status: status })
-            window.location.reload();
+            let updateTaskBackendRespond: any = await updateTaskMutation({ taskId: taskId, status: status, userId: userId })
+
+            dispatch(taskActions.setTasks(updateTaskBackendRespond.data.tasks))
+            // window.location.reload();
+
 
         } catch (error) {
             console.error("Error updating task status", error);
@@ -239,6 +243,7 @@ const Task = () => {
     const handleRadioChange = async (taskId: string, status: boolean) => {
         try {
             await updateTaskStatus(taskId, !status); // Invert the status when checkbox is clicked
+
         } catch (error) {
             console.error("Error updating task status", error);
         }
@@ -293,12 +298,11 @@ const Task = () => {
 
         dispatch(taskActions.setFilterByStatus({ searchTerm: searchTerm, showCompleted: showCompleted, showNotCompleted: showNotCompleted }));
         // dispatch(taskActions.filterTaskDueDate());
-        console.log("called")
-        console.log("redux store after status filter", taskValues)
+        
 
 
 
-    }, [showCompleted, showNotCompleted, searchTerm,])
+    }, [showCompleted, showNotCompleted, searchTerm, taskPageNumber])
 
 
 
@@ -484,7 +488,7 @@ const Task = () => {
                                             <td>
                                                 <button
                                                     onClick={() => {
-                                                        console.log("delete svg clicked")
+                                                       
 
                                                         setDeleteErroLogic({ ...deleteErroLogic, delete: true });
 
@@ -563,9 +567,9 @@ const Task = () => {
 
                                 if (taskPageNumber > 1) {
 
-                                    console.log("previos triggerd 1", taskPageNumber)
+                                    
                                     setTaskPageNumber(((taskPageNumber) - 1));
-                                    console.log("previos triggerd 2", taskPageNumber)
+                                  
                                     return taskPageNumber
 
                                 }

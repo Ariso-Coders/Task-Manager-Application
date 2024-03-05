@@ -23,11 +23,15 @@ console.log("page number",pageNumber,parseInt(pageNumber))
       .find({ userID: userID })
       .skip((parseInt(pageNumber) - 1) * pageSize)
       .limit(pageSize)
-      console.log("task to the user",tasksToTheUser)
+      
+
     if (!tasksToTheUser) {
       const error = new CustomError("This user does not exist", 404);
       return next(error);
     }
+
+   
+
     res.status(200).json({ tasksToTheUser });
   } catch (err: any) {
     if (!err.statusCode) {
@@ -43,6 +47,7 @@ export const updateTaskById = async (
 ) => {
   const taskID = req.params.taskID;
   const { task_status } = req.body;
+  const userId = req.query.userId;
   try {
     const tasksUpdating = await taskModel.findByIdAndUpdate(
       { _id: taskID },
@@ -52,8 +57,11 @@ export const updateTaskById = async (
       const error = new CustomError("This task does not exist", 404);
       return next(error);
     }
+    const newTasksAfterUpdate = await taskModel.find({userID:userId});
+    
     res.status(200).json({
       message: "Task Status Updated successfully",
+      tasks:newTasksAfterUpdate
     });
   } catch (err: any) {
     if (!err.statusCode) {

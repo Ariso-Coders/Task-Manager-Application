@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { Task } from "../../pages/Task";
 
-import { Task } from "../../pages/ViewTask";
 
 export interface getAllTaskRTKInterface {
   tasksToTheUser: Task[];
@@ -27,15 +27,16 @@ export interface PostTaskResponsetInterface {
 export interface UpdateTaskStatusRequest {
   taskId: string;
   status: boolean;
+  userId:string
 }
 export interface UpdateTaskStatusResponse {
-  data?: { message: string | "" };
-  error?: {
-    data: {
-      message: string | "";
-    };
-    status: number;
-  };
+  data?: { message?: string | "" ,tasks?:Task[]};
+  // error?: {
+  //   data: {
+  //     message: string | "";
+  //   };
+  //   status: number;
+  // };
 }
 
 export interface UpdateTaskStatusResponseError {
@@ -90,8 +91,8 @@ export const taskApi = createApi({
       UpdateTaskStatusResponse,
       UpdateTaskStatusRequest
     >({
-      query: ({ taskId, status }) => ({
-        url: `task/tasks/${taskId}`,
+      query: ({ taskId, status,userId }) => ({
+        url: `task/tasks/${taskId}?userId=${userId}`,
         method: "PUT",
         body: { task_status: status },
       }),

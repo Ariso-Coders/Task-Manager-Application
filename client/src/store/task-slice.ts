@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { taskApi } from "./fetures/task-api";
 import { formatDate } from "../utils/Functions";
 import { compareDates } from "../utils/Functions";
-import { Task } from "../pages/ViewTask";
+import { Task } from "../pages/Task";
 
 // export interface TaskState {
 //   userID: string | null;
@@ -166,7 +166,6 @@ const taskSlice = createSlice({
               ) && task.task_status === false
           ),
         };
-        console.log("output from extrareducers", state.totalTask);
         return state;
       }
     );
