@@ -10,8 +10,6 @@ export interface RootState {
   [taskApi.reducerPath]: typeof taskApi.reducer;
 }
 
-
-
 const store = configureStore({
   reducer: {
     user: userSlice.reducer,

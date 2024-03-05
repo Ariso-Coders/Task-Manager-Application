@@ -1,6 +1,5 @@
 import { Task } from "../pages/Task";
 
-
 interface TaskState {
   
   _id: string;

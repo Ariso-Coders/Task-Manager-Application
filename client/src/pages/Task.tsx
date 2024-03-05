@@ -1,25 +1,20 @@
 import { useState, useEffect } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
-
 import { useNavigate } from "react-router-dom";
 import ErrorCard from "../components/ErrorCard/ErrorCard";
 import TaskOverlay from "../components/taskoverlay/TaskOverlay";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { DateRangePicker } from "react-date-range";
-import { UpdateTaskStatusResponse, useDeleteTaskByIdMutation, useGetAllTasksQuery, useUpdateTaskStatusMutation } from "../store/fetures/task-api";
+import { useDeleteTaskByIdMutation, useGetAllTasksQuery, useUpdateTaskStatusMutation } from "../store/fetures/task-api";
 import { useDispatch, useSelector } from "react-redux";
 import { TasksState, taskActions } from "../store/task-slice";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { SerializedError } from "@reduxjs/toolkit";
+import { fetchTask } from "../store/task-slice";
 import { RootState } from "../store";
 import { FaSliders } from "react-icons/fa6";
 import { IoIosWarning } from "react-icons/io";
 import { IoIosClose } from "react-icons/io";
 import { IoIosCloseCircle } from "react-icons/io";
-import { formatDate } from "../utils/OverdueCheck";
-import { compareDates } from "../utils/Functions";
-
 
 export interface Task {
     _id: string;
@@ -28,68 +23,53 @@ export interface Task {
     date: String | any;
 }
 
-// interface updateTaskMutationResponse {
-//     data?: UpdateTaskStatusResponse
-
-//     error?: FetchBaseQueryError | SerializedError
-// }
-
 interface ErroCardLogicState {
     delete: boolean | false;
     update: boolean | false;
 }
+
 interface MobileTaskStyleInterface {
     taskClass: string,
     cound: number
 }
 
-
-
-
-
-
 const Task = () => {
-
-
     const userId: string | any = localStorage.getItem("userId");
     const [taskPageNumber, setTaskPageNumber] = useState<number>(1);
-    const { data, isError } = useGetAllTasksQuery({ userID: userId, pageNumber: taskPageNumber }); // calling API 
-    const dispatch = useDispatch();
+    let taskValues: TasksState;
 
+    taskValues = {
+        totalTask: [
+            {
+                _id: "",
+                date: "",
+                task_description: "",
+                task_status: false
+            }],
+        filteredTask: [
+            {
+                _id: "",
+                date: "",
+                task_description: "",
+                task_status: false
+            }],
+        filterMessage: "",
+        overdueTasks: [
+            {
+                _id: "",
+                date: "",
+                task_description: "",
+                task_status: false
+            }
+        ],
+        taskPageNumber: 0
+    };
+
+    taskValues = useSelector((state: RootState) => state.task);
+    const { data, isError } = useGetAllTasksQuery({ userID: userId, pageNumber: taskValues.taskPageNumber }); // calling API 
+    const dispatch = useDispatch();
     const [updateTaskMutation] = useUpdateTaskStatusMutation();
     const [mutate, ,] = useDeleteTaskByIdMutation();
-
-
-    let taskValues: TasksState;
-    if (isError) {
-        taskValues = {
-            totalTask: [
-                {
-                    _id: "",
-                    date: "",
-                    task_description: "",
-                    task_status: false
-                }],
-            filteredTask: [
-                {
-                    _id: "",
-                    date: "",
-                    task_description: "",
-                    task_status: false
-                }],
-            filterMessage: "",
-            overdueTasks: [
-                {
-                    _id: "",
-                    date: "",
-                    task_description: "",
-                    task_status: false
-                }
-            ]
-        };
-    }
-    taskValues = useSelector((state: RootState) => state.task);
-   
 
 
 
@@ -97,7 +77,6 @@ const Task = () => {
     const tasksPerPage = 10;
     const indexOfLastTask = currentPage * tasksPerPage;
     const indexOfFirstTask = indexOfLastTask - tasksPerPage;
-
 
     let currentTasks;
     if (taskValues.filteredTask.length === 0) {
@@ -111,10 +90,7 @@ const Task = () => {
             indexOfLastTask
         );
     }
-
-
     const totalPages = Math.ceil(taskValues.totalTask.length / tasksPerPage);
-
 
     if (taskValues.filteredTask.length != 0) {
         var noOfResults = taskValues.filteredTask.length;
@@ -140,21 +116,11 @@ const Task = () => {
         delete: false,
         update: true,
     });
-    const [selectedTask, setSelectedTask] = useState<{
-        id: string;
-        status: boolean;
-    } | null>(null);
-    const [editMode, setEditMode] = useState<string | null>(null);
     const [showCompleted, setShowCompleted] = useState(false);
     const [showNotCompleted, setShowNotCompleted] = useState(false);
     const [startDate, setSelectStartDate] = useState(new Date());
     const [endDate, setSelectEndDate] = useState(new Date());
-    const [mobileTaskStyleClass, setMobileTaskStyleClass] = useState<MobileTaskStyleInterface>({
-        cound: 0,
-        taskClass: ""
-    });
     const navigation = useNavigate();
-
     const [isVisible, setIsVisible] = useState(true);
     const [isHovered, setIsHovered] = useState(false);
     const [isAppear, setIsAppear] = useState(false);
@@ -163,7 +129,6 @@ const Task = () => {
         setIsVisible(false);
         setIsAppear(true);
     };
-
 
     // variables 
 
@@ -174,50 +139,26 @@ const Task = () => {
         key: "selection",
     };
 
-
     // functions 
 
-
-    const handleSaveClick = () => {
-        if (selectedTask) {
-
-            updateTaskStatus(selectedTask.id, selectedTask.status);
-            setSelectedTask(null);
-            setEditMode(null);
-        }
-    };
-
-
     const updateTaskStatus = async (taskId: string, status: boolean) => {
-
         try {
-
             let updateTaskBackendRespond: any = await updateTaskMutation({ taskId: taskId, status: status, userId: userId })
-
             dispatch(taskActions.setTasks(updateTaskBackendRespond.data.tasks))
-            // window.location.reload();
-
 
         } catch (error) {
             console.error("Error updating task status", error);
         }
     };
 
-
     const deleteTaskByIdFunction = async (taskId: string) => {
         try {
-
             let delteTaskBackendRespond = await mutate(taskId);
 
         } catch (err: any) {
             console.log("error of deleting task", err);
         }
-
-
-
-
     };
-
 
     const handleDateRange = (date: any) => {
         const startDate = new Date(date.selection.startDate).toISOString()
@@ -230,25 +171,18 @@ const Task = () => {
                 showNotCompleted: showNotCompleted,
             })
         );
-
-
-
-
         setSelectStartDate(date.selection.startDate);
         setSelectEndDate(date.selection.endDate);
-
     };
-
 
     const handleRadioChange = async (taskId: string, status: boolean) => {
         try {
-            await updateTaskStatus(taskId, !status); // Invert the status when checkbox is clicked
+            await updateTaskStatus(taskId, !status);
 
         } catch (error) {
             console.error("Error updating task status", error);
         }
     };
-
 
     // error card handlers 
 
@@ -263,7 +197,6 @@ const Task = () => {
             setDeleteErroLogic({ ...deleteErroLogic, delete: false });
         }
     };
-
 
     const handleLogoutErrorCardClick = async (args: {
         btn1: boolean;
@@ -283,33 +216,15 @@ const Task = () => {
         setTaskOverLayLogic(value);
     };
 
-    const mobileStyleClassHandler = (id: string): string => {
-        if ((id === mobileTaskStyleClass.taskClass) && (mobileTaskStyleClass.cound % 2 !== 0)) {
-            return `h-vh10 translate-y-0`
-        } else {
-
-            return ""
-        }
-    }
-
     useEffect(() => {
 
-
-
         dispatch(taskActions.setFilterByStatus({ searchTerm: searchTerm, showCompleted: showCompleted, showNotCompleted: showNotCompleted }));
-        // dispatch(taskActions.filterTaskDueDate());
-        
-
-
 
     }, [showCompleted, showNotCompleted, searchTerm, taskPageNumber])
 
 
-
-
     return (
         <div className='w-full py-vh5  px-vw5 flex flex-col gap-vh5' >
-
             <section className=" flex flex-col gap-vh5" >
 
                 <div className="w-full flex items-center justify-between  gap-vw3">
@@ -319,12 +234,10 @@ const Task = () => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-
                     <FaSliders
                         className="text-3xl hover:cursor-pointer"
                         onClick={() => { setFilterMenuOpen((prev) => !prev); }}
                     />
-
                 </div>
                 <div className="w-full flex gap-5 justify-center">
                     {taskValues.overdueTasks.length > 0 && isVisible && (
@@ -358,8 +271,6 @@ const Task = () => {
                         <button
                             onMouseEnter={() => setIsHovered(true)}
                             onMouseLeave={() => setIsHovered(false)}
-
-
                         >
                             <IoIosWarning
                                 className="text-2xl text-over_due"
@@ -369,19 +280,14 @@ const Task = () => {
                                     setIsTopic(true);
                                 }}
                             />
-
-
                             {isHovered && (
                                 <div className={` absolute  bg-white p-1 rounded-md text-sm  transition-all hover:text-red-600`}>
                                     Click here to view tasks
                                 </div>
                             )}
-
-
                         </button>
                     </div>
                 )}
-
                 {isTopic && <h1 className="capitalize font-bold text-xl text-red-700">You have {taskValues.overdueTasks.length} overdue tasks</h1>}
             </section>
 
@@ -428,8 +334,8 @@ const Task = () => {
                                 <DateRangePicker
                                     ranges={[selectionRange]}
                                     onChange={handleDateRange}
-                                    staticRanges={[]} // Remove predefined static ranges
-                                    inputRanges={[]}  // Remove predefined input ranges
+                                    staticRanges={[]}
+                                    inputRanges={[]}
                                     className="w-full"
                                 />
                             </div>
@@ -454,9 +360,7 @@ const Task = () => {
                         setTaskOverLayLogic(true);
                     }} >ADD</button>
                 </div>
-
                 <h1 className="w-full text-green-600 text-left">{taskValues.filterMessage}</h1>
-
                 <div className=" h-vh40 overflow-x-hidden overflow-y-scroll flex items-start justify-center border border-gray-200 py-vh4 px-vw3 rounded-md">
                     <table className="table-auto  w-full h-auto overflow-scroll ">
                         <thead>
@@ -488,12 +392,8 @@ const Task = () => {
                                             <td>
                                                 <button
                                                     onClick={() => {
-                                                       
-
                                                         setDeleteErroLogic({ ...deleteErroLogic, delete: true });
-
                                                         setTaskIdToDelete(task._id)
-
                                                     }}
                                                     className=" text-view_task_4  rounded-sm text-red-500 p-1 transition-all  hover:scale-150"
                                                 >
@@ -501,20 +401,13 @@ const Task = () => {
                                                 </button>
                                             </td>
                                         </tr>
-
                                     ))
                                 )
                             }
-
-
-
                         </tbody>
                     </table>
                 </div>
-
             </section>
-
-
             {deleteErroLogic.delete && (
                 <ErrorCard
                     fn={handleDeleteErrorCardClick}
@@ -535,13 +428,8 @@ const Task = () => {
                     }}
                 />
             )}
-
             {taskOverLayLogic && <TaskOverlay onCancelClick={taskOVerLayHandler} />}
-
-
-
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-
                 <div>
                     <p className="text-sm text-gray-700 flex ">
                         Showing
@@ -560,20 +448,14 @@ const Task = () => {
                         className="isolate inline-flex -space-x-px rounded-md shadow-sm"
                         aria-label="Pagination"
                     >
-
                         <button
                             onClick={() => {
                                 setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+                                if (taskValues.taskPageNumber > 1) {
 
-                                if (taskPageNumber > 1) {
-
-                                    
-                                    setTaskPageNumber(((taskPageNumber) - 1));
-                                  
-                                    return taskPageNumber
+                                    dispatch(taskActions.setTaskPageNumber(taskValues.taskPageNumber - 1))
 
                                 }
-
                             }}
                             className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-200 focus:z-20 focus:outline-offset-0"
                         >
@@ -584,23 +466,19 @@ const Task = () => {
                                 setCurrentPage((prevPage) =>
                                     Math.min(prevPage + 1, totalPages)
                                 );
-
-
-
                                 setTaskPageNumber(taskPageNumber + 1)
+                                dispatch(taskActions.setTaskPageNumber(taskValues.taskPageNumber + 1));
+
+                             
+                               
                             }}
                             className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 focus:z-20 focus:outline-offset-0"
-
-
                         >
                             Next
                         </button>
                     </nav>
                 </div>
             </div>
-
-
-
         </div>
     )
 }

@@ -6,9 +6,6 @@ import { PostTaskResponsetInterface, PostTaskRequestInterface, taskApi, usePostT
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 
-
-// interface MyFunctionalComponentProps { }
-
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 interface InputState {
@@ -18,23 +15,17 @@ interface InputState {
   erroLogic: boolean | false
 }
 
-
-
 interface TaskDetails {
   date: string;
   task_description: string;
   task_status: boolean;
   userID: string;
   _id: string;
-  // Add other properties if there are any
 }
-
 
 interface ErrorResponse {
   message?: string | "";
 }
-
-
 
 interface PostTaskMutationResponse {
   data?: PostTaskResponsetInterface;
@@ -51,13 +42,8 @@ interface respond {
   details: string | null
 }
 
-
-
 const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
-
-  // const {} = usePostTaskMutation();
   const [postTaskMutation, { isLoading, status, isError, data, error }] = usePostTaskMutation();
-
   const [inputDetails, setInputDetails] = useState<InputState>({
     date: "",
     task: "",
@@ -66,7 +52,6 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
   });
 
   const userId: string | null = localStorage.getItem("userId");
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isEmpty(inputDetails.date) || isEmpty(inputDetails.task)) {
@@ -75,35 +60,13 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
     } else {
       setInputDetails({ ...inputDetails, erroLogic: false, erorMsg: "" })
     }
-
-
-
     try {
-
-      // const taskCreationRespond: respond = await axios.post(
-      //   "http://localhost:8080/task/createTask", {
-      //   taskDate: inputDetails.date,
-      //   task: inputDetails.task,
-      //   userId: userId?.toString()
-
-      // }, {
-      //   headers: {
-      //     Authorization: "Bearer " + userToken,
-      //   },
-      // }
-      // )
-
       let createTaskBackendRespond: PostTaskMutationResponse = await postTaskMutation({
         task: inputDetails.task || "",
         taskDate: inputDetails.date,
         userId: userId?.toString() || ""
       });
-
-
       window.location.reload();
-
-
-
     } catch (err: any) {
       console.log("error that passed into ", err)
       if (err.response.status === 400 || err.response.status === 500) {
@@ -114,11 +77,8 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
       } else {
         setInputDetails({ ...inputDetails, erroLogic: false, erorMsg: "" })
       }
-
     }
   };
-
-
   return (
     <div className="absolute top-0 left-0 
     w-full h-full 
@@ -137,7 +97,6 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
             onChange={(e) => {
               setInputDetails({ ...inputDetails, date: new Date(e.target.value) });
             }}
-
           />
         </section>
         <section>
@@ -152,7 +111,6 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
           />
         </section>
         {inputDetails.erroLogic && (
-
           <p className="text-red-700 capitalize text-center font-bold  w-full ">
             {inputDetails.erorMsg}
           </p>

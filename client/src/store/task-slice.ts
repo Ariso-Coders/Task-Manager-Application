@@ -1,32 +1,27 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { taskApi } from "./fetures/task-api";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { taskApi, useGetAllTasksQuery } from "./fetures/task-api";
 import { formatDate } from "../utils/Functions";
 import { compareDates } from "../utils/Functions";
 import { Task } from "../pages/Task";
-
-// export interface TaskState {
-//   userID: string | null;
-//   date: string | any;
-//   task_description: string | "";
-//   task_status: boolean | null;
-// }
+import { useDispatch } from "react-redux";
 
 interface overdueInterface {
   overdueLogic: boolean | any;
   overdueTaskCount: number | any;
 }
+
 export interface TasksState {
   totalTask: Task[];
   filteredTask: Task[];
   filterMessage: string;
   overdueTasks: Task[];
+  taskPageNumber: number;
 }
 
 export interface filterTaskStaus {
   searchTerm: string;
   showCompleted: boolean;
   showNotCompleted: boolean;
-  //setFilterMessage: string;
 }
 
 const initialState: TasksState = {
@@ -34,20 +29,46 @@ const initialState: TasksState = {
   filteredTask: [],
   filterMessage: "",
   overdueTasks: [],
+  taskPageNumber: 1,
 };
+
+
+
+interface GetTasksRequest {
+  userId: string;
+  pageNumber: number;
+}
+
+export const fetchTask = createAsyncThunk<void, GetTasksRequest>(
+  'tasks/fetchTask',
+  async ({ userId, pageNumber }: GetTasksRequest) => {
+    const { data } =  useGetAllTasksQuery({ userID: userId, pageNumber: pageNumber });
+  }
+);
+
+
+
 const taskSlice = createSlice({
   name: "task",
   initialState,
-
   reducers: {
     setTasks(state, action: PayloadAction<Task[]>) {
       state = {
         ...state,
         totalTask: action.payload,
       };
-
       return state;
     },
+    setTaskPageNumber(state, action: PayloadAction<number>) {
+      
+      
+      
+      state = { ...state, taskPageNumber: action.payload };
+      
+      console.log("page number", state.taskPageNumber);
+      return state;
+    },
+
     filterTaskDueDate(state) {
       state = {
         ...state,
@@ -57,12 +78,9 @@ const taskSlice = createSlice({
             task.task_status === false
         ),
       };
-
       return state;
     },
     setFilterByStatus(state, action: PayloadAction<filterTaskStaus>) {
-      //console.log("Values came to redux", action.payload);
-
       state = {
         ...state,
         filteredTask: state.totalTask.filter(
@@ -112,7 +130,6 @@ const taskSlice = createSlice({
     ) {
       const { date, searchTerm, showCompleted, showNotCompleted } =
         action.payload;
-
       const filteredTasks = state.totalTask.filter((task) => {
         const taskDate = task.date?.split("T")[0];
         const withinRange =
@@ -130,7 +147,6 @@ const taskSlice = createSlice({
             (!showCompleted && !showNotCompleted))
         );
       });
-      //fix error of displaying wrong date
       const newStartDate = new Date(date.selection.startDate);
       const newEndDate = new Date(date.selection.endDate);
       newStartDate.setDate(newStartDate.getDate() + 1);
@@ -150,11 +166,10 @@ const taskSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // need to move update into extraReducer ?
-
     builder.addMatcher(
       taskApi.endpoints.getAllTasks.matchFulfilled,
       (state, { payload }) => {
+        console.log("extra reducer worked")
         state = {
           ...state,
           totalTask: payload.tasksToTheUser,

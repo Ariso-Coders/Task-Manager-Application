@@ -1,6 +1,5 @@
 import React from "react";
 
-
 type ErrorDetails = {
     message: string;
     btn1: [boolean, string, string?];
