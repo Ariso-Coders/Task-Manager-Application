@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from "express";
 import bodyparser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
-
 import authRoutes from "./routes/auth";
 import taskRoutes from "./routes/task";
 import userRoutes from "./routes/user";
@@ -29,7 +28,7 @@ const errorHandler = (
 ) => {
   const status = error.statusCode || 500;
   const message = error.message || "This is error from backend";
-
+  console.log("backend error",error)
   res.status(status).json({ message: message });
 };
 

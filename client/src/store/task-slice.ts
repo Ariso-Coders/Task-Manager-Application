@@ -3,7 +3,9 @@ import { taskApi, useGetAllTasksQuery } from "./fetures/task-api";
 import { formatDate } from "../utils/Functions";
 import { compareDates } from "../utils/Functions";
 import { Task } from "../pages/Task";
-import { useDispatch } from "react-redux";
+
+import { RootState } from "./index";
+import axios from "axios";
 
 interface overdueInterface {
   overdueLogic: boolean | any;
@@ -32,21 +34,35 @@ const initialState: TasksState = {
   taskPageNumber: 1,
 };
 
-
-
 interface GetTasksRequest {
   userId: string;
   pageNumber: number;
 }
 
-export const fetchTask = createAsyncThunk<void, GetTasksRequest>(
-  'tasks/fetchTask',
-  async ({ userId, pageNumber }: GetTasksRequest) => {
-    const { data } =  useGetAllTasksQuery({ userID: userId, pageNumber: pageNumber });
+export const fetchTask = createAsyncThunk<Task[], GetTasksRequest>(
+  "tasks/fetchTask",
+  async ({ userId, pageNumber }: GetTasksRequest, thunkAPI) => {
+    const token = localStorage.getItem("userToken");
+    console.log("fetch task executed");
+    const state = thunkAPI.getState() as RootState;
+    const response = await axios.get(
+      `http://localhost:8080/task/tasks/${userId}?pageNumber=${pageNumber}`,
+      {
+        headers: {
+          Authorization: "Bearer" + token,
+        },
+      }
+    );
+
+    console.log("fetchtask response", response.data.tasksToTheUser);
+    if (response.data.tasksToTheUser) {
+      return response.data.tasksToTheUser;
+    }
+    console.log("get fethTask executed");
+
+    return [];
   }
 );
-
-
 
 const taskSlice = createSlice({
   name: "task",
@@ -60,12 +76,8 @@ const taskSlice = createSlice({
       return state;
     },
     setTaskPageNumber(state, action: PayloadAction<number>) {
-      
-      
-      
       state = { ...state, taskPageNumber: action.payload };
-      
-      console.log("page number", state.taskPageNumber);
+
       return state;
     },
 
@@ -166,10 +178,16 @@ const taskSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(fetchTask.fulfilled, (state, action) => {
+      console.log("add case worked");
+      state.totalTask = action.payload;
+      return state;
+    });
+
     builder.addMatcher(
       taskApi.endpoints.getAllTasks.matchFulfilled,
       (state, { payload }) => {
-        console.log("extra reducer worked")
+        console.log("extra reducer worked");
         state = {
           ...state,
           totalTask: payload.tasksToTheUser,

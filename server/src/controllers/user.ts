@@ -5,12 +5,12 @@ const jwt = require("jsonwebtoken");
 
 class CustomError extends Error {
   statusCode: number;
-
   constructor(message: string, statusCode: number) {
     super(message);
     this.statusCode = statusCode;
   }
 }
+
 export const login = async (
   req: Request,
   res: Response,
@@ -18,7 +18,6 @@ export const login = async (
 ) => {
   const email: String = req.body.email;
   const password: String = req.body.password;
-  
   let existUser;
   try {
     existUser = await User.findOne({ email: email });
@@ -26,25 +25,20 @@ export const login = async (
       throw new CustomError("This email is not registered", 404);
     }
   } catch (error) {
-    
     return next(error);
   }
-
   let comparePassword = await bcrypt.compare(password, existUser.password);
   try {
     if (!comparePassword) {
       throw new CustomError("This Password is Invalid", 404);
     }
   } catch (error) {
-   
     return next(error);
   }
-
   try {
     const token = jwt.sign(
       {
         email: existUser.email,
-        
         userId: existUser._id.toString(),
       },
       "supersecretsignature",
@@ -55,7 +49,7 @@ export const login = async (
       message: "Login Successfull",
       token: token,
       email: existUser.email,
-      name:existUser.name,
+      name: existUser.name,
     });
   } catch (err) {
     if (!err.statusCode) {
@@ -75,22 +69,17 @@ export const signUp = async (
   const dob: String = req.body.dob;
   const password: String = req.body.password;
   const confirmPassword: String = req.body.confirmPassword;
- 
+
   const userType = "user";
   try {
     if (password.length <= 5) {
-      throw new CustomError(
-        "Password should have more than 8 characters",
-        400
-      );
+      throw new CustomError("Password should have more than 8 characters", 400);
     } else {
       let existingUserCount = await User.countDocuments({ email: email });
       if (existingUserCount !== 0) {
         throw new CustomError("User with this email already exists", 409);
       }
-
       const hashedPassword = await bcrypt.hash(password, 8);
-
       const user = new User({
         name: name,
         email: email,

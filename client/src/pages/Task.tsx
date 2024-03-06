@@ -15,6 +15,7 @@ import { FaSliders } from "react-icons/fa6";
 import { IoIosWarning } from "react-icons/io";
 import { IoIosClose } from "react-icons/io";
 import { IoIosCloseCircle } from "react-icons/io";
+import { AppDispatch } from '../store/index';
 
 export interface Task {
     _id: string;
@@ -67,7 +68,7 @@ const Task = () => {
 
     taskValues = useSelector((state: RootState) => state.task);
     const { data, isError } = useGetAllTasksQuery({ userID: userId, pageNumber: taskValues.taskPageNumber }); // calling API 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const [updateTaskMutation] = useUpdateTaskStatusMutation();
     const [mutate, ,] = useDeleteTaskByIdMutation();
 
@@ -219,6 +220,9 @@ const Task = () => {
     useEffect(() => {
 
         dispatch(taskActions.setFilterByStatus({ searchTerm: searchTerm, showCompleted: showCompleted, showNotCompleted: showNotCompleted }));
+        console.log("hi")
+
+
 
     }, [showCompleted, showNotCompleted, searchTerm, taskPageNumber])
 
@@ -450,10 +454,17 @@ const Task = () => {
                     >
                         <button
                             onClick={() => {
+                                
+
                                 setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
                                 if (taskValues.taskPageNumber > 1) {
 
+                                    dispatch(fetchTask({ userId: userId, pageNumber: taskValues.taskPageNumber -1 }));
+
                                     dispatch(taskActions.setTaskPageNumber(taskValues.taskPageNumber - 1))
+
+
+
 
                                 }
                             }}
@@ -466,11 +477,15 @@ const Task = () => {
                                 setCurrentPage((prevPage) =>
                                     Math.min(prevPage + 1, totalPages)
                                 );
-                                setTaskPageNumber(taskPageNumber + 1)
+                               
+
+                               dispatch(fetchTask({ userId: userId, pageNumber: taskValues.taskPageNumber + 1 }));
+
                                 dispatch(taskActions.setTaskPageNumber(taskValues.taskPageNumber + 1));
 
-                             
-                               
+
+
+
                             }}
                             className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 focus:z-20 focus:outline-offset-0"
                         >
