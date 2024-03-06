@@ -153,7 +153,7 @@ function SignUp() {
             </label>
             <input
               {...register("confirmPassword", {
-                required: "Password is required",
+                required: "Confirm Password is required",
                 minLength: {
                   value: 8,
                   message: "Password Should Be At Least 8 Characters",
