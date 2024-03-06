@@ -3,6 +3,15 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import LoginForm from "../../pages/LoginForm";
 import { Button } from "../../components/Button";
+
+test("Render The Login Component without crashing",()=>{
+  render(
+    <Router>
+      <LoginForm/>
+    </Router>
+  )
+})
+
 test("Login Text should be displayed", () => {
   render(
     <Router>
@@ -38,3 +47,20 @@ test("Login button should be rendered", () => {
   const buttonInput = screen.getByRole("button");
   expect(buttonInput).toBeInTheDocument();
 });
+
+//mock function for submit handler
+test('Submit handler is are called',()=>{
+  const submitHandler=jest.fn();
+  const props: LoginFormData = {
+    email: 'ashani@gmail.com',
+    password: '12345678',
+    handleSubmit: submitHandler, 
+  };
+  
+  render(
+    <Router>
+      <LoginForm {...props}
+      handleSubmit={submitHandler}/>
+    </Router>
+  )
+})
