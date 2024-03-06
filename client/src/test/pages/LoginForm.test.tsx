@@ -1,17 +1,25 @@
-import { render, screen,fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  getByPlaceholderText,
+} from "@testing-library/react";
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import LoginForm from "../../pages/LoginForm";
 import { Button } from "../../components/Button";
-import {LoginFormData} from "../../pages/LoginForm";
+import { LoginFormData } from "../../pages/LoginForm";
+import user from "@testing-library/user-event";
+import userEvent from "@testing-library/react";
+import { input } from "@testing-library/user-event/dist/types/event";
 
-test("Render The Login Component without crashing",()=>{
+test("Render The Login Component without crashing", () => {
   render(
     <Router>
-      <LoginForm/>
+      <LoginForm />
     </Router>
-  )
-})
+  );
+});
 
 test("Login Text should be displayed", () => {
   render(
@@ -44,30 +52,32 @@ test("password input should be rendered", () => {
 });
 
 test("Login button should be rendered", () => {
-  render(<Button buttonLabel="Login" />); 
+  render(<Button buttonLabel="Login" />);
   const buttonInput = screen.getByRole("button");
   expect(buttonInput).toBeInTheDocument();
 });
 
-//mock function for submit handler
-test('Submit handler is are called',()=>{
-  const submitHandler=jest.fn();
+//submithandler tests
+//1.render submit handler
+test("Submit handler is rendered", async () => {
+  const submitHandler = jest.fn();
   const props: LoginFormData = {
-    email: 'ashani@gmail.com',
-    password: '12345678',
-    handleSubmit: submitHandler, 
+    handleSubmit: submitHandler,
   };
-  
+
   render(
     <Router>
-      <LoginForm {...props}
-      handleSubmit={submitHandler}/>
+      <LoginForm {...props} handleSubmit={submitHandler} />
+      <Button buttonLabel="Login" />
     </Router>
-  )
-})
+  );
+});
+
+
+
 
 //Grouped test for error messages
-describe('Error Message Diplayed For',()=>{
+describe("Error Message Diplayed For", () => {
   test("'Email Is Required' when email is empty", async () => {
     render(
       <Router>
@@ -75,21 +85,48 @@ describe('Error Message Diplayed For',()=>{
       </Router>
     );
     fireEvent.submit(screen.getByText("Login"));
-    expect(await screen.findByText("Email Is Required")).toBeInTheDocument();
-   
+    expect(await screen.findByText(/Email Is Required/i)).toBeInTheDocument();
   });
 
-  test("'Password Is Required' when email is empty", async()=>{
+  test("'Password Is Required' when email is empty", async () => {
     render(
       <Router>
         <LoginForm />
       </Router>
     );
     fireEvent.submit(screen.getByText("Login"));
-    expect (await screen.findByText('Password is required')).toBeInTheDocument();
-  })
-  
-})
+    expect(
+      await screen.findByText(/Password is required/i)
+    ).toBeInTheDocument();
+  });
+});
 
+test("Submit button with empty email displays error message", async () => {
+  const submitHandler = jest.fn(); 
+  render(
+    <Router>
+      <LoginForm handleSubmit={submitHandler} />
+    </Router>
+  );
+  const form = screen.getByRole("form");
+  const emailInput = screen.getByPlaceholderText(/enter your email/i);
+  fireEvent.change(emailInput, { target: { value: "" } });
+  fireEvent.submit(form);
 
+  expect(await screen.findByText(/Email Is Required/i)).toBeInTheDocument();
+});
 
+test("Submit button with empty password displays error message", async () => {
+  const submitHandler = jest.fn(); 
+  render(
+    <Router>
+      <LoginForm handleSubmit={submitHandler} />
+    </Router>
+  );
+  const form = screen.getByRole("form");
+  const passwordInput = screen.getByPlaceholderText(/enter your password/i);
+  fireEvent.change(passwordInput, { target: { value: "" } });
+  fireEvent.submit(form);
+
+  expect(await screen.findByText(/email Is Required/i)).toBeInTheDocument();
+});
