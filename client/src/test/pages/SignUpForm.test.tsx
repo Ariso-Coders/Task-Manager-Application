@@ -42,25 +42,25 @@ test("DOB input field should be rendered", () => {
   expect(dobInputEl).toBeInTheDocument();
 });
 
-test("Password input field should be rendered",()=>{
+test("Password input field should be rendered", () => {
   render(
     <Router>
-      <SignUp/>
+      <SignUp />
     </Router>
-  )
-  const passwordInputEl=screen.getByLabelText("Password")
+  );
+  const passwordInputEl = screen.getByLabelText("Password");
   expect(passwordInputEl).toBeInTheDocument();
-})
+});
 
-test("Confirm Password input field should be rendered",()=>{
+test("Confirm Password input field should be rendered", () => {
   render(
     <Router>
-      <SignUp/>
+      <SignUp />
     </Router>
-  )
-  const confirmPasswordInputEl=screen.getByLabelText("Re-enter password")
+  );
+  const confirmPasswordInputEl = screen.getByLabelText("Re-enter password");
   expect(confirmPasswordInputEl).toBeInTheDocument();
-})
+});
 
 test("Button should be rendered", () => {
   render(
@@ -71,4 +71,35 @@ test("Button should be rendered", () => {
   const buttonEl = screen.getByRole("button");
   expect(buttonEl).toBeInTheDocument();
 });
+
+test("Title should be rendered", () => {
+  render(
+    <Router>
+      <SignUp />
+    </Router>
+  );
+  const customElement = screen.getByTestId("custom-element");
+  expect(customElement).toBeInTheDocument();
+});
+
+test("displays error message for 'Email Is Required' when form is submitted without filling email field", async () => {
+  render(
+    <Router>
+      <SignUp />
+    </Router>
+  );
+  fireEvent.submit(screen.getByText("SignUp"));
+  expect(await screen.findByText("Email Is Required")).toBeInTheDocument();
+});
+
+test("displays error message for 'Name is required' when form is submitted without filling name field", async () => {
+  render(
+    <Router>
+      <SignUp />
+    </Router>
+  );
+  fireEvent.submit(screen.getByText("SignUp"));
+  expect(await screen.findByText("Name is required")).toBeInTheDocument();
+});
+
 
