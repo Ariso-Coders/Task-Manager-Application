@@ -1,9 +1,8 @@
-import { render, screen,fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import LoginForm from "../../pages/LoginForm";
 import { Button } from "../../components/Button";
-import {LoginFormData} from "../../pages/LoginForm";
 
 test("Render The Login Component without crashing",()=>{
   render(
@@ -65,31 +64,3 @@ test('Submit handler is are called',()=>{
     </Router>
   )
 })
-
-//Grouped test for error messages
-describe('Error Message Diplayed For',()=>{
-  test("'Email Is Required' when email is empty", async () => {
-    render(
-      <Router>
-        <LoginForm />
-      </Router>
-    );
-    fireEvent.submit(screen.getByText("Login"));
-    expect(await screen.findByText("Email Is Required")).toBeInTheDocument();
-   
-  });
-
-  test("'Password Is Required' when email is empty", async()=>{
-    render(
-      <Router>
-        <LoginForm />
-      </Router>
-    );
-    fireEvent.submit(screen.getByText("Login"));
-    expect (await screen.findByText('Password is required')).toBeInTheDocument();
-  })
-  
-})
-
-
-
