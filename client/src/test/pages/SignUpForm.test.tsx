@@ -3,8 +3,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import SignUp from "../../pages/SignUp";
 import { Button } from "../../components/Button";
-import {FormData} from '../../pages/SignUp'
-
+import { FormData } from "../../pages/SignUp";
 
 test("SignUp component renders without crashing", () => {
   render(
@@ -112,5 +111,19 @@ test("Submit handler is rendered", async () => {
       <SignUp {...props} handleSubmit={submitHandler} />
       <Button buttonLabel="SignUp" />
     </Router>
-  )
-})
+  );
+});
+
+// test("Validates email input field", async () => {
+//   render(
+//     <Router>
+//       <SignUp />
+//     </Router>
+//   );
+//   fireEvent.change(screen.getByLabelText("Email"),
+   
+//    {target: { value: "invalid_email" },
+//   });
+
+//   expect(await screen.findByText(/Invalid Email/)).toBeInTheDocument();
+// });
