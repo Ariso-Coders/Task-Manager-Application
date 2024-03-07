@@ -1,9 +1,11 @@
-import { act, fireEvent, getByText, render, screen } from "@testing-library/react";
+import { act, fireEvent, getByText, render, screen, waitFor } from "@testing-library/react";
 import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import SignUp from "../../pages/SignUp";
 import { Button } from "../../components/Button";
 import { FormData } from "../../pages/SignUp";
+import user from "@testing-library/user-event";
+
 
 test("SignUp component renders without crashing", () => {
   render(
@@ -155,3 +157,32 @@ test("when valid input is submitted", async () => {
   const errorMessage = screen.queryByText(/Email is required/i);
   expect(errorMessage).toBeNull();
 });
+
+
+
+test("Navigate to task page", async() => {
+  render(
+    <Router>
+      <SignUp />
+    </Router>
+  );
+  const emailInput = screen.getByLabelText(/Email/i);
+  fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
+
+  const nameInput = screen.getByLabelText(/Name/i);
+  fireEvent.change(nameInput, { target: { value: "aashani" } });
+  
+  const birthInput = screen.getByLabelText(/DOB/i);
+  fireEvent.change(birthInput, { target: { value: '07/02/2000' } });
+
+  const passwordInput = screen.getByLabelText("Password");
+  fireEvent.change(passwordInput, { target: { value: "12345678" } });
+
+  const confirmPasswordInput = screen.getByLabelText(/Re-enter password/i);
+  fireEvent.change(confirmPasswordInput, { target: { value: "12345678" } });
+
+    const submitButton = screen.getByRole("button", { name: /SignUp/i });
+    user.click(submitButton); 
+    await waitFor(() => expect(window.location.pathname).toBe("/"));
+
+  })
