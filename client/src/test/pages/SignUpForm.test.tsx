@@ -1,4 +1,4 @@
-import { fireEvent, getByText, render, screen } from "@testing-library/react";
+import { act, fireEvent, getByText, render, screen } from "@testing-library/react";
 import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import SignUp from "../../pages/SignUp";
@@ -134,22 +134,24 @@ test("when valid input is submitted", async () => {
       <SignUp />
     </Router>
   );
-  const emailInput = screen.getByLabelText(/Email/i);
-  fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
+  await act(async () => {
+    const emailInput = screen.getByLabelText(/Email/i);
+    fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
 
-  const nameInput = screen.getByLabelText(/Name/i);
-  fireEvent.change(nameInput, { target: { value: "aashani" } });
-  
-  const birthInput = screen.getByLabelText(/DOB/i);
-  fireEvent.change(birthInput, { target: { value: '07/02/2000' } });
+    const nameInput = screen.getByLabelText(/Name/i);
+    fireEvent.change(nameInput, { target: { value: "aashani" } });
+    
+    const birthInput = screen.getByLabelText(/DOB/i);
+    fireEvent.change(birthInput, { target: { value: '07/02/2000' } });
 
-  const passwordInput = screen.getByLabelText("Password");
-  fireEvent.change(passwordInput, { target: { value: "12345678" } });
+    const passwordInput = screen.getByLabelText("Password");
+    fireEvent.change(passwordInput, { target: { value: "12345678" } });
 
-  const confirmPasswordInput = screen.getByLabelText(/Re-enter password/i);
-  fireEvent.change(confirmPasswordInput, { target: { value: "12345678" } });
+    const confirmPasswordInput = screen.getByLabelText(/Re-enter password/i);
+    fireEvent.change(confirmPasswordInput, { target: { value: "12345678" } });
 
-  fireEvent.submit(screen.getByText(/SignUp/i));
+    fireEvent.submit(screen.getByText("SignUp"));
+  });
   const errorMessage = screen.queryByText(/Email is required/i);
   expect(errorMessage).toBeNull();
 });
