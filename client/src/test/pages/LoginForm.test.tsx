@@ -74,7 +74,7 @@ test("Submit handler is rendered", async () => {
 });
 
 //Grouped test for error messages
-describe("Error Message Diplayed For", () => {
+describe('Error Message Diplayed For',()=>{
   test("'Email Is Required' when email is empty", async () => {
     render(
       <Router>
@@ -82,10 +82,11 @@ describe("Error Message Diplayed For", () => {
       </Router>
     );
     fireEvent.submit(screen.getByText("Login"));
-    expect(await screen.findByText(/Email Is Required/i)).toBeInTheDocument();
+    expect(await screen.findByText("Email Is Required")).toBeInTheDocument();
+   
   });
 
-  test("'Password Is Required' when email is empty", async () => {
+  test("'Password Is Required' when email is empty", async()=>{
     render(
       <Router>
         <LoginForm />

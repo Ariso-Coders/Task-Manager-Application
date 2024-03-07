@@ -1,8 +1,9 @@
 import { fireEvent, getByText, render, screen } from "@testing-library/react";
-import React from "react";
+import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import SignUp from "../../pages/SignUp";
 import { Button } from "../../components/Button";
+import { FormData } from "../../pages/SignUp";
 
 test("SignUp component renders without crashing", () => {
   render(
@@ -98,4 +99,57 @@ describe("Error Messages ", () => {
   });
 });
 
+//submithandler tests
+test("Submit handler is rendered", async () => {
+  const submitHandler = jest.fn();
+  const props: FormData = {
+    handleSubmit: submitHandler,
+  };
 
+  render(
+    <Router>
+      <SignUp {...props} handleSubmit={submitHandler} />
+      <Button buttonLabel="SignUp" />
+    </Router>
+  );
+});
+
+// test("Validates email input field", async () => {
+//   render(
+//     <Router>
+//       <SignUp />
+//     </Router>
+//   );
+//   fireEvent.change(screen.getByLabelText("Email"),
+   
+//    {target: { value: "invalid_email" },
+//   });
+
+//   expect(await screen.findByText(/Invalid Email/)).toBeInTheDocument();
+// });
+
+test("when valid input is submitted", async () => {
+  render(
+    <Router>
+      <SignUp />
+    </Router>
+  );
+  const emailInput = screen.getByLabelText(/Email/i);
+  fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
+
+  const nameInput = screen.getByLabelText(/Name/i);
+  fireEvent.change(nameInput, { target: { value: "aashani" } });
+  
+  const birthInput = screen.getByLabelText(/DOB/i);
+  fireEvent.change(birthInput, { target: { value: '07/02/2000' } });
+
+  const passwordInput = screen.getByLabelText("Password");
+  fireEvent.change(passwordInput, { target: { value: "12345678" } });
+
+  const confirmPasswordInput = screen.getByLabelText(/Re-enter password/i);
+  fireEvent.change(confirmPasswordInput, { target: { value: "12345678" } });
+
+  fireEvent.submit(screen.getByText(/SignUp/i));
+  const errorMessage = screen.queryByText(/Email is required/i);
+  expect(errorMessage).toBeNull();
+});
