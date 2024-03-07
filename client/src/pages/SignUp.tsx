@@ -155,10 +155,10 @@ function SignUp() {
             </label>
             <input
               {...register("confirmPassword", {
-                required: "Confirm Password is required",
+                required: "Confirm-Password is required",
                 minLength: {
                   value: 8,
-                  message: "Password Should Be At Least 8 Characters",
+                  message: "Re-enter Password Should Be At Least 8 Characters",
                 },
                 validate: (value) =>
                   value === password || "The passwords do not match", // Validate if confirmPassword matches password
