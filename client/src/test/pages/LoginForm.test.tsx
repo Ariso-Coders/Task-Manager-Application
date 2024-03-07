@@ -11,7 +11,6 @@ import { Button } from "../../components/Button";
 import { LoginFormData } from "../../pages/LoginForm";
 import user from "@testing-library/user-event";
 import userEvent from "@testing-library/react";
-import { input } from "@testing-library/user-event/dist/types/event";
 
 test("Render The Login Component without crashing", () => {
   render(
@@ -73,9 +72,6 @@ test("Submit handler is rendered", async () => {
   );
 });
 
-
-
-
 //Grouped test for error messages
 describe("Error Message Diplayed For", () => {
   test("'Email Is Required' when email is empty", async () => {
@@ -101,32 +97,18 @@ describe("Error Message Diplayed For", () => {
   });
 });
 
-test("Submit button with empty email displays error message", async () => {
-  const submitHandler = jest.fn(); 
+test("when valid input is submitted", async () => {
   render(
     <Router>
-      <LoginForm handleSubmit={submitHandler} />
+      <LoginForm />
     </Router>
   );
-  const form = screen.getByRole("form");
-  const emailInput = screen.getByPlaceholderText(/enter your email/i);
-  fireEvent.change(emailInput, { target: { value: "" } });
-  fireEvent.submit(form);
+  const emailInput = screen.getByPlaceholderText(/Enter your email/i);
 
-  expect(await screen.findByText(/Email Is Required/i)).toBeInTheDocument();
-});
-
-test("Submit button with empty password displays error message", async () => {
-  const submitHandler = jest.fn(); 
-  render(
-    <Router>
-      <LoginForm handleSubmit={submitHandler} />
-    </Router>
-  );
-  const form = screen.getByRole("form");
+  fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
   const passwordInput = screen.getByPlaceholderText(/enter your password/i);
-  fireEvent.change(passwordInput, { target: { value: "" } });
-  fireEvent.submit(form);
-
-  expect(await screen.findByText(/email Is Required/i)).toBeInTheDocument();
+  fireEvent.change(passwordInput, { target: { value: "12345678" } });
+  fireEvent.submit(screen.getByText(/Login/i));
+  const errorMessage = screen.queryByText(/Email is required/i);
+  expect(errorMessage).toBeNull();
 });
