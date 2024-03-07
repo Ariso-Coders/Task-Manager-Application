@@ -3,6 +3,7 @@ import {
   screen,
   fireEvent,
   getByPlaceholderText,
+  waitFor
 } from "@testing-library/react";
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
@@ -111,4 +112,53 @@ test("when valid input is submitted", async () => {
   fireEvent.submit(screen.getByText(/Login/i));
   const errorMessage = screen.queryByText(/Email is required/i);
   expect(errorMessage).toBeNull();
+});
+
+// test("when invalid input is submitted", async () => {
+//   render(
+//     <Router>
+//       <LoginForm />
+//     </Router>
+//   );
+//   const emailInput = screen.getByPlaceholderText(/Enter your email/i);
+
+//   fireEvent.change(emailInput, { target: { value: "invalid@gmail.com" } });
+//   const passwordInput = screen.getByPlaceholderText(/enter your password/i);
+//   fireEvent.change(passwordInput, { target: { value: "123456789" } });
+//   fireEvent.submit(screen.getByText(/Login/i));
+ 
+
+//   const errorMessage = await screen.findByText("This email is not registered or Invalid Password");
+//   expect(errorMessage).toBeInTheDocument();
+
+
+// });
+
+//Validation Test Cases
+test("Invalid email format", async () => {
+  render(
+    <Router>
+      <LoginForm />
+    </Router>
+  );
+
+  const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
+  fireEvent.change(emailInput, { target: { value: "invalidemail" } });
+  fireEvent.submit(screen.getByText(/Login/i));
+  const emailErrorMessage = await screen.findByText("Invalid Email");
+  expect(emailErrorMessage).toBeInTheDocument();
+});
+
+test("Password shorter than 8 characters", async () => {
+  render(
+    <Router>
+      <LoginForm />
+    </Router>
+  );
+
+  const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
+  fireEvent.change(passwordInput, { target: { value: "123" } });
+  fireEvent.submit(screen.getByText(/Login/i));
+  const passwordErrorMessage = await screen.findByText("Password Should Be At Least 8 Characters");
+  expect(passwordErrorMessage).toBeInTheDocument();
 });
