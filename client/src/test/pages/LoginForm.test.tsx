@@ -132,6 +132,8 @@ describe("Valid Data Submit", () => {
 
       const submitButton = screen.getByRole("button", { name: /Signin/i });
       user.click(submitButton); 
+      await waitFor(() => expect(window.location.pathname).toBe("/task"));
+
     })
   });
 
