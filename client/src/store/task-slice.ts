@@ -144,12 +144,16 @@ const taskSlice = createSlice({
       const { date, searchTerm, showCompleted, showNotCompleted } =
         action.payload;
       const filteredTasks = state.totalTask.filter((task) => {
-        const taskDate = task.date?.split("T")[0];
+        const taskDate = new Date(task.date?.split("T")[0]);
+        const newStartDate = new Date(date.selection.startDate);
+        const newEndDate = new Date(date.selection.endDate);
+        newStartDate.setDate(newStartDate.getDate() + 1);
+        newEndDate.setDate(newEndDate.getDate() + 1);
         const withinRange =
-          task.date?.split("T")[0] >=
-            formatDate(new Date(date.selection.startDate)) &&
-          taskDate <= formatDate(new Date(date.selection.endDate));
-        const singleDay = taskDate.toDateString === date.selection.startDate;
+          taskDate >= new Date(date.selection.startDate) &&
+          taskDate <= newEndDate;
+        const singleDay = taskDate === newStartDate;
+        console.log("singleDay", singleDay);
         return (
           (withinRange || singleDay) &&
           task.task_description
