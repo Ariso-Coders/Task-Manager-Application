@@ -116,19 +116,6 @@ test("Submit handler is rendered", async () => {
   );
 });
 
-// test("Validates email input field", async () => {
-//   render(
-//     <Router>
-//       <SignUp />
-//     </Router>
-//   );
-//   fireEvent.change(screen.getByLabelText("Email"),
-   
-//    {target: { value: "invalid_email" },
-//   });
-
-//   expect(await screen.findByText(/Invalid Email/)).toBeInTheDocument();
-// });
 
 test("when valid input is submitted", async () => {
   render(
@@ -157,8 +144,6 @@ test("when valid input is submitted", async () => {
   const errorMessage = screen.queryByText(/Email is required/i);
   expect(errorMessage).toBeNull();
 });
-
-
 
 test("Navigate to task page", async() => {
   render(
