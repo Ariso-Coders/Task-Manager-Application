@@ -6,6 +6,7 @@ import { Task } from "../pages/Task";
 
 import { RootState } from "./index";
 import axios from "axios";
+// const axios = require("axios");
 
 interface overdueInterface {
   overdueLogic: boolean | any;
@@ -54,7 +55,7 @@ export const fetchTask = createAsyncThunk<Task[], GetTasksRequest>(
       }
     );
 
-    console.log("fetchtask response", response.data.tasksToTheUser);
+    console.log("fetchtask response", response);
     if (response.data.tasksToTheUser) {
       return response.data.tasksToTheUser;
     }
@@ -199,6 +200,7 @@ const taskSlice = createSlice({
               ) && task.task_status === false
           ),
         };
+        console.log("extra reducer values", state.totalTask);
         return state;
       }
     );

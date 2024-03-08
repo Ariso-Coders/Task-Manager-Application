@@ -68,6 +68,8 @@ const Task = () => {
 
     taskValues = useSelector((state: RootState) => state.task);
     const { data, isError } = useGetAllTasksQuery({ userID: userId, pageNumber: taskValues.taskPageNumber }); // calling API 
+
+    console.log("data in backend",data)
     const dispatch = useDispatch<AppDispatch>();
     const [updateTaskMutation] = useUpdateTaskStatusMutation();
     const [mutate, ,] = useDeleteTaskByIdMutation();
