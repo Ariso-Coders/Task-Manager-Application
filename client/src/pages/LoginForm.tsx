@@ -25,7 +25,7 @@ const LoginForm = () => {
 
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
-    console.log(data);
+    //console.log(data);
     try {
       const loginRespond = await axios.post(
         "http://localhost:8080/user/login",

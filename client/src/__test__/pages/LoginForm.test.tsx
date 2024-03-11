@@ -6,11 +6,16 @@ import {
   waitFor,
 } from "@testing-library/react";
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import LoginForm from "../../pages/LoginForm";
 import { Button } from "../../components/Button";
 import user from "@testing-library/user-event";
-import userEvent from "@testing-library/react";
+import Task from "../../pages/Task";
+import { Provider } from "react-redux";
+import store from "../../store/index";
+import Layout from "../../Layout/Layout";
+import axios from "axios";
+
 
 test("Render The Login Component without crashing", () => {
   render(
@@ -92,7 +97,7 @@ describe("Error Message Diplayed For", () => {
       </Router>
     );
     const submitButton = screen.getByRole("button", { name: /Signin/i });
-    user.click(submitButton); 
+    user.click(submitButton);
     expect(
       await screen.findByText(/Password is required/i)
     ).toBeInTheDocument();
@@ -113,29 +118,50 @@ describe("Valid Data Submit", () => {
     const passwordInput = screen.getByPlaceholderText(/enter your password/i);
     fireEvent.change(passwordInput, { target: { value: "12345678" } });
     const submitButton = screen.getByRole("button", { name: /Signin/i });
-    user.click(submitButton); 
+    user.click(submitButton);
     const errorMessage = screen.queryByText(/Email is required/i);
     expect(errorMessage).toBeNull();
   });
 
-  test("Navigate to task page", async() => {
+  test("Navigate to task page", async () => {
     render(
       <Router>
-        <LoginForm />
+        <Routes>
+        <Route path="/" element={<LoginForm />} />
+
+          <Route
+            path="/task"
+            element={
+              <Layout>
+                <Task />
+              </Layout>
+            }
+          ></Route>
+        </Routes>
       </Router>
     );
     const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
-    fireEvent.change(emailInput, { target: { value: "ashani@example.com" } });
+    fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
 
     const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
     fireEvent.change(passwordInput, { target: { value: "12345678" } });
 
-      const submitButton = screen.getByRole("button", { name: /Signin/i });
-      user.click(submitButton); 
-      await waitFor(() => expect(window.location.pathname).toBe("/task"));
+    const submitButton = screen.getByRole("button", { name: /Signin/i });
+    fireEvent.click(submitButton);
+    render(
+      <Router>
+        <Provider store={store}>
 
-    })
+        <Layout  >
+            <Task />
+          </Layout>
+        </Provider>
+      </Router>
+    );
+
+    waitFor(() => expect(window.location.pathname).toBe("/task"));
   });
+});
 
 //Validation Test Cases
 describe("validation", () => {
@@ -168,5 +194,56 @@ describe("validation", () => {
     );
     expect(passwordErrorMessage).toBeInTheDocument();
   });
-})
+});
 
+test("submit invalid email or password", async () => {
+  render(
+    <Router>
+      <LoginForm/>
+    </Router>
+  )
+  
+  const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
+  fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
+
+  const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
+   fireEvent.change(passwordInput, { target: { value: "12345678" } });
+
+  const submitButton = screen.getByRole("button", { name: /Signin/i });
+  fireEvent.click(submitButton);
+  console.log("email",emailInput)
+  waitFor(() =>
+  expect(screen.getByText("This email is not registered or Invalid Password")).toBeInTheDocument()
+);
+  })
+
+
+
+axios.post=jest.fn();
+jest.mock('axios');
+test('success login',async()=>{
+ 
+  const resp={data:{
+    //userToken: 'mockToken',
+    userName: 'Ashani',
+    userEmail:'ashani@gmail.com'
+  }}
+axios.post.mockResolvedValue(resp)
+
+render(
+  <Router>
+    <LoginForm/>
+  </Router>
+)
+const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
+fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
+
+const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
+fireEvent.change(passwordInput, { target: { value: "12345678" } });
+
+const submitButton = screen.getByRole("button", { name: /Signin/i });
+fireEvent.click(submitButton);
+//expect(localStorage.setItem).toHaveBeenCalledWith('userEmail', 'ashani@gmail.com');
+//const actualResp= getAxios()
+// expect (actualResp).toEqual(resp)
+})
