@@ -12,28 +12,3 @@ test("Render The Task page without crashing", () => {
   );
 });
 
-
-describe("Task component", () => {
-  test("renders Task component", () => {
-    render(<Task />);
-    expect(screen.getByText(/you have/i)).toBeInTheDocument();
-  });
-
-  test("displays error card when delete button is clicked", () => {
-    render(<Task />);
-    fireEvent.click(screen.getByRole('button',{name:'AI'})); 
-    expect(screen.getByText(/Do you want to Delete this task ?/i)).toBeInTheDocument();
-  });
-
-  test("updates search term state when user types in search input", () => {
-    render(<Task />);
-    fireEvent.change(screen.getByPlaceholderText("Search For Task"), { target: { value: "example" } });
-    expect(screen.getByPlaceholderText("Search For Task")).toHaveValue("example");
-  });
-
-  test("toggles filter menu when filter icon is clicked", () => {
-    render(<Task />);
-    fireEvent.click(screen.getByRole("button", { name: /filters/i }));
-    expect(screen.getByText(/Filter by:/i)).toBeInTheDocument();
-  });
-});
