@@ -21,7 +21,7 @@ describe("Task component", () => {
 
   test("displays error card when delete button is clicked", () => {
     render(<Task />);
-    fireEvent.click(screen.getByText("Delete")); // Assuming the delete button text is "Delete"
+    fireEvent.click(screen.getByRole('button',{name:'AI'})); 
     expect(screen.getByText(/Do you want to Delete this task ?/i)).toBeInTheDocument();
   });
 

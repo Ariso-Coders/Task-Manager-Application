@@ -89,6 +89,7 @@ describe("Error Message Diplayed For", () => {
     ).toBeInTheDocument();
   });
 });
+
 //Upon entry of valid input data
 describe("Valid Data Submit", () => {
   test("No Error Message is Displayed", async () => {
@@ -118,7 +119,7 @@ describe("Valid Data Submit", () => {
     fireEvent.change(passwordInput, { target: { value: "12345678" } });
     const submitButton = screen.getByRole("button", { name: /Signin/i });
     user.click(submitButton);
-    waitFor(() => expect(window.location.pathname).toEqual("/task"));
+    await waitFor(() => expect(window.location.pathname).toEqual("/task"));
   });
 });
 
@@ -134,7 +135,7 @@ describe("Valid Data Submit", () => {
     fireEvent.change(passwordInput, { target: { value: "1234567890" } });
     const submitButton = screen.getByRole("button", { name: /Signin/i });
     user.click(submitButton);
-    waitFor(() =>
+    await waitFor(() =>
     expect(screen.getByText("This email is not registered or Invalid Password")).toBeVisible()
   );
   });
@@ -153,6 +154,7 @@ describe("validation", () => {
     const emailErrorMessage = await screen.findByText("Invalid Email");
     expect(emailErrorMessage).toBeInTheDocument();
   });
+
   test("Password shorter than 8 characters", async () => {
     render(
       <Router>
