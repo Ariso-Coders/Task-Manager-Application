@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import SignUp from "../../pages/SignUp";
 import { Button } from "../../components/Button";
-import  {FormData}  from "../../pages/SignUp";
+import { FormData } from "../../pages/SignUp";
 import user from "@testing-library/user-event";
 
 
