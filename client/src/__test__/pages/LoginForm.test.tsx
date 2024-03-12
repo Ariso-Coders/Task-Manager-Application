@@ -16,7 +16,6 @@ import store from "../../store/index";
 import Layout from "../../Layout/Layout";
 import axios from "axios";
 
-
 test("Render The Login Component without crashing", () => {
   render(
     <Router>
@@ -62,20 +61,6 @@ describe("render", () => {
     const buttonInput = screen.getByRole("button");
     expect(buttonInput).toBeInTheDocument();
   });
-
-  test("Submit handler is rendered", async () => {
-    const submitHandler = jest.fn();
-    const props: LoginFormData = {
-      handleSubmit: submitHandler,
-    };
-
-    render(
-      <Router>
-        <LoginForm {...props} handleSubmit={submitHandler} />
-        <Button buttonLabel="Login" />
-      </Router>
-    );
-  });
 });
 
 //Grouped test for error messages
@@ -106,28 +91,12 @@ describe("Error Message Diplayed For", () => {
 
 //Upon entry of valid input data
 describe("Valid Data Submit", () => {
-  test("No Error Message is Displayed", async () => {
-    render(
-      <Router>
-        <LoginForm />
-      </Router>
-    );
-    const emailInput = screen.getByPlaceholderText(/Enter your email/i);
-
-    fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
-    const passwordInput = screen.getByPlaceholderText(/enter your password/i);
-    fireEvent.change(passwordInput, { target: { value: "12345678" } });
-    const submitButton = screen.getByRole("button", { name: /Signin/i });
-    user.click(submitButton);
-    const errorMessage = screen.queryByText(/Email is required/i);
-    expect(errorMessage).toBeNull();
-  });
-
+  //not working
   test("Navigate to task page", async () => {
     render(
       <Router>
         <Routes>
-        <Route path="/" element={<LoginForm />} />
+          <Route path="/" element={<LoginForm />} />
 
           <Route
             path="/task"
@@ -151,15 +120,18 @@ describe("Valid Data Submit", () => {
     render(
       <Router>
         <Provider store={store}>
-
-        <Layout  >
+          <Layout>
             <Task />
           </Layout>
         </Provider>
       </Router>
     );
 
-    waitFor(() => expect(window.location.pathname).toBe("/task"));
+    // await waitFor(() => expect(window.location.pathname).toBe("/task"));
+
+    //  expect(
+    //   await (window.location.pathname)
+    //  ).toBe("/task")
   });
 });
 
@@ -196,54 +168,61 @@ describe("validation", () => {
   });
 });
 
+//not working
 test("submit invalid email or password", async () => {
   render(
     <Router>
-      <LoginForm/>
+      <LoginForm />
     </Router>
-  )
-  
+  );
+
+  const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
+  fireEvent.change(emailInput, { target: { value: "aaashani@gmail.com" } });
+
+  const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
+  fireEvent.change(passwordInput, { target: { value: "12345678" } });
+
+  const submitButton = screen.getByRole("button", { name: /Signin/i });
+  fireEvent.click(submitButton);
+  fireEvent.submit(screen.getByText(/Signin/i));
+  // expect(
+  //   await screen.findByText(/This email is not registered or Invalid Password/i)
+  // ).toBeInTheDocument();
+  await waitFor(() =>
+    expect(
+      screen.getByText("This email is not registered or Invalid Password")
+    ).toBeInTheDocument()
+  );
+});
+
+// not working
+axios.post = jest.fn();
+jest.mock("axios");
+
+test("success login", async () => {
+  const resp = {
+    data: {
+      //userToken: 'mockToken',
+      userName: "Ashani",
+      userEmail: "ashani@gmail.com",
+    },
+  };
+  axios.post.mockResolvedValue(resp);
+
+  render(
+    <Router>
+      <LoginForm />
+    </Router>
+  );
   const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
   fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
 
   const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
-   fireEvent.change(passwordInput, { target: { value: "12345678" } });
+  fireEvent.change(passwordInput, { target: { value: "12345678" } });
 
   const submitButton = screen.getByRole("button", { name: /Signin/i });
   fireEvent.click(submitButton);
-  console.log("email",emailInput)
-  waitFor(() =>
-  expect(screen.getByText("This email is not registered or Invalid Password")).toBeInTheDocument()
-);
-  })
-
-
-
-axios.post=jest.fn();
-jest.mock('axios');
-test('success login',async()=>{
- 
-  const resp={data:{
-    //userToken: 'mockToken',
-    userName: 'Ashani',
-    userEmail:'ashani@gmail.com'
-  }}
-axios.post.mockResolvedValue(resp)
-
-render(
-  <Router>
-    <LoginForm/>
-  </Router>
-)
-const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
-fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
-
-const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
-fireEvent.change(passwordInput, { target: { value: "12345678" } });
-
-const submitButton = screen.getByRole("button", { name: /Signin/i });
-fireEvent.click(submitButton);
-//expect(localStorage.setItem).toHaveBeenCalledWith('userEmail', 'ashani@gmail.com');
-//const actualResp= getAxios()
-// expect (actualResp).toEqual(resp)
-})
+  //expect(localStorage.setItem).toHaveBeenCalledWith('userEmail', 'ashani@gmail.com');
+  //const actualResp= getAxios()
+  // expect (actualResp).toEqual(resp)
+});

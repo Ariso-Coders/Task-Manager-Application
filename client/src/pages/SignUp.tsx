@@ -124,7 +124,7 @@ function SignUp() {
               type="date"
             />
             {errors.dob && (
-              <p className="text-left text-red-700">{errors.dob.message}</p>
+              <p className="text-lefts text-red-700">{errors.dob.message}</p>
             )}
           </div>
 
