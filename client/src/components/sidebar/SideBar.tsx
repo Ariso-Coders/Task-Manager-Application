@@ -22,12 +22,12 @@ export default function SideBar({ onCallback, logoutLogic }: prop) {
           } to="/task">Task</NavLink>
           <NavLink className={({ isActive, isPending }) =>
             isPending ? " text-left w-full transition-all hover:scale-105   text-white" : isActive ? " py-vh1 px-vw1 rounded text-blue-700 bg-white  scale-105 text-left w-full transition-all hover:scale-105 " : "text-left w-full transition-all hover:scale-105 "
-          } to="/user">Users</NavLink>
+          } to="/user" >Users</NavLink>
           <NavLink className={({ isActive, isPending }) =>
             isPending ? " text-left w-full transition-all hover:scale-105   text-white" : isActive ? "py-vh1 px-vw1 rounded text-blue-700 bg-white  scale-105 text-left w-full transition-all hover:scale-105  " : "text-left w-full transition-all hover:scale-105"
           } to="/setting">Settings</NavLink>
         </div>
-        <div className="w-full flex flex-col items-start  ">
+        <div   className="w-full flex flex-col items-start  ">
           <hr className="border-gray-400 w-full" />
           <div className='w-full px-vw5'>
             <button className="text-gray-300 text-sm flex justify-start items-center gap-x-4 cursor-pointer p-5  pl-0  hover:underline rounded-sm " 

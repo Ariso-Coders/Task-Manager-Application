@@ -4,6 +4,7 @@ import { Button } from "../components/Button";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { useLoginMutation } from "../store/fetures/task-api";
 
 type LoginFormData = {
   email: string;
@@ -13,6 +14,8 @@ type LoginFormData = {
 
 const LoginForm = () => {
   const navigation = useNavigate();
+
+  const [loginMutation, { isError }] = useLoginMutation();
   const {
     register,
     handleSubmit,
@@ -24,13 +27,12 @@ const LoginForm = () => {
   const [tempoLogic, setTempoLogic] = useState<boolean>(false);
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     try {
-      const loginRespond = await axios.post(
-        "http://localhost:8080/user/login",
-        {
-          email: data.email,
-          password: data.password,
-        }
-      );
+
+      let loginRespond:any = await loginMutation({
+        email: data.email,
+        password: data.password
+      })
+
       console.log("login respond from login", loginRespond);
       setSuccessMessage("Login Successful");
       const decodedToken: any = jwtDecode(loginRespond.data.token);
@@ -38,9 +40,8 @@ const LoginForm = () => {
       localStorage.setItem("userEmail", decodedToken.email);
       localStorage.setItem("userId", decodedToken.userId);
       localStorage.setItem("userName", loginRespond.data.name);
-      // navigation("/task");
-      // setTempoLogic(true);
-      //window.location.reload();
+      navigation("/task");
+
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
         setErrorMessage("This email is not registered or Invalid Password");

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { useSignupMutation } from "../store/fetures/task-api";
 
 
 type FormData = {
@@ -34,20 +35,21 @@ function SignUp() {
   const [successMessage, setSuccessMessage] = useState<string>("");
 
   const navigation = useNavigate();
+  const [signupMutation, { isError }] = useSignupMutation();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log(data);
     try {
-      const signUpRespond = await axios.post(
-        "http://localhost:8080/user/signup",
-        {
-          email: data.email,
-          name: data.name,
-          dob: data.dob,
-          password: data.password,
-          confirmPassword: data.confirmPassword,
-        }
-      );
+
+      let signUpRespond = await signupMutation({
+        email: data.email,
+        name: data.name,
+        dob: data.dob,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+      })
+
+
       console.log("signUp respond from signup", signUpRespond);
       setSuccessMessage("Registered successfully!");
       navigation("/");
@@ -74,25 +76,25 @@ function SignUp() {
       </div>
       <div className="max-w-md w-full  mx-auto mt-4 bg-white sm:border border-gray-300 p-8 rounded-lg">
         <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-  <label htmlFor="email" className="flex mb-2 font-semibold">
-    Email
-  </label>
-  <input
-    {...register("email", {
-      required: "Email Is Required",
-      pattern: {
-        value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-        message: "Invalid Email",
-      },
-    })}
-    id="email" 
-    className="p-3 w-full border-2 border-gray-300 rounded-md" 
-  />
-  {errors.email && (
-    <p className="text-left text-red-700">{errors.email.message}</p>
-  )}
-</div>
+          <div>
+            <label htmlFor="email" className="flex mb-2 font-semibold">
+              Email
+            </label>
+            <input
+              {...register("email", {
+                required: "Email Is Required",
+                pattern: {
+                  value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                  message: "Invalid Email",
+                },
+              })}
+              id="email"
+              className="p-3 w-full border-2 border-gray-300 rounded-md"
+            />
+            {errors.email && (
+              <p className="text-left text-red-700">{errors.email.message}</p>
+            )}
+          </div>
 
           <div>
             <label htmlFor="name" className="flex mb-2 font-semibold">

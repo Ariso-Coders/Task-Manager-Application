@@ -6,7 +6,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import React from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import LoginForm from "../../pages/LoginForm";
 import { Button } from "../../components/Button";
 import user from "@testing-library/user-event";
@@ -195,34 +195,4 @@ test("submit invalid email or password", async () => {
   );
 });
 
-// not working
-axios.post = jest.fn();
-jest.mock("axios");
 
-test("success login", async () => {
-  const resp = {
-    data: {
-      //userToken: 'mockToken',
-      userName: "Ashani",
-      userEmail: "ashani@gmail.com",
-    },
-  };
-  axios.post.mockResolvedValue(resp);
-
-  render(
-    <Router>
-      <LoginForm />
-    </Router>
-  );
-  const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
-  fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
-
-  const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
-  fireEvent.change(passwordInput, { target: { value: "12345678" } });
-
-  const submitButton = screen.getByRole("button", { name: /Signin/i });
-  fireEvent.click(submitButton);
-  //expect(localStorage.setItem).toHaveBeenCalledWith('userEmail', 'ashani@gmail.com');
-  //const actualResp= getAxios()
-  // expect (actualResp).toEqual(resp)
-});

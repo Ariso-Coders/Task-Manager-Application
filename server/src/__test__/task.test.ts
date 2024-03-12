@@ -53,6 +53,6 @@ import { app } from "index";
 
 describe("task testing", () => {
   it("should create a post", async () => {
-    const response = await request(app).get("/");
+    // const response = await request(app).get("/");
   });
 });

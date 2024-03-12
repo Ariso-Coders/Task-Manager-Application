@@ -51,15 +51,10 @@
     "^.+\\.js$": "babel-jest"
   },
   "devDependencies": {
-<<<<<<< HEAD
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
     "@babel/preset-env": "^7.24.0",
     "@babel/preset-typescript": "^7.23.3",
     "@jest/globals": "^29.7.0",
-    "@types/jsonwebtoken": "^9.0.5",
-    "@types/react-date-range": "^1.4.9",
-    "babel-jest": "^29.7.0",
-=======
-    "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
     "@testing-library/dom": "^9.3.4",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
@@ -67,10 +62,13 @@
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/react-date-range": "^1.4.9",
+    "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
->>>>>>> origin/unitTesting
     "tailwindcss": "^3.4.1",
     "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3"
+  },
+  "overrides": {
     "typescript": "^5.3.3"
   },
   "moduleFileExtensions": [

@@ -45,7 +45,9 @@ function App() {
           </Layout>} >
           </Route>
           <Route path="/setting" element={<Layout  >
-            <div className="w-full h-full flex items-center justify-center text-blue-600 text-xl">SETTNG</div>
+            <div className="w-full h-full flex items-center justify-center text-blue-600 text-xl">SETTNG
+            <p>This is setting</p>
+            </div>
           </Layout>} >
           </Route>
           <Route path="/task2" element={<Layout>
