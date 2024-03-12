@@ -7,7 +7,7 @@ import authRoutes from "./routes/auth";
 import taskRoutes from "./routes/task";
 import userRoutes from "./routes/user";
 
-const app = express();
+ export const app = express();
 
 app.use(bodyparser.json());
 app.use(cors());
@@ -34,13 +34,15 @@ const errorHandler = (
 
 app.use(errorHandler);
 
-try {
-  mongoose.connect(
-    "mongodb+srv://ariso_database:arisoIT123@clusterariso.2wgz0cy.mongodb.net/"
-  );
-  app.listen(8080, () => {
-    console.log("connected to 8080");
-  });
-} catch (err) {
-  console.log("mongoose error", err);
-}
+
+
+// try {
+//   mongoose.connect(
+//     "mongodb+srv://ariso_database:arisoIT123@clusterariso.2wgz0cy.mongodb.net/"
+//   );
+//   app.listen(8080, () => {
+//     console.log("connected to 8080");
+//   });
+// } catch (err) {
+//   console.log("mongoose error", err);
+// }

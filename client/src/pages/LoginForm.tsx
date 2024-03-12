@@ -18,9 +18,10 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>();
- 
+
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
+  const [tempoLogic, setTempoLogic] = useState<boolean>(false);
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     try {
       const loginRespond = await axios.post(
@@ -35,16 +36,17 @@ const LoginForm = () => {
       const decodedToken: any = jwtDecode(loginRespond.data.token);
       localStorage.setItem("userToken", loginRespond.data.token);
       localStorage.setItem("userEmail", decodedToken.email);
-      localStorage.setItem("userId",decodedToken.userId);
-      localStorage.setItem("userName",loginRespond.data.name);
-      navigation("/task");
+      localStorage.setItem("userId", decodedToken.userId);
+      localStorage.setItem("userName", loginRespond.data.name);
+      // navigation("/task");
+      // setTempoLogic(true);
       //window.location.reload();
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
         setErrorMessage("This email is not registered or Invalid Password");
         setSuccessMessage("");
       } else {
-        console.error("An error occurred:", error);
+        // console.error("An error occurred:", error);
       }
     }
   };
@@ -92,9 +94,11 @@ const LoginForm = () => {
             )}
           </div>
 
-          <Button buttonLabel="Login"/>
+          {/* <Button buttonLabel="Login"/> */}
+
+          <button type="submit" className="bg-main_color py-2 px-6 rounded-md mb-4 text-white">Signin</button>
           {errorMessage && <p className="text-red-700">{errorMessage}</p>}
-          {successMessage && <p className="text-green">{successMessage}</p>}
+          {successMessage && <p className="text-green-400">{successMessage}</p>}
           <p>
             Don't Have an Account?{" "}
             <Link to="/signup" className="font-semibold">
@@ -102,6 +106,9 @@ const LoginForm = () => {
             </Link>
           </p>
         </form>
+        {tempoLogic && (<p className="text-green-500 text-3xl">
+          Sign in succesfull
+        </p>)}
       </div>
     </div>
   );

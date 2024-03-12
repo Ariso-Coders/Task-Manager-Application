@@ -100,7 +100,7 @@ export const postTask = async (
 
   if (isEmpty(taskDate) || isEmpty(task)) {
     const error: CustomError = new CustomError(
-      "Date or task cannot be emptytt",
+      "Date or task cannot be empty",
       400
     );
     return next(error);
