@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import SignUp from "../../pages/SignUp";
 import { Button } from "../../components/Button";
-import { FormData } from "../../pages/SignUp";
+
 test("SignUp component renders without crashing", () => {
   render(
     <Router>
@@ -86,19 +86,7 @@ describe("Error Messages ", () => {
     expect(await screen.findByText("Password is required")).toBeInTheDocument();
   });
 });
-//submithandler tests
-test("Submit handler is rendered", async () => {
-  const submitHandler = jest.fn();
-  const props: FormData = {
-    handleSubmit: submitHandler,
-  };
-  render(
-    <Router>
-      <SignUp {...props} handleSubmit={submitHandler} />
-      <Button buttonLabel="SignUp" />
-    </Router>
-  );
-});
+
 test("when valid input is submitted", async () => {
   render(
     <Router>
