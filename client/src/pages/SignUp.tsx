@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+
+
 type FormData = {
   email: string;
   name: string;
@@ -66,39 +68,41 @@ function SignUp() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center">
       <div className="max-w-md w-full mx-auto">
-        <div className="text-3xl font-bold text-gray-900 mt-2 text-center">
+        <div className="text-3xl font-bold text-gray-900 mt-2 text-center" data-testid="custom-element">
           Sign Up
         </div>
       </div>
       <div className="max-w-md w-full  mx-auto mt-4 bg-white sm:border border-gray-300 p-8 rounded-lg">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <label htmlFor="" className="flex mb-2 font-semibold">
-              Email
-            </label>
-            <input
-              {...register("email", {
-                required: "Email Is Required",
-                pattern: {
-                  value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                  message: "Invalid Email",
-                },
-              })}
-              className="p-3 w-full border-2 border-gray-300 rounded-md"
-            />
-            {errors.email && (
-              <p className="text-left text-red-700">{errors.email.message}</p>
-            )}
-          </div>
+        <div>
+  <label htmlFor="email" className="flex mb-2 font-semibold">
+    Email
+  </label>
+  <input
+    {...register("email", {
+      required: "Email Is Required",
+      pattern: {
+        value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+        message: "Invalid Email",
+      },
+    })}
+    id="email" 
+    className="p-3 w-full border-2 border-gray-300 rounded-md" 
+  />
+  {errors.email && (
+    <p className="text-left text-red-700">{errors.email.message}</p>
+  )}
+</div>
 
           <div>
-            <label htmlFor="" className="flex mb-2 font-semibold">
+            <label htmlFor="name" className="flex mb-2 font-semibold">
               Name
             </label>
             <input
               {...register("name", {
                 required: "Name is required",
               })}
+              id="name"
               className="p-3 w-full border-2 border-gray-300 rounded-md"
               type="text"
             />
@@ -108,13 +112,14 @@ function SignUp() {
           </div>
 
           <div>
-            <label htmlFor="" className="flex mb-2 font-semibold">
+            <label htmlFor="dob" className="flex mb-2 font-semibold">
               DOB
             </label>
             <input
               {...register("dob", {
                 required: "DOB is required",
               })}
+              id="dob"
               className="p-3 w-full border-2 border-gray-300 rounded-md"
               type="date"
             />
@@ -124,7 +129,7 @@ function SignUp() {
           </div>
 
           <div>
-            <label htmlFor="" className="flex mb-2 font-semibold">
+            <label htmlFor="password" className="flex mb-2 font-semibold">
               Password
             </label>
             <input
@@ -135,6 +140,7 @@ function SignUp() {
                   message: "Password Should Be At Least 8 Characters",
                 },
               })}
+              id="password"
               className="p-3 w-full border-2 border-gray-300 rounded-md"
               type="password"
             />
@@ -144,19 +150,20 @@ function SignUp() {
           </div>
 
           <div>
-            <label htmlFor="" className="flex mb-2 font-semibold">
+            <label htmlFor="confirmPassword" className="flex mb-2 font-semibold">
               Re-enter password
             </label>
             <input
               {...register("confirmPassword", {
-                required: "Password is required",
+                required: "Confirm-Password is required",
                 minLength: {
                   value: 8,
-                  message: "Password Should Be At Least 8 Characters",
+                  message: "Re-enter Password Should Be At Least 8 Characters",
                 },
                 validate: (value) =>
                   value === password || "The passwords do not match", // Validate if confirmPassword matches password
               })}
+              id="confirmPassword"
               className="p-3 w-full border-2 border-gray-300 rounded-md"
               type="password"
             />
