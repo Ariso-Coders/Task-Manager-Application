@@ -23,7 +23,7 @@ export const NavBar = ({ onCallback, onCallBacklogic }: props) => {
           <h1 className="hover:cursor-pointer transition-all hover:font-semibold"  ><NavLink to="/contact" className={({ isActive }) => isActive ? "font-bold" : ""} > ContactUs </NavLink></h1>
         </div>
         <div className="font-semibold text-sm sm:text-xl hidden sm:inline ">
-          <h1 className="flex gap-2"> Welcome Back ! <span className="capitalize">{userName}</span></h1>
+          <h1 className="flex gap-2"> Welcome Back! <span className="capitalize">{userName}</span></h1>
         </div>
       </div>
     </header>

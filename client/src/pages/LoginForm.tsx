@@ -53,7 +53,7 @@ const LoginForm = () => {
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="sm:border border-gray-300 p-8 rounded-lg">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form id="loginForm" onSubmit={handleSubmit(onSubmit)}>
           <h2 className="text-4xl mb-4 font-bold">Login</h2>
           <p className="text-xl mb-8">
             Welcome Back! Please Enter Your details

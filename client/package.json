@@ -4,10 +4,6 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.1.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
     "@types/node": "^16.18.79",
     "@types/react": "^18.2.53",
     "@types/react-dom": "^18.2.18",
@@ -27,6 +23,7 @@
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
+    "redux": "^5.0.1",
     "stream-browserify": "^3.0.0",
     "util": "^0.12.5",
     "web-vitals": "^2.1.4",
@@ -54,14 +51,33 @@
     "^.+\\.js$": "babel-jest"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@babel/preset-env": "^7.24.0",
     "@babel/preset-typescript": "^7.23.3",
     "@jest/globals": "^29.7.0",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/react-date-range": "^1.4.9",
     "babel-jest": "^29.7.0",
+=======
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "@testing-library/dom": "^9.3.4",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jest": "^29.5.12",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/react-date-range": "^1.4.9",
+    "jest": "^29.7.0",
+>>>>>>> origin/unitTesting
     "tailwindcss": "^3.4.1",
     "ts-jest": "^29.1.2",
     "typescript": "^5.3.3"
-  }
+  },
+  "moduleFileExtensions": [
+    "js",
+    "jsx",
+    "ts",
+    "tsx",
+    "json"
+  ]
 }
