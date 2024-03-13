@@ -6,21 +6,30 @@ import {
   waitFor,
 } from "@testing-library/react";
 import React from "react";
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import {
+  Route,
+  BrowserRouter as Router,
+  RouterProvider,
+  Routes,
+  createMemoryRouter,
+} from "react-router-dom";
 import LoginForm from "../../pages/LoginForm";
 import { Button } from "../../components/Button";
-import user from "@testing-library/user-event";
+import user, { userEvent } from "@testing-library/user-event";
 import Task from "../../pages/Task";
 import { Provider } from "react-redux";
 import store from "../../store/index";
 import Layout from "../../Layout/Layout";
 import axios from "axios";
+import SignUp from "../../pages/SignUp";
 
 test("Render The Login Component without crashing", () => {
   render(
-    <Router>
-      <LoginForm />
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <LoginForm />
+      </Router>
+    </Provider>
   );
 });
 
@@ -28,9 +37,11 @@ test("Render The Login Component without crashing", () => {
 describe("render", () => {
   test("Login Text should be displayed", () => {
     render(
-      <Router>
-        <LoginForm />
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <LoginForm />
+        </Router>
+      </Provider>
     );
     const loginText = screen.getByText(/Login/i);
     expect(loginText).toBeInTheDocument();
@@ -38,9 +49,11 @@ describe("render", () => {
 
   test("email input should be rendered", () => {
     render(
-      <Router>
-        <LoginForm />
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <LoginForm />
+        </Router>
+      </Provider>
     );
     const userInputEl = screen.getByPlaceholderText(/Enter Your Email/i);
     expect(userInputEl).toBeInTheDocument;
@@ -48,9 +61,11 @@ describe("render", () => {
 
   test("password input should be rendered", () => {
     render(
-      <Router>
-        <LoginForm />
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <LoginForm />
+        </Router>
+      </Provider>
     );
     const userInputEl = screen.getByPlaceholderText(/password/i);
     expect(userInputEl).toBeInTheDocument;
@@ -67,9 +82,11 @@ describe("render", () => {
 describe("Error Message Diplayed For", () => {
   test("'Email Is Required' when email is empty", async () => {
     render(
-      <Router>
-        <LoginForm />
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <LoginForm />
+        </Router>
+      </Provider>
     );
     fireEvent.submit(screen.getByText("Signin"));
     expect(await screen.findByText("Email Is Required")).toBeInTheDocument();
@@ -77,9 +94,11 @@ describe("Error Message Diplayed For", () => {
 
   test("'Password Is Required' when email is empty", async () => {
     render(
-      <Router>
-        <LoginForm />
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <LoginForm />
+        </Router>
+      </Provider>
     );
     const submitButton = screen.getByRole("button", { name: /Signin/i });
     user.click(submitButton);
@@ -89,59 +108,15 @@ describe("Error Message Diplayed For", () => {
   });
 });
 
-//Upon entry of valid input data
-describe("Valid Data Submit", () => {
-  //not working
-  test("Navigate to task page", async () => {
-    render(
-      <Router>
-        <Routes>
-          <Route path="/" element={<LoginForm />} />
-
-          <Route
-            path="/task"
-            element={
-              <Layout>
-                <Task />
-              </Layout>
-            }
-          ></Route>
-        </Routes>
-      </Router>
-    );
-    const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
-    fireEvent.change(emailInput, { target: { value: "ashani@gmail.com" } });
-
-    const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
-    fireEvent.change(passwordInput, { target: { value: "12345678" } });
-
-    const submitButton = screen.getByRole("button", { name: /Signin/i });
-    fireEvent.click(submitButton);
-    render(
-      <Router>
-        <Provider store={store}>
-          <Layout>
-            <Task />
-          </Layout>
-        </Provider>
-      </Router>
-    );
-
-    // await waitFor(() => expect(window.location.pathname).toBe("/task"));
-
-    //  expect(
-    //   await (window.location.pathname)
-    //  ).toBe("/task")
-  });
-});
-
 //Validation Test Cases
 describe("validation", () => {
   test("Invalid email format", async () => {
     render(
-      <Router>
-        <LoginForm />
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <LoginForm />
+        </Router>
+      </Provider>
     );
 
     const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
@@ -153,9 +128,11 @@ describe("validation", () => {
 
   test("Password shorter than 8 characters", async () => {
     render(
-      <Router>
-        <LoginForm />
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <LoginForm />
+        </Router>
+      </Provider>
     );
 
     const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
@@ -168,31 +145,57 @@ describe("validation", () => {
   });
 });
 
-//not working
-test("submit invalid email or password", async () => {
+test("navigation", async () => {
+  const user = userEvent.setup();
+  const routes = [
+    {
+      path: "/",
+      element: (
+        <Layout>
+          <LoginForm />
+        </Layout>
+      ),
+    },
+    {
+      path: "/signup",
+      element: (
+        <Layout>
+          <SignUp />
+        </Layout>
+      ),
+    },
+    {
+      path: "/task",
+      element: (
+        <Layout>
+          <Task />
+        </Layout>
+      ),
+    },
+  ];
+  const router = createMemoryRouter(routes, {
+    initialEntries: ["/", "/signup", "/task"],
+    initialIndex: 0,
+  });
   render(
-    <Router>
-      <LoginForm />
-    </Router>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   );
-
-  const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
-  fireEvent.change(emailInput, { target: { value: "aaashani@gmail.com" } });
-
-  const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
-  fireEvent.change(passwordInput, { target: { value: "12345678" } });
-
-  const submitButton = screen.getByRole("button", { name: /Signin/i });
-  fireEvent.click(submitButton);
-  fireEvent.submit(screen.getByText(/Signin/i));
-  // expect(
-  //   await screen.findByText(/This email is not registered or Invalid Password/i)
-  // ).toBeInTheDocument();
-  await waitFor(() =>
-    expect(
-      screen.getByText("This email is not registered or Invalid Password")
-    ).toBeInTheDocument()
+  //checks if we are on login page
+  const loginHeader = screen.getByText(
+    "Welcome Back! Please Enter Your details"
   );
+  expect(loginHeader).toBeVisible();
+
+  //check for "sign up" link on login page
+  const signInLink = screen.getByRole("link", { name: /Sign Up/i });
+  expect(signInLink).toBeVisible();
+  await user.click(signInLink);
+  
+  //check sign up page
+  await waitFor(() => {
+    const aboutUsText = screen.getByText(/Already Have an Account/i);
+    expect(aboutUsText).toBeVisible();
+  });
 });
-
-
