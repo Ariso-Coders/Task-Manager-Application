@@ -20,8 +20,8 @@ export const getTaskById = async (
   try {
     const tasksToTheUser = await taskModel
       .find({ userID: userID })
-      // .skip((parseInt(pageNumber) - 1) * pageSize)
-      // .limit(pageSize);
+      .skip((parseInt(pageNumber) - 1) * pageSize)
+      .limit(pageSize);
     if (!tasksToTheUser) {
       const error = new CustomError("This user does not exist", 404);
       throw error;

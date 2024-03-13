@@ -188,6 +188,7 @@ const taskSlice = createSlice({
       taskApi.endpoints.getAllTasks.matchFulfilled,
       (state, { payload }) => {
         console.log("extra reducer worked");
+        console.log("Res",payload)
         state = {
           ...state,
           totalTask: payload.tasksToTheUser,
