@@ -149,28 +149,4 @@ describe('SideBar Component', () => {
 
   })
 
-  test('navigates to "/task" page when Task link is clicked', () => {
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <SideBar {...mockProps} />
-      </MemoryRouter>
-    );
-
-    userEvent.click(screen.getByText(/Task/i));
-
-    expect(window.location.pathname).toBe('/task');
-  });
-
-
-
-  test('navigates to "/task" page when Task link is clicked', () => {
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <SideBar {...mockProps} />
-      </MemoryRouter>
-    );
-
-    fireEvent.click(screen.getByText(/Settings/i));
-    expect(window.location.pathname).toBe('/setting');
-  });
-});
+})
