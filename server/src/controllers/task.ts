@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import taskModel from "../models/task";
 import { isEmpty } from "../utills/Validations";
-class CustomError extends Error {
+export class CustomError extends Error {
   statusCode: number;
   constructor(message: string, statusCode: number) {
     super(message);
@@ -11,7 +11,7 @@ class CustomError extends Error {
 export const getTaskById = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  //next: NextFunction
 ) => {
   const userID = req.params.userID;
   const pageNumber: string = req.query.pageNumber as string;
@@ -20,20 +20,22 @@ export const getTaskById = async (
   try {
     const tasksToTheUser = await taskModel
       .find({ userID: userID })
-      .skip((parseInt(pageNumber) - 1) * pageSize)
-      .limit(pageSize);
+      // .skip((parseInt(pageNumber) - 1) * pageSize)
+      // .limit(pageSize);
     if (!tasksToTheUser) {
       const error = new CustomError("This user does not exist", 404);
-      return next(error);
+      throw error;
+      //return next(error);
     }
-    
     res.status(200).json({ tasksToTheUser });
+
   } catch (err: any) {
-    console.log("get task by id error",err)
+    console.log("get task by id error", err);
     if (!err.statusCode) {
       err.statusCode = 500;
     }
-    next(err);
+    throw err;
+    //next(err);
   }
 };
 export const updateTaskById = async (

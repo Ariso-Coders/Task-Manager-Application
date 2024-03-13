@@ -1,6 +1,6 @@
 import { Document, Schema, model, Types } from "mongoose";
 
-interface Task extends Document {
+export interface Task extends Document {
   userID: Types.ObjectId;
   date: Date;
   task_description: string;
@@ -9,7 +9,7 @@ interface Task extends Document {
 
 const taskSchema = new Schema<Task>({
   userID: {
-    type: Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId ,
     ref: "users",
     required: true,
   },
