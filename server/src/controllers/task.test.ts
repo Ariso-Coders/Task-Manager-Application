@@ -41,14 +41,14 @@ describe("getTaskById controller", () => {
 
     //newww
 
-     (taskModel.find as jest.Mock).mockReturnThis(); // Allow chaining
+     (taskModel.find as jest.Mock).mockReturnThis(); 
      (taskModel.find as jest.Mock).mockResolvedValue(mockTasks);
 
      // Mocking the skip function
-     (taskModel.find as jest.Mock).mockReturnThis(); // Allow chaining
+     (taskModel.find as jest.Mock).mockReturnThis(); 
      (taskModel.find as jest.Mock).mockReturnValueOnce({
-       skip: jest.fn().mockReturnThis(), // Allow chaining
-       limit: jest.fn().mockResolvedValue(mockTasks), // Mocking the limit function
+       skip: jest.fn().mockReturnThis(), 
+       limit: jest.fn().mockResolvedValue(mockTasks), 
      });
 
      //neww
