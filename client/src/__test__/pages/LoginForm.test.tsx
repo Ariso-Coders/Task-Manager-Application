@@ -80,6 +80,8 @@ describe("render", () => {
 
 //Grouped test for error messages
 describe("Error Message Diplayed For", () => {
+  const user = userEvent.setup();
+
   test("'Email Is Required' when email is empty", async () => {
     render(
       <Provider store={store}>
@@ -87,9 +89,9 @@ describe("Error Message Diplayed For", () => {
           <LoginForm />
         </Router>
       </Provider>
-    );
-    fireEvent.submit(screen.getByText("Signin"));
-    expect(await screen.findByText("Email Is Required")).toBeInTheDocument();
+    ); 
+    await user.click(screen.getByRole("button",{name:"Signin"}));
+    expect(screen.getByText(/Email Is Required/i)).toBeInTheDocument();
   });
 
   test("'Password Is Required' when email is empty", async () => {
@@ -100,16 +102,16 @@ describe("Error Message Diplayed For", () => {
         </Router>
       </Provider>
     );
-    const submitButton = screen.getByRole("button", { name: /Signin/i });
-    user.click(submitButton);
+    await user.click(screen.getByRole("button",{name:"Signin"}));
     expect(
-      await screen.findByText(/Password is required/i)
+      screen.getByText(/Password is required/i)
     ).toBeInTheDocument();
   });
 });
 
 //Validation Test Cases
 describe("validation", () => {
+  const user = userEvent.setup();
   test("Invalid email format", async () => {
     render(
       <Provider store={store}>
@@ -121,8 +123,8 @@ describe("validation", () => {
 
     const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
     fireEvent.change(emailInput, { target: { value: "invalidemail" } });
-    fireEvent.submit(screen.getByText(/Signin/i));
-    const emailErrorMessage = await screen.findByText("Invalid Email");
+    await user.click(screen.getByRole("button",{name:"Signin"}));
+    const emailErrorMessage = screen.getByText("Invalid Email");
     expect(emailErrorMessage).toBeInTheDocument();
   });
 
@@ -137,31 +139,13 @@ describe("validation", () => {
 
     const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
     fireEvent.change(passwordInput, { target: { value: "123" } });
-    fireEvent.submit(screen.getByText(/Signin/i));
-    const passwordErrorMessage = await screen.findByText(
+    await user.click(screen.getByRole("button",{name:"Signin"}));
+    const passwordErrorMessage = screen.getByText(
       "Password Should Be At Least 8 Characters"
     );
     expect(passwordErrorMessage).toBeInTheDocument();
   });
 });
-
-test("submit with wrong credentials",async()=>{
-  render(
-    <Provider store={store}>
-      <Router>
-        <LoginForm />
-      </Router>
-    </Provider>
-  );
-  const user = userEvent.setup();
-  const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
-  fireEvent.change(emailInput, { target: { value: "invalid@gmail.com" } });
-  const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
-  fireEvent.change(passwordInput, { target: { value: "12345678" } });
-  user.click(screen.getByText(/Signin/i));
-  // const errorMessage=await screen.findByText("Login Successful")
-  // expect(errorMessage).toBeInTheDocument(); 
-})
 
 test("navigation", async () => {
   const user = userEvent.setup();
@@ -217,3 +201,21 @@ test("navigation", async () => {
     expect(aboutUsText).toBeVisible();
   });
 });
+
+test("submit with wrong credentials",async()=>{
+  render(
+    <Provider store={store}>
+      <Router>
+        <LoginForm />
+      </Router>
+    </Provider>
+  );
+  const user = userEvent.setup();
+  const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
+  fireEvent.change(emailInput, { target: { value: "invalid@gmail.com" } }); 
+  const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
+  fireEvent.change(passwordInput, { target: { value: "12345678" } });
+  await user.click(screen.getByRole("button",{name:"Signin"}));
+  // const errorMessage=await screen.findByText("This email is not registered or Invalid Password")
+  // expect(errorMessage).toBeInTheDocument();  
+})
