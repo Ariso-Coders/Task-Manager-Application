@@ -2,7 +2,6 @@ import {
   render,
   screen,
   fireEvent,
-  getByPlaceholderText,
   waitFor,
 } from "@testing-library/react";
 import React from "react";
@@ -14,7 +13,6 @@ import Task from "../../pages/Task";
 import { Provider } from "react-redux";
 import store from "../../store/index";
 import Layout from "../../Layout/Layout";
-import axios from "axios";
 
 test("Render The Login Component without crashing", () => {
   render(
@@ -33,7 +31,11 @@ describe("render", () => {
       </Router>
     );
     const loginText = screen.getByText(/Login/i);
-    expect(loginText).toBeInTheDocument();
+
+    const loginText2 = screen.getByRole("heading", { name: /Login/i });
+    // screen.get
+    expect(loginText).toBeVisible();
+
   });
 
   test("email input should be rendered", () => {
@@ -63,6 +65,25 @@ describe("render", () => {
   });
 });
 
+test("login button should rednerd correctly", () => {
+  render(
+    <Provider store={store}>
+
+      <Router>
+        <LoginForm />
+      </Router>
+    </Provider>
+  );
+
+  const signInButton = screen.getByRole('button', {
+    name: /signin/i
+  })
+
+  expect(signInButton).toBeVisible();
+  expect(signInButton).toBeEnabled();
+})
+
+
 //Grouped test for error messages
 describe("Error Message Diplayed For", () => {
   test("'Email Is Required' when email is empty", async () => {
@@ -71,6 +92,7 @@ describe("Error Message Diplayed For", () => {
         <LoginForm />
       </Router>
     );
+
     fireEvent.submit(screen.getByText("Signin"));
     expect(await screen.findByText("Email Is Required")).toBeInTheDocument();
   });

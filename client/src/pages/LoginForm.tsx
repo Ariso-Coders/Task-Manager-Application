@@ -24,16 +24,23 @@ const LoginForm = () => {
 
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
-  const [tempoLogic, setTempoLogic] = useState<boolean>(false);
+
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     try {
 
-      let loginRespond:any = await loginMutation({
+      let loginRespond: any = await loginMutation({
         email: data.email,
         password: data.password
       })
 
-      console.log("login respond from login", loginRespond);
+
+      if (loginRespond.error) {
+        setErrorMessage("This email is not registered or Invalid Password");
+        setSuccessMessage("");
+        return;
+      }
+
+      console.log("login respond from login", loginRespond, "This is error", isError);
       setSuccessMessage("Login Successful");
       const decodedToken: any = jwtDecode(loginRespond.data.token);
       localStorage.setItem("userToken", loginRespond.data.token);
@@ -107,9 +114,7 @@ const LoginForm = () => {
             </Link>
           </p>
         </form>
-        {tempoLogic && (<p className="text-green-500 text-3xl">
-          Sign in succesfull
-        </p>)}
+
       </div>
     </div>
   );
