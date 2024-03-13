@@ -17,11 +17,13 @@ import { Button } from "../../components/Button";
 import user, { userEvent } from "@testing-library/user-event";
 import Task from "../../pages/Task";
 import { Provider } from "react-redux";
-import store from "../../store/index";
+
 import Layout from "../../Layout/Layout";
 import axios from "axios";
 import SignUp from "../../pages/SignUp";
+import { setupStore } from "../../store";
 
+const store = setupStore();
 test("Render The Login Component without crashing", () => {
   render(
     <Provider store={store}>
