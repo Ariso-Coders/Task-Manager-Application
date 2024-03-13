@@ -3,9 +3,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SideBar from '../../components/sidebar/SideBar';
 import userEvent from "@testing-library/user-event";
-import App from '../../App';
-import store from '../../store/index';
-import { Provider } from 'react-redux';
 import { createMemoryRouter, RouterProvider, useLocation, MemoryRouter } from 'react-router-dom';
 import Layout from '../../Layout/Layout';
 import Task from '../../pages/Task';
@@ -118,6 +115,7 @@ describe('SideBar Component', () => {
 
     );
 
+    
 
     const userHeader = screen.getByRole("heading", { name: /User Profile/i })
     expect(userHeader).toBeVisible();
