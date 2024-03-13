@@ -14,7 +14,7 @@ import {
 } from "react-router-dom";
 import LoginForm from "../../pages/LoginForm";
 import { Button } from "../../components/Button";
-import user, { userEvent } from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import Task from "../../pages/Task";
 import { Provider } from "react-redux";
 
@@ -24,6 +24,7 @@ import SignUp from "../../pages/SignUp";
 import { setupStore } from "../../store";
 
 const store = setupStore();
+const user = userEvent.setup();
 test("Render The Login Component without crashing", () => {
   render(
     <Provider store={store}>
@@ -104,8 +105,6 @@ test("login button should rednerd correctly", () => {
 
 //Grouped test for error messages
 describe("Error Message Diplayed For", () => {
-  const user = userEvent.setup();
-
   test("'Email Is Required' when email is empty", async () => {
     render(
       <Provider store={store}>
@@ -135,7 +134,6 @@ describe("Error Message Diplayed For", () => {
 
 //Validation Test Cases
 describe("validation", () => {
-  const user = userEvent.setup();
   test("Invalid email format", async () => {
     render(
       <Provider store={store}>
@@ -172,7 +170,6 @@ describe("validation", () => {
 });
 
 test("navigation", async () => {
-  const user = userEvent.setup();
   const routes = [
     {
       path: "/",
@@ -234,12 +231,11 @@ test("submit with wrong credentials",async()=>{
       </Router>
     </Provider>
   );
-  const user = userEvent.setup();
   const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
   fireEvent.change(emailInput, { target: { value: "invalid@gmail.com" } }); 
   const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
   fireEvent.change(passwordInput, { target: { value: "12345678" } });
   await user.click(screen.getByRole("button",{name:"Signin"}));
-  // const errorMessage=await screen.findByText("This email is not registered or Invalid Password")
-  // expect(errorMessage).toBeInTheDocument();  
+  const errorMessage=await screen.findByText("This email is not registered or Invalid Password")
+  expect(errorMessage).toBeInTheDocument();  
 })
