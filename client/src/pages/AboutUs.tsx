@@ -5,7 +5,7 @@ export default function AboutUs() {
     <div className="p-4 flex flex-col items-center justify-center h-screen ">
       <div className="max-w-md flex flex-col bg-gray-100 rounded-lg p-4 shadow-md ">
         <div className="mb-2">
-          <b> # About Us</b>
+          <b># About Us</b>
 
           <p className="text-justify">
             Welcome to TaskMaster, your go-to task management solution! We
