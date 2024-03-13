@@ -145,6 +145,24 @@ describe("validation", () => {
   });
 });
 
+test("submit with wrong credentials",async()=>{
+  render(
+    <Provider store={store}>
+      <Router>
+        <LoginForm />
+      </Router>
+    </Provider>
+  );
+  const user = userEvent.setup();
+  const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
+  fireEvent.change(emailInput, { target: { value: "invalid@gmail.com" } });
+  const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
+  fireEvent.change(passwordInput, { target: { value: "12345678" } });
+  user.click(screen.getByText(/Signin/i));
+  // const errorMessage=await screen.findByText("Login Successful")
+  // expect(errorMessage).toBeInTheDocument(); 
+})
+
 test("navigation", async () => {
   const user = userEvent.setup();
   const routes = [
