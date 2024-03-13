@@ -47,6 +47,7 @@ const LoginForm = () => {
       localStorage.setItem("userEmail", decodedToken.email);
       localStorage.setItem("userId", decodedToken.userId);
       localStorage.setItem("userName", loginRespond.data.name);
+     
       navigation("/task");
 
     } catch (error: any) {
@@ -54,7 +55,7 @@ const LoginForm = () => {
         setErrorMessage("This email is not registered or Invalid Password");
         setSuccessMessage("");
       } else {
-        // console.error("An error occurred:", error);
+        console.error("An error occurred:", error);
       }
     }
   };
@@ -63,9 +64,7 @@ const LoginForm = () => {
       <div className="sm:border border-gray-300 p-8 rounded-lg">
         <form id="loginForm" onSubmit={handleSubmit(onSubmit)}>
           <h2 className="text-4xl mb-4 font-bold">Login</h2>
-          <p className="text-xl mb-8">
-            Welcome Back! Please Enter Your details
-          </p>
+          <p className="text-xl mb-8">Welcome Back! Please Enter Your details</p>
           <div className="mb-4">
             <label className="flex mb-2 font-semibold">Email</label>
             <input
