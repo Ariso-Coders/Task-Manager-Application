@@ -159,7 +159,7 @@ const taskSlice = createSlice({
           task.task_description
             ?.toLowerCase()
             .includes(searchTerm.toLowerCase()) &&
-          ((showCompleted && task.task_status) ||
+            ((showCompleted && task.task_status) ||
             (showNotCompleted && !task.task_status) ||
             (!showCompleted && !showNotCompleted))
         );

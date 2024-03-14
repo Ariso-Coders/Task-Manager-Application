@@ -2,6 +2,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import taskSlice, { TasksState, taskActions } from "../../store/task-slice";
 import { initial } from "lodash";
 
+
 describe("Task Slice", () => {
   let initialState: TasksState;
 
@@ -41,7 +42,6 @@ describe("Task Slice", () => {
   });
 
   describe("filter task by status", () => {
-
     it("should set filter task by status by showNotcompleted ", () => {
       const tasks = [
         {
@@ -88,7 +88,9 @@ describe("Task Slice", () => {
       });
       const newStateAfterFilterByStatus = taskSlice.reducer(newState1, action2);
       expect(newStateAfterFilterByStatus).not.toBeNull();
-      expect(newStateAfterFilterByStatus.filterMessage).toEqual("Results for Not Completed Tasks")
+      expect(newStateAfterFilterByStatus.filterMessage).toEqual(
+        "Results for Not Completed Tasks"
+      );
       expect(newStateAfterFilterByStatus.filteredTask).toEqual([
         {
           date: "2024-03-21T00:00:00.000Z",
@@ -163,7 +165,9 @@ describe("Task Slice", () => {
       });
       const newStateAfterFilterByStatus = taskSlice.reducer(newState1, action2);
       expect(newStateAfterFilterByStatus).not.toBeNull();
-      expect(newStateAfterFilterByStatus.filterMessage).toEqual("Results for Completed Tasks")
+      expect(newStateAfterFilterByStatus.filterMessage).toEqual(
+        "Results for Completed Tasks"
+      );
       expect(newStateAfterFilterByStatus.filteredTask).toEqual([
         {
           date: "2024-03-21T00:00:00.000Z",
@@ -229,304 +233,15 @@ describe("Task Slice", () => {
       });
       const newStateAfterFilterByStatus = taskSlice.reducer(newState1, action2);
       expect(newStateAfterFilterByStatus).not.toBeNull();
-      expect(newStateAfterFilterByStatus.filterMessage).toEqual("Results for Both Completed & Not Completed Tasks")
+      expect(newStateAfterFilterByStatus.filterMessage).toEqual(
+        "Results for Both Completed & Not Completed Tasks"
+      );
       expect(newStateAfterFilterByStatus.filteredTask).toEqual(tasks);
     });
-
-
-  })
-
-
-
-
-  // it('should filter tasks by date range correctly', () => {
-  //   const actionPayload: PayloadAction<{
-  //     date: { selection: { startDate: string; endDate: string } };
-  //     searchTerm: string;
-  //     showCompleted: boolean;
-  //     showNotCompleted: boolean;
-  //   }> = {
-  //     type: 'task/setFilterByDate',
-  //     payload: {
-  //       date: {
-  //         selection: {
-  //           startDate: '2024-03-01T00:00:00Z',
-  //           endDate: '2024-03-10T23:59:59Z',
-  //         },
-  //       },
-  //       searchTerm: 'example search term',
-  //       showCompleted: true,
-  //       showNotCompleted: true,
-  //     },
-  //   };
-
-  //   const newState = taskSlice.reducer(initialState, actionPayload);
-  //   type dummyTaskType = {
-
-  //     _id: string,
-  //       task_description: string,
-  //       task_status: boolean,
-  //       // date: ,
-
-  //   }
-  //   const dummyTasks = [
-  //     {
-  //       _id: '1',
-  //       task_description: 'Task 1',
-  //       task_status: true,
-  //       date: '2024-03-05T00:00:00Z',
-  //     },
-  //     {
-  //       _id: '2',
-  //       task_description: 'Task 2',
-  //       task_status: false,
-  //       date: '2024-03-08T00:00:00Z',
-  //     },
-  //   ];
-
-  //   const expectedFilteredTasks = dummyTasks.filter((task) => {
-  //     const taskDate = new Date(task.date.split('T')[0]);
-  //     const startDate = new Date(actionPayload.payload.date.selection.startDate);
-  //     const endDate = new Date(actionPayload.payload.date.selection.endDate);
-  //   });
-
-  //   expect(newState.filteredTask).toEqual(expectedFilteredTasks);
-  // });
-
-
-  it("should filter task by date that are not completed", () => {
-    const tasks = [
-      {
-        date: "2024-03-21T00:00:00.000Z",
-        task_description: "2",
-        task_status: false,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af7e71fbf1d8b053eec7",
-      },
-      {
-        date: "2024-03-22T00:00:00.000Z",
-        task_description: "3",
-        task_status: false,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af8371fbf1d8b053eeca",
-      },
-      {
-        date: "2024-04-22T00:00:00.000Z",
-        task_description: "4",
-        task_status: false,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af7e71fbf1d8b053eec8",
-      },
-      {
-        date: "2024-04-25T00:00:00.000Z",
-        task_description: "40",
-        task_status: false,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af7e71fbf1d8b053eec8",
-      },
-      {
-        date: "2024-04-30T00:00:00.000Z",
-        task_description: "5",
-        task_status: false,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af8371fbf1d8b053eec9",
-      },
-    ];
-
-    const action1 = taskActions.setTasks(tasks);
-    const newState1 = taskSlice.reducer(initialState, action1);
-
-
-    const action2 = taskActions.setFilterByDate({
-      date: { selection: { startDate: "2024-03-18", endDate: "2024-04-26" } },
-      searchTerm: "",
-      showCompleted: false,
-      showNotCompleted: true
-    })
-
-    const newState2 = taskSlice.reducer(newState1, action2);
-    expect(newState2.filteredTask).not.toBeNull()
-    expect(newState2.filteredTask).toEqual([
-
-      {
-        date: "2024-03-21T00:00:00.000Z",
-        task_description: "2",
-        task_status: false,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af7e71fbf1d8b053eec7",
-      },
-     
+  });
+describe("filter task by date",()=>{
+  let tasks = [
     {
-      date: "2024-03-22T00:00:00.000Z",
-      task_description: "3",
-      task_status: false,
-      userID: "65c73f02e32fc26d22101e27",
-      __v: 0,
-      _id: "65e5af8371fbf1d8b053eeca",
-    },
-    
-    {
-      date: "2024-04-22T00:00:00.000Z",
-      task_description: "4",
-      task_status: false,
-      userID: "65c73f02e32fc26d22101e27",
-      __v: 0,
-      _id: "65e5af7e71fbf1d8b053eec8",
-    },
-    {
-      date: "2024-04-25T00:00:00.000Z",
-      task_description: "40",
-      task_status: false,
-      userID: "65c73f02e32fc26d22101e27",
-      __v: 0,
-      _id: "65e5af7e71fbf1d8b053eec8",
-    },])
-    console.log("redux store after date filter", newState2);
-  })
-
-
-  it("should filter task by date that are completed", () => {
-    const tasks = [
-      {
-        date: "2024-03-21T00:00:00.000Z",
-        task_description: "2",
-        task_status: true,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af7e71fbf1d8b053eec7",
-      },
-      {
-        date: "2024-03-22T00:00:00.000Z",
-        task_description: "3",
-        task_status: true,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af8371fbf1d8b053eeca",
-      },
-      {
-        date: "2024-04-22T00:00:00.000Z",
-        task_description: "4",
-        task_status: true,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af7e71fbf1d8b053eec8",
-      },
-      {
-        date: "2024-04-25T00:00:00.000Z",
-        task_description: "40",
-        task_status: true,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af7e71fbf1d8b053eec8",
-      },
-      {
-        date: "2024-04-30T00:00:00.000Z",
-        task_description: "5",
-        task_status: true,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af8371fbf1d8b053eec9",
-      },
-    ];
-
-    const action1 = taskActions.setTasks(tasks);
-    const newState1 = taskSlice.reducer(initialState, action1);
-
-
-    const action2 = taskActions.setFilterByDate({
-      date: { selection: { startDate: "2024-03-18", endDate: "2024-04-26" } },
-      searchTerm: "",
-      showCompleted: true,
-      showNotCompleted: false
-    })
-
-    const newState2 = taskSlice.reducer(newState1, action2);
-    expect(newState2.filteredTask).not.toBeNull()
-    expect(newState2.filteredTask).toEqual([
-
-      {
-        date: "2024-03-21T00:00:00.000Z",
-        task_description: "2",
-        task_status: true,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af7e71fbf1d8b053eec7",
-      },
-     
-    {
-      date: "2024-03-22T00:00:00.000Z",
-      task_description: "3",
-      task_status: true,
-      userID: "65c73f02e32fc26d22101e27",
-      __v: 0,
-      _id: "65e5af8371fbf1d8b053eeca",
-    },
-    
-    {
-      date: "2024-04-22T00:00:00.000Z",
-      task_description: "4",
-      task_status: true,
-      userID: "65c73f02e32fc26d22101e27",
-      __v: 0,
-      _id: "65e5af7e71fbf1d8b053eec8",
-    },
-    {
-      date: "2024-04-25T00:00:00.000Z",
-      task_description: "40",
-      task_status: true,
-      userID: "65c73f02e32fc26d22101e27",
-      __v: 0,
-      _id: "65e5af7e71fbf1d8b053eec8",
-    },])
-    console.log("redux store after date filter", newState2);
-  })
-
-  it("should filter tasks by a single date", () => {
-    const tasks = [
-      {
-        date: "2024-03-21T00:00:00.000Z",
-        task_description: "2",
-        task_status: true,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af7e71fbf1d8b053eec7",
-      },
-      {
-        date: "2024-03-21T00:00:00.000Z",
-        task_description: "3",
-        task_status: true,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af8371fbf1d8b053eeca",
-      },
-      {
-        date: "2024-04-21T00:00:00.000Z",
-        task_description: "4",
-        task_status: true,
-        userID: "65c73f02e32fc26d22101e27",
-        __v: 0,
-        _id: "65e5af7e71fbf1d8b053eec8",
-      },
-    ];
-  
-    const action1 = taskActions.setTasks(tasks);
-    const newState1 = taskSlice.reducer(initialState, action1);
-  
-    const action2 = taskActions.setFilterByDate({
-      date: { selection: { startDate: "2024-03-21", endDate: "2024-03-21" } },
-      searchTerm: "",
-      showCompleted: true,
-      showNotCompleted: false
-    });
-  
-    const newState2 = taskSlice.reducer(newState1, action2);  
-    expect(newState2.filteredTask).toEqual([{
       date: "2024-03-21T00:00:00.000Z",
       task_description: "2",
       task_status: true,
@@ -535,20 +250,179 @@ describe("Task Slice", () => {
       _id: "65e5af7e71fbf1d8b053eec7",
     },
     {
-      date: "2024-03-21T00:00:00.000Z",
+      date: "2024-03-22T00:00:00.000Z",
       task_description: "3",
-      task_status: true,
+      task_status: false,
       userID: "65c73f02e32fc26d22101e27",
       __v: 0,
       _id: "65e5af8371fbf1d8b053eeca",
-    },]);
+    },
+    {
+      date: "2024-04-22T00:00:00.000Z",
+      task_description: "4",
+      task_status: false,
+      userID: "65c73f02e32fc26d22101e27",
+      __v: 0,
+      _id: "65e5af7e71fbf1d8b053eec8",
+    },
+    {
+      date: "2024-04-25T00:00:00.000Z",
+      task_description: "40",
+      task_status: true,
+      userID: "65c73f02e32fc26d22101e27",
+      __v: 0,
+      _id: "65e5af7e71fbf1d8b053eec8",
+    },
+    {
+      date: "2024-04-30T00:00:00.000Z",
+      task_description: "5",
+      task_status: false,
+      userID: "65c73f02e32fc26d22101e27",
+      __v: 0,
+      _id: "65e5af8371fbf1d8b053eec9",
+    }, 
+    {
+      date: "2024-03-21T00:00:00.000Z",
+      task_description: "6",
+      task_status: false,
+      userID: "65c73f02e32fc26d22101e27",
+      __v: 0,
+      _id: "65e5af8371fbf1d8b053eeca",
+    },
+  ];
 
-    
-  });
+  it("should filter task by date that are not completed", () => {
+    const action1 = taskActions.setTasks(tasks);
+    const newState1 = taskSlice.reducer(initialState, action1);
+
+    const action2 = taskActions.setFilterByDate({
+      date: { selection: { startDate: "2024-03-18", endDate: "2024-04-26" } },
+      searchTerm: "",
+      showCompleted: false,
+      showNotCompleted: true,
+    });
+
+    const newState2 = taskSlice.reducer(newState1, action2);
+    expect(newState2.filteredTask).not.toBeNull();
+    expect(newState2.filteredTask).toEqual([
   
+      {
+        date: "2024-03-22T00:00:00.000Z",
+        task_description: "3",
+        task_status: false,
+        userID: "65c73f02e32fc26d22101e27",
+        __v: 0,
+        _id: "65e5af8371fbf1d8b053eeca",
+      },
+
+      {
+        date: "2024-04-22T00:00:00.000Z",
+        task_description: "4",
+        task_status: false,
+        userID: "65c73f02e32fc26d22101e27",
+        __v: 0,
+        _id: "65e5af7e71fbf1d8b053eec8",
+      },
+      {
+        date: "2024-03-21T00:00:00.000Z",
+        task_description: "6",
+        task_status: false,
+        userID: "65c73f02e32fc26d22101e27",
+        __v: 0,
+        _id: "65e5af8371fbf1d8b053eeca",
+      },
+    ]);
+    console.log("redux store after date filter", newState2);
+  });
+
+  it("should filter task by date that are completed", () => {
+  
+    const action1 = taskActions.setTasks(tasks);
+    const newState1 = taskSlice.reducer(initialState, action1);
+
+    const action2 = taskActions.setFilterByDate({
+      date: { selection: { startDate: "2024-03-21", endDate: "2024-04-26" } },
+      searchTerm: "",
+      showCompleted: true,
+      showNotCompleted: false,
+    });
+
+    const newState2 = taskSlice.reducer(newState1, action2);
+    expect(newState2.filteredTask).not.toBeNull();
+    expect(newState2.filteredTask).toEqual([
+      {
+        date: "2024-03-21T00:00:00.000Z",
+        task_description: "2",
+        task_status: true,
+        userID: "65c73f02e32fc26d22101e27",
+        __v: 0,
+        _id: "65e5af7e71fbf1d8b053eec7",
+      },
+      {
+        date: "2024-04-25T00:00:00.000Z",
+        task_description: "40",
+        task_status: true,
+        userID: "65c73f02e32fc26d22101e27",
+        __v: 0,
+        _id: "65e5af7e71fbf1d8b053eec8",
+      },
+    ]);
+    console.log("redux store after date filter", newState2);
+  });
+
+  it("should filter tasks by a single date",() => {
+    const dummySingleDate=[
+      {
+      date: "2024-03-21T00:00:00.000Z",
+      task_description: "5",
+      task_status: false,
+      userID: "65c73f02e32fc26d22101e27",
+      __v: 0,
+      _id: "65e5af8371fbf1d8b053eec9",
+    }, 
+    {
+      date: "2024-03-21T00:00:00.000Z",
+      task_description: "6",
+      task_status: true,
+      userID: "65c73f02e32fc26d22101e27", 
+      __v: 0,
+      _id: "65e5af8371fbf1d8b053eeca",
+    },
+  ]
+    const action1 = taskActions.setTasks(dummySingleDate);
+    const newState1 = taskSlice.reducer(initialState, action1);
+
+    const action2 = taskActions.setFilterByDate({
+      date: { selection: { startDate: "2024-03-21", endDate: "2024-03-21" } },
+      searchTerm: "",
+      showCompleted: true,
+      showNotCompleted: true,
+    });
+
+    const newState2 = taskSlice.reducer(newState1, action2);
+    expect(newState2.filteredTask).toEqual([
+      {
+        date: "2024-03-21T00:00:00.000Z",
+        task_description: "5",
+        task_status: false,
+        userID: "65c73f02e32fc26d22101e27",
+        __v: 0,
+        _id: "65e5af8371fbf1d8b053eec9",
+      }, 
+      {
+        date: "2024-03-21T00:00:00.000Z",
+        task_description: "6",
+        task_status: true,
+        userID: "65c73f02e32fc26d22101e27",
+        __v: 0,
+        _id: "65e5af8371fbf1d8b053eeca",
+      },
+    ]);
+  });
+})
+
 
   describe("filter overduetasks", () => {
-
     it("should filter taskoverdue", () => {
       const tasks = [
         {
@@ -618,11 +492,9 @@ describe("Task Slice", () => {
           __v: 0,
           _id: "65e5af7e71fbf1d8b053eec8",
         },
-      ])
-    })
-
-  })
-
+      ]);
+    });
+  });
 
   it("should set 0 overduetasks", () => {
     const tasks = [
@@ -666,16 +538,6 @@ describe("Task Slice", () => {
     const action2 = taskActions.filterTaskDueDate();
     const newState2 = taskSlice.reducer(newState1, action2);
 
-    expect(newState2.filteredTask).toEqual([])
-
-  })
-
-
-})
-
-
-
-
-
-
-
+    expect(newState2.filteredTask).toEqual([]);
+  });
+});
