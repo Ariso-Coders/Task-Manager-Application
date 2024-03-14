@@ -26,6 +26,8 @@ export const getTaskById = async (
       const error = new CustomError("This user does not exist", 404);
       return next(error);
     }
+
+    console.log("result",tasksToTheUser)
     
     res.status(200).json({ tasksToTheUser });
   } catch (err: any) {

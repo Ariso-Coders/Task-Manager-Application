@@ -5,5 +5,8 @@ module.exports = {
   testMatch: ["**/**/*.test.ts"],
   verbose: true,
   forceExit: true,
+  collectCoverage: true,
+  collectCoverageFrom: ["src/**/*.tsx", "!src/**/*.test.tsx"],
+  coverageReporters: ["json", "lcov", "text", "clover"],
   //cleanMocks: true,
 };

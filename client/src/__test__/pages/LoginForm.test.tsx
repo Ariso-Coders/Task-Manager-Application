@@ -24,6 +24,7 @@ import SignUp from "../../pages/SignUp";
 import { setupStore } from "../../store";
 
 const store = setupStore();
+const userT = userEvent.setup();
 test("Render The Login Component without crashing", () => {
   render(
     <Provider store={store}>
@@ -45,6 +46,8 @@ describe("render", () => {
       </Provider>
     );
     const loginText = screen.getByText(/Login/i);
+
+
 
     const loginText2 = screen.getByRole("heading", { name: /Login/i });
     // screen.get
@@ -113,8 +116,8 @@ describe("Error Message Diplayed For", () => {
           <LoginForm />
         </Router>
       </Provider>
-    ); 
-    await user.click(screen.getByRole("button",{name:"Signin"}));
+    );
+    await user.click(screen.getByRole("button", { name: "Signin" }));
     expect(screen.getByText(/Email Is Required/i)).toBeInTheDocument();
   });
 
@@ -126,7 +129,7 @@ describe("Error Message Diplayed For", () => {
         </Router>
       </Provider>
     );
-    await user.click(screen.getByRole("button",{name:"Signin"}));
+    await user.click(screen.getByRole("button", { name: "Signin" }));
     expect(
       screen.getByText(/Password is required/i)
     ).toBeInTheDocument();
@@ -147,7 +150,7 @@ describe("validation", () => {
 
     const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
     fireEvent.change(emailInput, { target: { value: "invalidemail" } });
-    await user.click(screen.getByRole("button",{name:"Signin"}));
+    await user.click(screen.getByRole("button", { name: "Signin" }));
     const emailErrorMessage = screen.getByText("Invalid Email");
     expect(emailErrorMessage).toBeInTheDocument();
   });
@@ -163,7 +166,7 @@ describe("validation", () => {
 
     const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
     fireEvent.change(passwordInput, { target: { value: "123" } });
-    await user.click(screen.getByRole("button",{name:"Signin"}));
+    await user.click(screen.getByRole("button", { name: "Signin" }));
     const passwordErrorMessage = screen.getByText(
       "Password Should Be At Least 8 Characters"
     );
@@ -218,7 +221,7 @@ test("navigation", async () => {
   const signInLink = screen.getByRole("link", { name: /Sign Up/i });
   expect(signInLink).toBeVisible();
   await user.click(signInLink);
-  
+
   //check sign up page
   await waitFor(() => {
     const aboutUsText = screen.getByText(/Already Have an Account/i);
@@ -226,7 +229,7 @@ test("navigation", async () => {
   });
 });
 
-test("submit with wrong credentials",async()=>{
+test("submit with wrong credentials", async () => {
   render(
     <Provider store={store}>
       <Router>
@@ -236,10 +239,10 @@ test("submit with wrong credentials",async()=>{
   );
   const user = userEvent.setup();
   const emailInput = screen.getByPlaceholderText(/Enter Your Email/i);
-  fireEvent.change(emailInput, { target: { value: "invalid@gmail.com" } }); 
+  fireEvent.change(emailInput, { target: { value: "invalid@gmail.com" } });
   const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
   fireEvent.change(passwordInput, { target: { value: "12345678" } });
-  await user.click(screen.getByRole("button",{name:"Signin"}));
+  await user.click(screen.getByRole("button", { name: "Signin" }));
   // const errorMessage=await screen.findByText("This email is not registered or Invalid Password")
   // expect(errorMessage).toBeInTheDocument();  
 })
