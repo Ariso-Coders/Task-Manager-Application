@@ -5,8 +5,7 @@ import { Button } from "../../components/Button";
 
 
 test("Login button should be rendered", () => {
-    render(<Button buttonLabel="Login" />); 
-    const buttonInput = screen.getByRole("button");
-    expect(buttonInput).toBeInTheDocument();
-  });
-  
+  render(<Button buttonLabel="Login" />);
+  const buttonInput = screen.getByRole("button");
+  expect(buttonInput).toBeInTheDocument();
+});

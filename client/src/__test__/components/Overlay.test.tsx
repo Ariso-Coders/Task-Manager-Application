@@ -1,8 +1,10 @@
 import { render, screen } from "@testing-library/react"
 import TaskOverlay from '../../components/taskoverlay/TaskOverlay';
 import { Provider } from "react-redux";
-import store from '../../store/index';
+import { setupStore } from "../../store";
 
+
+const store = setupStore();
 describe(" taskoverlay", ()=>{
 it("render taskoverlay", async()=>{
     render(

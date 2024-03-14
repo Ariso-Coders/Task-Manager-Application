@@ -3,6 +3,7 @@ import { render } from '@testing-library/react'
 import type { RenderOptions } from '@testing-library/react'
 import type { AppStore, RootState } from '../../../store/index'
 import { setupStore } from '../../../store/index';
+import { Provider } from 'react-redux';
 
 
 // This type interface extends the default options for render from RTL, as well
@@ -27,7 +28,6 @@ export function renderWithProviders(
   function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
 
     return <Provider store={store}>{children}</Provider>
-   
 
   }
 

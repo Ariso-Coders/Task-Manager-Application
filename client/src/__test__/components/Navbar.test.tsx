@@ -1,5 +1,5 @@
-import { render, fireEvent,screen,waitFor } from '@testing-library/react';
-import { MemoryRouter,Router, RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter, Router, RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { NavBar } from '../../components/NavBar/NavBar';
 import userEvent from '@testing-library/user-event';
 import Layout from '../../Layout/Layout';
@@ -33,44 +33,44 @@ describe('NavBar Component', () => {
     expect(welcomeMessage).toBeInTheDocument();
   });
 
-  test("navigate to /about and /contact url",async()=>{
-    const user=userEvent.setup();
-    const routes=[
+  test("navigate to /about and /contact url", async () => {
+    const user = userEvent.setup();
+    const routes = [
       {
-        path:"/task",
-        element:<Layout><Task/></Layout>,
+        path: "/task",
+        element: <Layout><Task /></Layout>,
       },
       {
-        path:"/about",
-        element:<Layout><AboutUs/></Layout>,
+        path: "/about",
+        element: <Layout><AboutUs /></Layout>,
       },
       {
-        path:"/contact",
-        element:<Layout><ContactUs/></Layout>,
+        path: "/contact",
+        element: <Layout><ContactUs /></Layout>,
       },
       {
-        path:"/user",
-        element:<Layout><User></User></Layout>
-      }     
+        path: "/user",
+        element: <Layout><User></User></Layout>
+      }
     ];
-    const router=createMemoryRouter(routes,{
-      initialEntries:["/user","/task","/about","/contact"],
-      initialIndex:0,
+    const router = createMemoryRouter(routes, {
+      initialEntries: ["/user", "/task", "/about", "/contact"],
+      initialIndex: 0,
     });
 
     render(
-      <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     );
     //checks if we are on user page
     const userHeader = screen.getByRole("heading", { name: /User Profile/i })
     expect(userHeader).toBeVisible();
-  
+
     //check for "about us" on navbar
     const aboutUsLink = screen.getByRole("link", { name: /About Us/i })
     expect(aboutUsLink).toBeVisible();
     await user.click(aboutUsLink)
 
-      //check about us page
+    //check about us page
     await waitFor(() => {
       const aboutUsText = screen.getByText(/# About Us/i);
       expect(aboutUsText).toBeVisible();
@@ -81,10 +81,10 @@ describe('NavBar Component', () => {
     expect(contactUsLink).toBeVisible();
     await user.click(contactUsLink);
 
-     //check contact us page
+    //check contact us page
     await waitFor(() => {
       const contactUsText = screen.getByText(/Send your message to us/i);
-      expect(contactUsText).toBeVisible(); 
+      expect(contactUsText).toBeVisible();
     });
-})
+  })
 });

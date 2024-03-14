@@ -115,7 +115,7 @@ describe('SideBar Component', () => {
 
     );
 
-    
+
 
     const userHeader = screen.getByRole("heading", { name: /User Profile/i })
     expect(userHeader).toBeVisible();

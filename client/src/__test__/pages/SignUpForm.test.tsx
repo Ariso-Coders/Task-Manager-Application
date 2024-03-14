@@ -3,7 +3,7 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom"; // For illustration, assuming you're using react-router-dom for testing
 import SignUp from "../../pages/SignUp";
 import userEvent from "@testing-library/user-event";
-import { createMemoryRouter, useLocation, MemoryRouter,RouterProvider } from 'react-router-dom'; // For testing purposes
+import { createMemoryRouter, useLocation, MemoryRouter, RouterProvider } from 'react-router-dom'; // For testing purposes
 import LoginForm from "../../pages/LoginForm";
 import Layout from '../../Layout/Layout';
 import Task from '../../pages/Task';
@@ -15,10 +15,10 @@ const store = setupStore();
 test("SignUp component renders without crashing", () => {
   render(
     <Provider store={store}>
-    <Router>
-      <SignUp />
-    </Router>
-  </Provider>
+      <Router>
+        <SignUp />
+      </Router>
+    </Provider>
   );
 });
 test("Button should be rendered", () => {
@@ -48,10 +48,10 @@ test("Email input field should be rendered", () => {
 test("Name input field should be rendered", () => {
   render(
     <Provider store={store}>
-    <Router>
-      <SignUp />
-    </Router>
-  </Provider>
+      <Router>
+        <SignUp />
+      </Router>
+    </Provider>
   );
   const nameInputEl = screen.getByLabelText("Name");
   expect(nameInputEl).toBeInTheDocument();
@@ -59,10 +59,10 @@ test("Name input field should be rendered", () => {
 test("DOB input field should be rendered", () => {
   render(
     <Provider store={store}>
-    <Router>
-      <SignUp />
-    </Router>
-  </Provider>
+      <Router>
+        <SignUp />
+      </Router>
+    </Provider>
   );
   const dobInputEl = screen.getByLabelText("DOB");
   expect(dobInputEl).toBeInTheDocument();
@@ -93,10 +93,10 @@ describe("Error Messages ", () => {
   test("displays when form is submitted without filling input fields", async () => {
     render(
       <Provider store={store}>
-      <Router>
-        <SignUp />
-      </Router>
-    </Provider>
+        <Router>
+          <SignUp />
+        </Router>
+      </Provider>
     );
     fireEvent.submit(screen.getByText("SignUp"));
     expect(await screen.findByText("Email Is Required")).toBeInTheDocument();
@@ -140,10 +140,10 @@ describe("validation", () => {
   test("Invalid email format", async () => {
     render(
       <Provider store={store}>
-      <Router>
-        <SignUp />
-      </Router>
-    </Provider>
+        <Router>
+          <SignUp />
+        </Router>
+      </Provider>
     );
     const emailInput = screen.getByLabelText(/Email/i);
     fireEvent.change(emailInput, { target: { value: "invalidemail" } });
@@ -154,10 +154,10 @@ describe("validation", () => {
   test("Name is required message", async () => {
     render(
       <Provider store={store}>
-      <Router>
-        <SignUp />
-      </Router>
-    </Provider>
+        <Router>
+          <SignUp />
+        </Router>
+      </Provider>
     );
     const nameInput = screen.getByLabelText(/Name/i);
     fireEvent.change(nameInput, { target: { value: "" } });
@@ -168,10 +168,10 @@ describe("validation", () => {
   test("Name is required message", async () => {
     render(
       <Provider store={store}>
-      <Router>
-        <SignUp />
-      </Router>
-    </Provider>
+        <Router>
+          <SignUp />
+        </Router>
+      </Provider>
     );
     const dobInput = screen.getByLabelText(/DOB/i);
     fireEvent.change(dobInput, { target: { value: "" } });
@@ -182,10 +182,10 @@ describe("validation", () => {
   test("Password shorter than 8 characters", async () => {
     render(
       <Provider store={store}>
-      <Router>
-        <SignUp />
-      </Router>
-    </Provider>
+        <Router>
+          <SignUp />
+        </Router>
+      </Provider>
     );
     const passwordInput = screen.getByLabelText("Password");
     fireEvent.change(passwordInput, { target: { value: "123" } });
@@ -198,12 +198,12 @@ describe("validation", () => {
   test("Password shorter than 8 characters", async () => {
     render(
       <Provider store={store}>
-      <Router>
-        <SignUp />
-      </Router>
-    </Provider>
+        <Router>
+          <SignUp />
+        </Router>
+      </Provider>
     );
-  const confirmPasswordInput = screen.getByLabelText("Re-enter password");
+    const confirmPasswordInput = screen.getByLabelText("Re-enter password");
     fireEvent.change(confirmPasswordInput, { target: { value: "123" } });
     fireEvent.submit(screen.getByText(/SignUp/i));
     const confirmPasswordErrorMessage = await screen.findByText(
@@ -238,13 +238,13 @@ test("navigate correctly to /login url", async () => {
   render(
 
     <Provider store={store}>
-    <RouterProvider router={router} />
-  </Provider>
+      <RouterProvider router={router} />
+    </Provider>
 
   );
 
   const aboutUsText = screen.getByText(/Already Have an Account?/i);
-    expect(aboutUsText).toBeVisible();
+  expect(aboutUsText).toBeVisible();
 
   const userLink = screen.getByRole("link", { name: /Login/i })
   expect(userLink).toBeVisible();

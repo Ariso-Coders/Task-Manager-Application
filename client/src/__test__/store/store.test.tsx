@@ -332,7 +332,7 @@ describe("filter task by date",()=>{
         _id: "65e5af8371fbf1d8b053eeca",
       },
     ]);
-    console.log("redux store after date filter", newState2);
+    
   });
 
   it("should filter task by date that are completed", () => {
@@ -367,7 +367,7 @@ describe("filter task by date",()=>{
         _id: "65e5af7e71fbf1d8b053eec8",
       },
     ]);
-    console.log("redux store after date filter", newState2);
+   
   });
 
   it("should filter tasks by a single date",() => {

@@ -237,7 +237,7 @@ test("submit with wrong credentials", async () => {
   fireEvent.change(emailInput, { target: { value: "invalid@gmail.com" } });
   const passwordInput = screen.getByPlaceholderText(/Enter Your Password/i);
   fireEvent.change(passwordInput, { target: { value: "12345678" } });
-  await user.click(screen.getByRole("button",{name:"Signin"}));
-  const errorMessage=await screen.findByText("This email is not registered or Invalid Password")
-  expect(errorMessage).toBeInTheDocument();  
+  await user.click(screen.getByRole("button", { name: "Signin" }));
+  const errorMessage = await screen.findByText("This email is not registered or Invalid Password")
+  expect(errorMessage).toBeInTheDocument();
 })
