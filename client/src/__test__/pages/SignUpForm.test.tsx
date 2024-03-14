@@ -9,8 +9,9 @@ import Layout from '../../Layout/Layout';
 import Task from '../../pages/Task';
 import User from '../../pages/User';
 import { Provider } from "react-redux";
-import store from '../../store/index'
-
+import { setupStore } from "../../store";
+//import store from '../../store/index'
+const store = setupStore();
 test("SignUp component renders without crashing", () => {
   render(
     <Provider store={store}>
