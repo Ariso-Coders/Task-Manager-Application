@@ -16,7 +16,7 @@ export const getTaskById = async (
   const userID = req.params.userID;
   const pageNumber: string = req.query.pageNumber as string;
   const pageSize = 10;
-  console.log("page number", pageNumber, parseInt(pageNumber));
+  //console.log("page number", pageNumber, parseInt(pageNumber));
   try {
     const tasksToTheUser = await taskModel
       .find({ userID: userID })
@@ -41,7 +41,7 @@ export const getTaskById = async (
 export const updateTaskById = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  
 ) => {
   const taskID = req.params.taskID;
   const { task_status } = req.body;
@@ -53,7 +53,8 @@ export const updateTaskById = async (
     );
     if (!tasksUpdating) {
       const error = new CustomError("This task does not exist", 404);
-      return next(error);
+      throw error;
+      
     }
     const newTasksAfterUpdate = await taskModel.find({ userID: userId });
 
@@ -61,11 +62,13 @@ export const updateTaskById = async (
       message: "Task Status Updated successfully",
       tasks: newTasksAfterUpdate,
     });
+    console.log(newTasksAfterUpdate)
   } catch (err: any) {
     if (!err.statusCode) {
       err.statusCode = 500;
     }
-    next(err);
+    
+    throw err;
   }
 };
 export const deleteTaskById = async (
