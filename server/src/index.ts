@@ -2,7 +2,6 @@ import express from "express";
 import { Request, Response, NextFunction } from "express";
 import bodyparser from "body-parser";
 import cors from "cors";
-import mongoose from "mongoose";
 import authRoutes from "./routes/auth";
 import taskRoutes from "./routes/task";
 import userRoutes from "./routes/user";

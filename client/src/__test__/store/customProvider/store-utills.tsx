@@ -6,11 +6,10 @@ import { setupStore } from '../../../store/index';
 import { Provider } from 'react-redux';
 
 
-// This type interface extends the default options for render from RTL, as well
-// as allows the user to specify other things such as initialState, store.
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   preloadedState?: Partial<RootState>
   store?: AppStore
+  router?: React.ReactElement;
 }
 
 
@@ -18,20 +17,24 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
 export function renderWithProviders(
   ui: React.ReactElement,
   {
-    preloadedState = {},
-    // Automatically create a store instance if no store was passed in
+    preloadedState = {
+
+    },
+   
     store = setupStore(preloadedState),
+    router,
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ) {
 
   function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
 
-    return <Provider store={store}>{children}</Provider>
-
+    
+    return <Provider store={store}>{children}</Provider>;
+    // return <Provider store={store}>{router ? <Router>{children}</Router> : children}</Provider>;
   }
 
-  
+
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) }
 }
 

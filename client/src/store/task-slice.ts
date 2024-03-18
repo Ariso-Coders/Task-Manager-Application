@@ -159,7 +159,7 @@ const taskSlice = createSlice({
           task.task_description
             ?.toLowerCase()
             .includes(searchTerm.toLowerCase()) &&
-            ((showCompleted && task.task_status) ||
+          ((showCompleted && task.task_status) ||
             (showNotCompleted && !task.task_status) ||
             (!showCompleted && !showNotCompleted))
         );
@@ -186,6 +186,7 @@ const taskSlice = createSlice({
     builder.addCase(fetchTask.fulfilled, (state, action) => {
       console.log("add case worked");
       state.totalTask = action.payload;
+      console.log("extra reducer output", state.totalTask);
       return state;
     });
 
