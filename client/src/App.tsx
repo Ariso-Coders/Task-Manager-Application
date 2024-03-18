@@ -16,6 +16,7 @@ const MyComponent = () => {
       localStorage.removeItem("userToken");
       localStorage.removeItem("userEmail");
       localStorage.removeItem("userId");
+      console.log("CONSOLE LOG FOR TESTING WORKFLOW");
       navigation("/")
     }}>Go To Login</button> </div>
   )
