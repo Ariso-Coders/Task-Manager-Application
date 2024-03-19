@@ -52,23 +52,6 @@
   "transform": {
     "^.+\\.js$": "babel-jest"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "jsdom",
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "ts",
-      "tsx"
-    ],
-    "testMatch": [
-      "**/src/**/*.test.{js,jsx,ts,tsx}"
-    ],
-    "moduleNameMapper": {
-      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
-    }
-  },
-  
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
     "@babel/preset-env": "^7.24.0",
@@ -90,6 +73,8 @@
   "overrides": {
     "typescript": "^5.3.3"
   },
+
+ 
   
   "moduleFileExtensions": [
     "js",
