@@ -16,12 +16,6 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    // updateUser: (state, action: PayloadAction<UserState>) => {
-    //   state.email = action.payload.email;
-    //   state.token = action.payload.token;
-    //   state.userId = action.payload.userId;
-    // },
-
     updateUser: (state, action: PayloadAction<UserState>) => {
       console.log("values came to set", action.payload);
       return {

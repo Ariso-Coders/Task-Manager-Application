@@ -1,4 +1,4 @@
-import { Task } from "../pages/ViewTask";
+import { Task } from "../pages/Task";
 
 interface TaskState {
   

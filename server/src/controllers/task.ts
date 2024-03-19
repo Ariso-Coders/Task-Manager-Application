@@ -14,14 +14,24 @@ export const getTaskById = async (
   next: NextFunction
 ) => {
   const userID = req.params.userID;
+  const pageNumber: string = req.query.pageNumber as string;
+  const pageSize = 10;
+  console.log("page number", pageNumber, parseInt(pageNumber));
   try {
-    const tasksToTheUser = await taskModel.find({ userID: userID });
+    const tasksToTheUser = await taskModel
+      .find({ userID: userID })
+      .skip((parseInt(pageNumber) - 1) * pageSize)
+      .limit(pageSize);
     if (!tasksToTheUser) {
       const error = new CustomError("This user does not exist", 404);
       return next(error);
     }
+
+    console.log("result",tasksToTheUser)
+    
     res.status(200).json({ tasksToTheUser });
   } catch (err: any) {
+    console.log("get task by id error",err)
     if (!err.statusCode) {
       err.statusCode = 500;
     }
@@ -35,6 +45,7 @@ export const updateTaskById = async (
 ) => {
   const taskID = req.params.taskID;
   const { task_status } = req.body;
+  const userId = req.query.userId;
   try {
     const tasksUpdating = await taskModel.findByIdAndUpdate(
       { _id: taskID },
@@ -44,9 +55,11 @@ export const updateTaskById = async (
       const error = new CustomError("This task does not exist", 404);
       return next(error);
     }
+    const newTasksAfterUpdate = await taskModel.find({ userID: userId });
+
     res.status(200).json({
       message: "Task Status Updated successfully",
-      details: "nothing",
+      tasks: newTasksAfterUpdate,
     });
   } catch (err: any) {
     if (!err.statusCode) {
@@ -89,7 +102,7 @@ export const postTask = async (
 
   if (isEmpty(taskDate) || isEmpty(task)) {
     const error: CustomError = new CustomError(
-      "Date or task cannot be emptytt",
+      "Date or task cannot be empty",
       400
     );
     return next(error);

@@ -1,18 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userSlice, { UserState } from "./user-slice";
-import taskSlice, { TaskState } from "./task-slice";
+import taskSlice, {TasksState } from "./task-slice";
 import { taskApi } from "./fetures/task-api";
 import { useSelector } from "react-redux";
 
 export interface RootState {
   user: UserState;
-  task: TaskState;
+  task: TasksState;
   [taskApi.reducerPath]: typeof taskApi.reducer;
 }
 
+export const setupStore = (preloadedState?: Partial<RootState>) => {
 
-
-const store = configureStore({
+return configureStore({
   reducer: {
     user: userSlice.reducer,
     task: taskSlice.reducer,
@@ -22,4 +22,9 @@ const store = configureStore({
     getDefaultMiddleware().concat(taskApi.middleware),
 });
 
-export default store;
+}
+
+
+
+export type AppStore = ReturnType<typeof setupStore>
+export type AppDispatch  = AppStore['dispatch'];

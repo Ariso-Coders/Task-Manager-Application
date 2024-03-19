@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 
 class CustomError extends Error {
   statusCode: number | 500;
-
   constructor(message: string, statusCode: number) {
     super(message);
     this.statusCode = statusCode;
@@ -23,7 +22,6 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     decodedToken = jwt.verify(token, "supersecretsignature");
-    
   } catch (err) {
     (err as any).statusCode = 500;
     return next(err);
@@ -33,8 +31,6 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const error = new CustomError("Not Authenticated", 401);
     return next(error);
   }
-
-  //   req.userId = decodedToken.userId;
   next();
 };
 
