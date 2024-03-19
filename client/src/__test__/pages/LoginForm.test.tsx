@@ -14,7 +14,7 @@ import {
 } from "react-router-dom";
 import LoginForm from "../../pages/LoginForm";
 import { Button } from "../../components/Button";
-import { userEvent } from "@testing-library/user-event";
+import { userEvent } from '@testing-library/user-event';
 import Task from "../../pages/Task";
 import { Provider } from "react-redux";
 
