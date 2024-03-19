@@ -1,22 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import taskModel from "../models/task";
 import { isEmpty } from "../utills/Validations";
-class CustomError extends Error {
+export class CustomError extends Error {
   statusCode: number;
   constructor(message: string, statusCode: number) {
     super(message);
     this.statusCode = statusCode;
   }
 }
-export const getTaskById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getTaskById = async (req: Request, res: Response) => {
   const userID = req.params.userID;
   const pageNumber: string = req.query.pageNumber as string;
   const pageSize = 10;
-  console.log("page number", pageNumber, parseInt(pageNumber));
+
   try {
     const tasksToTheUser = await taskModel
       .find({ userID: userID })
@@ -24,25 +20,18 @@ export const getTaskById = async (
       .limit(pageSize);
     if (!tasksToTheUser) {
       const error = new CustomError("This user does not exist", 404);
-      return next(error);
+      throw error;
     }
-
-    console.log("result",tasksToTheUser)
-    
     res.status(200).json({ tasksToTheUser });
   } catch (err: any) {
-    console.log("get task by id error",err)
+    console.log("get task by id error", err);
     if (!err.statusCode) {
       err.statusCode = 500;
     }
-    next(err);
+    throw err;
   }
 };
-export const updateTaskById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const updateTaskById = async (req: Request, res: Response) => {
   const taskID = req.params.taskID;
   const { task_status } = req.body;
   const userId = req.query.userId;
@@ -53,7 +42,7 @@ export const updateTaskById = async (
     );
     if (!tasksUpdating) {
       const error = new CustomError("This task does not exist", 404);
-      return next(error);
+      throw error;
     }
     const newTasksAfterUpdate = await taskModel.find({ userID: userId });
 
@@ -61,11 +50,13 @@ export const updateTaskById = async (
       message: "Task Status Updated successfully",
       tasks: newTasksAfterUpdate,
     });
+    console.log(newTasksAfterUpdate);
   } catch (err: any) {
     if (!err.statusCode) {
       err.statusCode = 500;
     }
-    next(err);
+
+    throw err;
   }
 };
 export const deleteTaskById = async (
@@ -91,21 +82,17 @@ export const deleteTaskById = async (
   }
 };
 
-export const postTask = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const postTask = async (req: Request, res: Response) => {
   const taskDate: Date = req.body.taskDate;
   const task: string = req.body.task;
   const userId: string = req.body.userId;
 
   if (isEmpty(taskDate) || isEmpty(task)) {
     const error: CustomError = new CustomError(
-      "Date or task cannot be empty",
+      "Date or task cannot be emptytt",
       400
     );
-    return next(error);
+    throw error;
   }
 
   try {
@@ -122,7 +109,8 @@ export const postTask = async (
         "Erro when creating Task Please Try Again Later",
         500
       );
-      return next(error);
+      throw error;
+      //return next(error);
     }
 
     res.status(200).json({
@@ -130,6 +118,7 @@ export const postTask = async (
       details: savedTask,
     });
   } catch (error: any) {
-    next(error);
+    throw error;
+    //next(error);
   }
 };

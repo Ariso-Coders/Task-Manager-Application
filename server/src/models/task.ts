@@ -1,6 +1,6 @@
 import { Document, Schema, model, Types } from "mongoose";
 
-interface Task extends Document {
+export interface Task extends Document {
   userID: Types.ObjectId;
   date: Date;
   task_description: string;

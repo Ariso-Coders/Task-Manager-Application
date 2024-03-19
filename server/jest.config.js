@@ -1,6 +1,9 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-    preset: 'ts-jest',
-    testEnvironment: 'node',
-    testMatch: ['**/*.test.ts'], // Change this pattern to match your test files
-  };
-  
+  preset: "ts-jest",
+  testEnvironment: "node",
+  testMatch: ["**/**/*.test.ts"],
+  verbose: true,
+  forceExit: true,
+  //cleanMocks: true,
+};
