@@ -35,6 +35,7 @@ interface MobileTaskStyleInterface {
 }
 
 const Task = () => {
+    
     const userId: string | any = localStorage.getItem("userId");
     const [taskPageNumber, setTaskPageNumber] = useState<number>(1);
     let taskValues: TasksState;
@@ -67,7 +68,10 @@ const Task = () => {
     };
 
     taskValues = useSelector((state: RootState) => state.task);
+    console.log("task values from redux", useSelector((state: RootState) => state));
     const { data, isError } = useGetAllTasksQuery({ userID: userId, pageNumber: taskValues.taskPageNumber }); // calling API 
+
+    // console.log("data in backend", data)
     const dispatch = useDispatch<AppDispatch>();
     const [updateTaskMutation] = useUpdateTaskStatusMutation();
     const [mutate, ,] = useDeleteTaskByIdMutation();
@@ -239,6 +243,7 @@ const Task = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <FaSliders
+                        data-testid="filter_svg"
                         className="text-3xl hover:cursor-pointer"
                         onClick={() => { setFilterMenuOpen((prev) => !prev); }}
                     />
@@ -380,7 +385,7 @@ const Task = () => {
                                 (currentTasks.length > 0) && (
                                     currentTasks.map((task: Task) => (
 
-                                        <tr key={task._id} className="text-left border-b  border-gray-400 transition-all hover:bg-gray-100">
+                                        <tr data-testid="task_tr" key={task._id} className="text-left border-b  border-gray-400 transition-all hover:bg-gray-100">
                                             <td className="">{task.task_description}</td>
                                             <td>{task.date.split("T")[0]}</td>
                                             <td> <span>
@@ -454,12 +459,12 @@ const Task = () => {
                     >
                         <button
                             onClick={() => {
-                                
+
 
                                 setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
                                 if (taskValues.taskPageNumber > 1) {
 
-                                    dispatch(fetchTask({ userId: userId, pageNumber: taskValues.taskPageNumber -1 }));
+                                    dispatch(fetchTask({ userId: userId, pageNumber: taskValues.taskPageNumber - 1 }));
 
                                     dispatch(taskActions.setTaskPageNumber(taskValues.taskPageNumber - 1))
 
@@ -477,9 +482,9 @@ const Task = () => {
                                 setCurrentPage((prevPage) =>
                                     Math.min(prevPage + 1, totalPages)
                                 );
-                               
 
-                               dispatch(fetchTask({ userId: userId, pageNumber: taskValues.taskPageNumber + 1 }));
+
+                                dispatch(fetchTask({ userId: userId, pageNumber: taskValues.taskPageNumber + 1 }));
 
                                 dispatch(taskActions.setTaskPageNumber(taskValues.taskPageNumber + 1));
 

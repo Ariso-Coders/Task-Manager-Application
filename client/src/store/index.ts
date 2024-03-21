@@ -10,7 +10,9 @@ export interface RootState {
   [taskApi.reducerPath]: typeof taskApi.reducer;
 }
 
-const store = configureStore({
+export const setupStore = (preloadedState?: Partial<RootState>) => {
+
+return configureStore({
   reducer: {
     user: userSlice.reducer,
     task: taskSlice.reducer,
@@ -20,6 +22,9 @@ const store = configureStore({
     getDefaultMiddleware().concat(taskApi.middleware),
 });
 
-export default store;
+}
 
-export type AppDispatch  = typeof store.dispatch;
+
+
+export type AppStore = ReturnType<typeof setupStore>
+export type AppDispatch  = AppStore['dispatch'];

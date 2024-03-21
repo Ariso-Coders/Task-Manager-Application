@@ -76,7 +76,7 @@ const TaskOverlay: FC<MyFunctionalComponentProps> = (props) => {
         }
       } else {
         setInputDetails({ ...inputDetails, erroLogic: false, erorMsg: "" })
-      }
+      } 
     }
   };
   return (

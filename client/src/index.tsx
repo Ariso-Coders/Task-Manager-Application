@@ -4,13 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import store from "./store/index"
+
 import { BrowserRouter } from 'react-router-dom';
 import { ApiProvider } from '@reduxjs/toolkit/query/react';
 import { taskApi } from './store/fetures/task-api';
+import { setupStore } from './store';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+const store = setupStore();
 root.render(
   <React.StrictMode>
     <ApiProvider api={taskApi}>

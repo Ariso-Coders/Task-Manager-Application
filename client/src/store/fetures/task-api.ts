@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Task } from "../../pages/Task";
+import { url } from "inspector";
 
 
 export interface getAllTaskRTKInterface {
@@ -48,6 +49,20 @@ export interface UpdateTaskStatusResponseError {
   };
 }
 
+
+interface LoginRequestInterface {
+  email:string,
+  password:string
+}
+
+interface SignupRequestInterface {
+  email: string,
+  name: string,
+  dob: Date,
+  password: string,
+  confirmPassword: string,
+}
+
 export interface deleteTaskRTKInterface {
   message: string | "";
 }
@@ -83,6 +98,22 @@ export const taskApi = createApi({
       }),
     }),
 
+    login:builder.mutation<LoginRequestInterface ,any>({
+      query:(body) =>({
+        url:`user/login`,
+        method:"POST",
+        body:body
+      })
+    }),
+    
+    signup:builder.mutation<SignupRequestInterface ,any>({
+      query:(body) =>({
+        url:`user/signup`,
+        method:"POST",
+        body:body
+      })
+    }),
+
     getTaskById: builder.query<Task, string>({
       query: (taskId) => `task/taskById/${taskId}`,
     }),
@@ -113,4 +144,6 @@ export const {
   useGetTaskByIdQuery,
   useDeleteTaskByIdMutation,
   useUpdateTaskStatusMutation,
+  useLoginMutation,
+  useSignupMutation
 } = taskApi;

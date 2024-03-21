@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1710481663996" clover="3.2.0">
-  <project timestamp="1710481663996" name="All files">
+<coverage generated="1711006350500" clover="3.2.0">
+  <project timestamp="1711006350500" name="All files">
     <metrics statements="67" coveredstatements="55" conditionals="13" coveredconditionals="8" methods="10" coveredmethods="10" elements="90" coveredelements="73" complexity="0" loc="67" ncloc="67" packages="3" files="3" classes="3"/>
     <package name="controllers">
       <metrics statements="61" coveredstatements="49" conditionals="10" coveredconditionals="5" methods="9" coveredmethods="9"/>
-      <file name="task.ts" path="D:\Intern\Task-Manger-Version-14\Task-Manager-Application\server\src\controllers\task.ts">
+      <file name="task.ts" path="D:\Intern\Task-Manager-Version-14\Task-Manager-Application\server\src\controllers\task.ts">
         <metrics statements="61" coveredstatements="49" conditionals="10" coveredconditionals="5" methods="9" coveredmethods="9"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -71,7 +71,7 @@
     </package>
     <package name="models">
       <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="task.ts" path="D:\Intern\Task-Manger-Version-14\Task-Manager-Application\server\src\models\task.ts">
+      <file name="task.ts" path="D:\Intern\Task-Manager-Version-14\Task-Manager-Application\server\src\models\task.ts">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="10" count="1" type="stmt"/>
@@ -81,7 +81,7 @@
     </package>
     <package name="utills">
       <metrics statements="2" coveredstatements="2" conditionals="3" coveredconditionals="3" methods="1" coveredmethods="1"/>
-      <file name="Validations.ts" path="D:\Intern\Task-Manger-Version-14\Task-Manager-Application\server\src\utills\Validations.ts">
+      <file name="Validations.ts" path="D:\Intern\Task-Manager-Version-14\Task-Manager-Application\server\src\utills\Validations.ts">
         <metrics statements="2" coveredstatements="2" conditionals="3" coveredconditionals="3" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="5" type="cond" truecount="3" falsecount="0"/>
